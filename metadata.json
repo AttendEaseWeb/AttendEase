@@ -1,0 +1,6 @@
+{
+  "name": "AttendEase",
+  "description": "Modern attendance, event, and session tracking management web application.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

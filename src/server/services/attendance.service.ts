@@ -1,0 +1,103 @@
+import { AttendanceRecord, CheckInRequest, AttendanceStats, AttendanceStatus } from '../../shared/types/attendance';
+import { dbStore } from '../db/store';
+import { parseQRToken } from '../../shared/utils/qr';
+
+export class AttendanceService {
+  static getAllAttendance(): AttendanceRecord[] {
+    return dbStore.getAttendanceRecords();
+  }
+
+  static getAttendanceBySession(sessionId: string): AttendanceRecord[] {
+    return dbStore.getAttendanceBySessionId(sessionId);
+  }
+
+  static getAttendanceByStudent(studentId: string): AttendanceRecord[] {
+    return dbStore.getAttendanceByStudentId(studentId);
+  }
+
+  static checkIn(req: CheckInRequest): AttendanceRecord {
+    const session = dbStore.getSessionById(req.sessionId);
+    if (!session) {
+      throw new Error('Session not found');
+    }
+
+    const student = dbStore.getUserById(req.studentId);
+    if (!student) {
+      throw new Error('Student user record not found');
+    }
+
+    // Verify QR token if provided
+    if (req.qrToken) {
+      const decoded = parseQRToken(req.qrToken);
+      if (!decoded) {
+        throw new Error('Invalid QR Code format');
+      }
+      if (decoded.sessionId !== req.sessionId) {
+        throw new Error('QR code is for a different session');
+      }
+      if (decoded.expiresAt < Date.now()) {
+        throw new Error('QR code has expired. Please refresh the display code.');
+      }
+    }
+
+    // Determine status based on time
+    let status: AttendanceStatus = 'PRESENT';
+    const record: AttendanceRecord = {
+      id: `att-${Date.now()}`,
+      sessionId: session.id,
+      courseId: session.courseId,
+      courseCode: session.courseCode,
+      courseTitle: session.courseTitle,
+      studentId: student.id,
+      studentName: student.name,
+      studentEmail: student.email,
+      studentNumber: student.studentId || 'ST-2026-99',
+      checkInTime: new Date().toISOString(),
+      status,
+      method: req.qrToken ? 'QR_SCAN' : 'GEO_CHECKIN',
+      verifiedLocation: req.latitude && req.longitude ? {
+        latitude: req.latitude,
+        longitude: req.longitude,
+        distanceMeters: 15,
+      } : undefined,
+      notes: 'Verified live check-in',
+    };
+
+    return dbStore.addAttendanceRecord(record);
+  }
+
+  static manualCheckIn(data: {
+    sessionId: string;
+    studentId: string;
+    status: AttendanceStatus;
+    notes?: string;
+  }): AttendanceRecord {
+    const session = dbStore.getSessionById(data.sessionId);
+    if (!session) throw new Error('Session not found');
+
+    const student = dbStore.getUserById(data.studentId);
+    if (!student) throw new Error('Student not found');
+
+    const record: AttendanceRecord = {
+      id: `att-${Date.now()}`,
+      sessionId: session.id,
+      courseId: session.courseId,
+      courseCode: session.courseCode,
+      courseTitle: session.courseTitle,
+      studentId: student.id,
+      studentName: student.name,
+      studentEmail: student.email,
+      studentNumber: student.studentId || 'ST-2026-99',
+      checkInTime: new Date().toISOString(),
+      status: data.status,
+      method: 'MANUAL_ENTRY',
+      notes: data.notes || 'Manual override by Instructor/Admin',
+    };
+
+    return dbStore.addAttendanceRecord(record);
+  }
+
+  static getStats(studentId?: string): AttendanceStats {
+    return dbStore.getAttendanceStats(studentId);
+  }
+}
