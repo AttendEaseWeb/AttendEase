@@ -53,15 +53,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 p-6 text-white shadow-lg">
+      <div className="relative overflow-hidden rounded-[32px] bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container p-6 sm:p-8 text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container shadow-md">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-xs font-medium text-indigo-200 mb-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-m3-sys-light-primary/10 dark:bg-m3-sys-dark-primary/20 border border-m3-sys-light-primary/20 dark:border-m3-sys-dark-primary/30 text-label-small font-medium text-m3-sys-light-primary dark:text-m3-sys-dark-primary mb-3">
+              <span className="w-2 h-2 rounded-full bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary animate-ping" />
               <span>{user?.role} Portal</span>
             </div>
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back, {user?.name}!</h2>
-            <p className="text-xs text-indigo-200/80 mt-1 max-w-xl">
+            <h2 className="text-headline-large font-normal tracking-tight">Welcome back, {user?.name}!</h2>
+            <p className="text-body-medium text-m3-sys-light-on-primary-container/80 dark:text-m3-sys-dark-on-primary-container/80 mt-2 max-w-xl">
               Track course attendance, launch live dynamic QR check-ins, monitor student presence, and verify session logs seamlessly.
             </p>
           </div>
@@ -70,8 +70,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <Button
               id="dashboard-quick-checkin-btn"
               onClick={onOpenQRScanner}
-              icon={<QrCode className="w-4 h-4" />}
-              className="bg-white text-indigo-900 hover:bg-slate-100 font-semibold"
+              icon={<QrCode className="w-5 h-5" />}
+              className="bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary hover:bg-m3-sys-light-primary/90 font-medium rounded-full px-6 py-2.5"
             >
               {user?.role === 'STUDENT' ? 'Scan QR Code' : 'Display QR Display'}
             </Button>
@@ -94,7 +94,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => onNavigateToTab('events')}
-                icon={<ArrowRight className="w-3.5 h-3.5" />}
+                icon={<ArrowRight className="w-4 h-4" />}
+                className="text-m3-sys-light-primary dark:text-m3-sys-dark-primary"
               >
                 View All
               </Button>
@@ -102,39 +103,39 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           >
             <div className="space-y-3">
               {activeSessions.length === 0 ? (
-                <p className="p-6 text-center text-slate-400 text-xs">No active or scheduled sessions right now.</p>
+                <p className="p-6 text-center text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant text-body-medium">No active or scheduled sessions right now.</p>
               ) : (
                 activeSessions.map((session) => (
                   <div
                     key={session.id}
-                    className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-indigo-500/50 transition-all"
+                    className="p-4 rounded-3xl border border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-m3-sys-light-primary/50 dark:hover:border-m3-sys-dark-primary/50 transition-all"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       <div
-                        className={`p-3 rounded-xl text-xs font-bold ${
+                        className={`p-3 rounded-2xl text-title-small font-bold ${
                           session.status === 'ACTIVE'
-                            ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400'
-                            : 'bg-indigo-100 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-400'
+                            ? 'bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container'
+                            : 'bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container'
                         }`}
                       >
                         {session.courseCode}
                       </div>
                       <div>
-                        <h4 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                        <h4 className="text-title-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
                           {session.title}
                         </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-0.5">
                           {session.room} • {session.startTime} - {session.endTime}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                        <span className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
                           {session.attendedCount} / {session.totalExpectedCount}
                         </span>
-                        <p className="text-[10px] text-slate-400">Attended</p>
+                        <p className="text-label-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">Attended</p>
                       </div>
 
                       <Button
@@ -162,7 +163,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => onNavigateToTab('attendance')}
-                icon={<ArrowRight className="w-3.5 h-3.5" />}
+                icon={<ArrowRight className="w-4 h-4" />}
+                className="text-m3-sys-light-primary dark:text-m3-sys-dark-primary"
               >
                 Full Logs
               </Button>

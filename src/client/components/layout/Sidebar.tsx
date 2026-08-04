@@ -54,7 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Sidebar Container */}
       <aside
         className={`
-          bg-slate-900 text-slate-300 border-r border-slate-800 flex flex-col shrink-0 transition-all duration-300 ease-in-out z-50
+          bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface border-r border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant flex flex-col shrink-0 transition-all duration-300 ease-in-out z-50
           /* Mobile Drawer Positioning */
           fixed inset-y-0 left-0 lg:static h-full min-h-screen
           ${isMobileOpen ? 'translate-x-0 w-72 shadow-2xl' : '-translate-x-full lg:translate-x-0'}
@@ -63,17 +63,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
         `}
       >
         {/* Brand Header */}
-        <div className="p-4 sm:p-5 flex items-center justify-between border-b border-slate-800">
+        <div className="p-4 sm:p-5 flex items-center justify-between border-b border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="p-2 bg-indigo-600 rounded-xl text-white shadow-md shadow-indigo-600/30 shrink-0">
+            <div className="p-2 bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary rounded-xl text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shrink-0">
               <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             {(!isCollapsed || isMobileOpen) && (
               <div className="truncate">
-                <h1 className="font-bold text-base sm:text-lg text-white tracking-wide leading-none truncate">
+                <h1 className="font-bold text-title-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface tracking-wide leading-none truncate">
                   AttendEase
                 </h1>
-                <p className="text-[10px] text-indigo-400 font-medium mt-0.5 truncate">
+                <p className="text-label-small text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-medium mt-0.5 truncate">
                   Attendance Management
                 </p>
               </div>
@@ -83,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {/* Mobile Close Button */}
           <button
             onClick={onCloseMobile}
-            className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none"
+            className="lg:hidden p-2 rounded-full text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50 focus:outline-none"
             aria-label="Close mobile menu"
           >
             <X className="w-5 h-5" />
@@ -93,7 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!isMobileOpen && (
             <button
               onClick={onToggleCollapse}
-              className="hidden lg:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="hidden lg:flex p-2 rounded-full text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50 transition-colors"
               title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
               {isCollapsed ? (
@@ -108,7 +108,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Navigation List */}
         <nav className="p-3 sm:p-4 flex-1 space-y-1.5 overflow-y-auto">
           {(!isCollapsed || isMobileOpen) && (
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-3 pb-2">
+            <div className="text-label-small uppercase tracking-wider text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant px-3 pb-2">
               Main Menu
             </div>
           )}
@@ -122,16 +122,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 id={`nav-item-${item.id}`}
                 onClick={() => handleNavClick(item.id)}
                 title={isCollapsed && !isMobileOpen ? item.label : undefined}
-                className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl font-medium text-xs transition-all cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-3.5 py-3.5 rounded-full font-medium text-label-large transition-all cursor-pointer ${
                   isCollapsed && !isMobileOpen ? 'justify-center px-2' : ''
                 } ${
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 font-semibold'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                    ? 'bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container font-semibold'
+                    : 'text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50'
                 }`}
               >
                 <Icon
-                  className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`}
+                  className={`w-5 h-5 shrink-0 ${isActive ? 'text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container' : 'text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant'}`}
                 />
                 {(!isCollapsed || isMobileOpen) && (
                   <span className="truncate">{item.label}</span>
@@ -142,15 +142,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
 
         {/* Footer System Info */}
-        <div className="p-3 sm:p-4 border-t border-slate-800/80 bg-slate-950/40">
+        <div className="p-3 sm:p-4 border-t border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant bg-m3-sys-light-surface-variant/20 dark:bg-m3-sys-dark-surface-variant/20">
           <div
-            className={`flex items-center text-[11px] text-slate-500 ${
+            className={`flex items-center text-label-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant ${
               isCollapsed && !isMobileOpen ? 'justify-center' : 'justify-between'
             }`}
           >
             {(!isCollapsed || isMobileOpen) && <span>v1.0.0</span>}
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="flex items-center gap-1.5 text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-medium">
+              <span className="w-2 h-2 rounded-full bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary animate-pulse shrink-0" />
               {(!isCollapsed || isMobileOpen) && 'Live API'}
             </span>
           </div>

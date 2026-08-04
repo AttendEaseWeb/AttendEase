@@ -86,23 +86,23 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onOpenQRScanner }) => {
       {/* Top Action Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+          <h2 className="text-headline-small text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
             Course & Session Directory
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1">
             Manage academic courses, schedule live sessions, and trigger QR attendance checkpoints.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-2.5 w-4 h-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant" />
             <input
               type="text"
               placeholder="Search courses..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full pl-9 pr-3 py-2 text-body-medium bg-m3-sys-light-surface-variant/50 dark:bg-m3-sys-dark-surface-variant/30 border border-transparent dark:border-transparent rounded-full text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary focus:bg-m3-sys-light-surface dark:focus:bg-m3-sys-dark-surface"
             />
           </div>
 
@@ -133,19 +133,19 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onOpenQRScanner }) => {
 
       {/* All Scheduled Sessions List */}
       <Card title="Scheduled Session History & Live Controls" subtitle="All active and past class check-in sessions">
-        <div className="divide-y divide-slate-100 dark:divide-slate-800">
+        <div className="divide-y divide-m3-sys-light-outline-variant dark:divide-m3-sys-dark-outline-variant">
           {sessions.map((s) => (
             <div
               key={s.id}
-              className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+              className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
             >
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-700 dark:text-slate-300 font-bold text-xs shrink-0">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-m3-sys-light-surface-variant dark:bg-m3-sys-dark-surface-variant rounded-2xl text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant font-bold text-title-small shrink-0">
                   {s.courseCode}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">{s.title}</h4>
+                    <h4 className="text-title-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">{s.title}</h4>
                     <Badge
                       variant={
                         s.status === 'ACTIVE'
@@ -158,21 +158,21 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onOpenQRScanner }) => {
                       {s.status}
                     </Badge>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-0.5">
                     {s.room} • {s.date} ({s.startTime} - {s.endTime})
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 justify-end">
-                <span className="text-xs font-medium text-slate-600 dark:text-slate-300">
+              <div className="flex items-center gap-4 justify-end">
+                <span className="text-label-large text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
                   {s.attendedCount} / {s.totalExpectedCount} Attended
                 </span>
                 <Button
                   size="sm"
                   variant={s.status === 'ACTIVE' ? 'primary' : 'outline'}
                   onClick={onOpenQRScanner}
-                  icon={<QrCode className="w-3.5 h-3.5" />}
+                  icon={<QrCode className="w-4 h-4" />}
                 >
                   {s.status === 'ACTIVE' ? 'Show QR Code' : 'View Code'}
                 </Button>

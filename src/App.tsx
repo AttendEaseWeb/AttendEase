@@ -22,7 +22,7 @@ function MainLayout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+    <div className="flex min-h-screen font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary relative overflow-x-hidden">
       {/* Sidebar Navigation */}
       <Sidebar
         activeTab={activeTab}

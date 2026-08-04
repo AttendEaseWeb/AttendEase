@@ -33,29 +33,29 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <div
       id={id}
-      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow transition-all"
+      className="bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant rounded-3xl p-5 shadow-sm hover:shadow transition-all"
     >
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <span className="text-label-large font-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
           {title}
         </span>
-        <div className={`p-2.5 rounded-xl ${colorBg[color]}`}>{icon}</div>
+        <div className={`p-3 rounded-2xl ${colorBg[color]}`}>{icon}</div>
       </div>
-      <div className="mt-3 flex items-baseline justify-between">
-        <span className="text-2xl font-bold text-slate-900 dark:text-slate-100">{value}</span>
+      <div className="mt-4 flex items-baseline justify-between">
+        <span className="text-headline-large font-normal text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">{value}</span>
         {trend && (
           <span
-            className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+            className={`text-label-medium font-medium px-2 py-0.5 rounded-full ${
               trend.isPositive
-                ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400'
-                : 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-400'
+                ? 'bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container'
+                : 'bg-m3-sys-light-error-container dark:bg-m3-sys-dark-error-container text-m3-sys-light-on-error-container dark:text-m3-sys-dark-on-error-container'
             }`}
           >
             {trend.value}
           </span>
         )}
       </div>
-      {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{subtitle}</p>}
+      {subtitle && <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1.5">{subtitle}</p>}
     </div>
   );
 };
