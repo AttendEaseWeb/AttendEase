@@ -1,11 +1,16 @@
+import { GradeLevel, GradeCategory } from './class';
+
 export type AttendanceStatus = 'PRESENT' | 'LATE' | 'ABSENT' | 'EXCUSED';
 
 export interface AttendanceRecord {
   id: string;
   sessionId: string;
-  courseId: string;
-  courseTitle: string;
-  courseCode: string;
+  classId: string;
+  classCode: string;
+  sectionName: string;
+  subject: string;
+  gradeLevel: GradeLevel;
+  category: GradeCategory;
   studentId: string;
   studentName: string;
   studentEmail: string;
@@ -19,6 +24,10 @@ export interface AttendanceRecord {
     distanceMeters?: number;
   };
   notes?: string;
+  // Backward compatibility aliases if needed
+  courseId?: string;
+  courseTitle?: string;
+  courseCode?: string;
 }
 
 export interface CheckInRequest {
@@ -30,11 +39,14 @@ export interface CheckInRequest {
 }
 
 export interface AttendanceStats {
+  totalClasses: number;
   totalSessions: number;
   totalPresent: number;
   totalLate: number;
   totalAbsent: number;
   totalExcused: number;
   attendanceRate: number;
+  juniorHighRate?: number;
+  seniorHighRate?: number;
   recentActivity: AttendanceRecord[];
 }

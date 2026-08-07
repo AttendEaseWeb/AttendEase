@@ -53,9 +53,9 @@ export const Modal: React.FC<ModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            className={`relative w-full ${maxWidthClasses[maxWidth]} bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface rounded-3xl shadow-xl p-6 overflow-hidden z-10`}
+            className={`relative w-full ${maxWidthClasses[maxWidth]} bg-expressive-surface rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.4)] border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 p-8 overflow-hidden z-10`}
           >
-            <div className="flex items-center justify-between pb-4">
+            <div className="flex items-center justify-between pb-5">
               <h3 className="text-title-large font-normal text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">{title}</h3>
               <button
                 onClick={onClose}

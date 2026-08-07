@@ -18,45 +18,45 @@ export const EventCard: React.FC<EventCardProps> = ({
   userRole,
 }) => {
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+    <div className="bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-[28px] p-6 shadow-expressive-sm hover:shadow-expressive transition-all flex flex-col justify-between group">
       <div>
         {/* Header Badges */}
-        <div className="flex items-center justify-between mb-3">
-          <Badge variant="indigo" size="md">
+        <div className="flex items-center justify-between mb-4">
+          <div className="px-3 py-1.5 bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container rounded-full text-label-small font-bold">
             {course.code}
-          </Badge>
-          <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+          </div>
+          <span className="text-label-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant bg-m3-sys-light-surface-variant/50 dark:bg-m3-sys-dark-surface-variant/50 px-2 py-1 rounded-md">
             {course.department}
           </span>
         </div>
 
         {/* Title & Description */}
-        <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 line-clamp-1">
+        <h3 className="text-title-large text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface line-clamp-1 group-hover:text-m3-sys-light-primary dark:group-hover:text-m3-sys-dark-primary transition-colors">
           {course.title}
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+        <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-2 line-clamp-2 leading-relaxed">
           {course.description}
         </p>
 
         {/* Meta Info */}
-        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 space-y-2 text-xs text-slate-600 dark:text-slate-300">
-          <div className="flex items-center gap-2">
-            <Clock className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+        <div className="mt-5 pt-4 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20 space-y-2.5 text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
+          <div className="flex items-center gap-2.5">
+            <Clock className="w-4 h-4 text-m3-sys-light-primary dark:text-m3-sys-dark-primary shrink-0" />
             <span>{course.schedule}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <MapPin className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+          <div className="flex items-center gap-2.5">
+            <MapPin className="w-4 h-4 text-m3-sys-light-primary dark:text-m3-sys-dark-primary shrink-0" />
             <span>{course.room}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Users className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+          <div className="flex items-center gap-2.5">
+            <Users className="w-4 h-4 text-m3-sys-light-primary dark:text-m3-sys-dark-primary shrink-0" />
             <span>{course.totalStudents} Enrolled Students</span>
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="mt-5 pt-3 flex items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-800">
+      <div className="mt-6 pt-4 flex items-center justify-between gap-3 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20">
         <Button
           variant="outline"
           size="sm"

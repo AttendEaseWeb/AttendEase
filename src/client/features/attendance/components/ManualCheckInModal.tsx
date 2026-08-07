@@ -88,41 +88,41 @@ export const ManualCheckInModal: React.FC<ManualCheckInModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} title="Manual Attendance Override">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Target Session</label>
+          <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface ml-1">Target Class Session</label>
           <select
             value={selectedSessionId}
             onChange={(e) => setSelectedSessionId(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 p-2.5 text-sm text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500"
+            className="w-full rounded-2xl border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-4 text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-sm"
           >
             {sessions.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.courseCode}: {s.title} ({s.date})
+                {s.classCode || s.courseCode} - {s.sectionName || s.title} ({s.date})
               </option>
             ))}
           </select>
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Select Student</label>
+          <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface ml-1">Select Student</label>
           <select
             value={selectedStudentId}
             onChange={(e) => setSelectedStudentId(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 p-2.5 text-sm text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500"
+            className="w-full rounded-2xl border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-4 text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-sm"
           >
             {users.map((u) => (
               <option key={u.id} value={u.id}>
-                {u.name} ({u.email})
+                {u.name} ({u.department || u.email})
               </option>
             ))}
           </select>
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Status</label>
+          <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface ml-1">Status</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as AttendanceStatus)}
-            className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 p-2.5 text-sm text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500"
+            className="w-full rounded-2xl border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-4 text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-sm"
           >
             <option value="PRESENT">PRESENT</option>
             <option value="LATE">LATE</option>
@@ -133,16 +133,16 @@ export const ManualCheckInModal: React.FC<ManualCheckInModalProps> = ({
 
         <Input
           label="Notes / Reason"
-          placeholder="e.g. Verified via medical excuse note"
+          placeholder="e.g. Verified via official excuse slip"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
         />
 
-        <div className="pt-3 flex justify-end gap-2 border-t border-slate-100 dark:border-slate-800">
+        <div className="pt-5 flex justify-end gap-3 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20">
           <Button variant="outline" type="button" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit" isLoading={isSubmitting}>
+          <Button type="submit" isLoading={isSubmitting} variant="primary">
             Save Record
           </Button>
         </div>

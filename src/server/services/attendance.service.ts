@@ -18,7 +18,7 @@ export class AttendanceService {
   static checkIn(req: CheckInRequest): AttendanceRecord {
     const session = dbStore.getSessionById(req.sessionId);
     if (!session) {
-      throw new Error('Session not found');
+      throw new Error('Active session not found');
     }
 
     const student = dbStore.getUserById(req.studentId);
@@ -33,21 +33,23 @@ export class AttendanceService {
         throw new Error('Invalid QR Code format');
       }
       if (decoded.sessionId !== req.sessionId) {
-        throw new Error('QR code is for a different session');
+        throw new Error('QR code is for a different active session');
       }
       if (decoded.expiresAt < Date.now()) {
-        throw new Error('QR code has expired. Please refresh the display code.');
+        throw new Error('QR code has expired. Please scan the refreshed code.');
       }
     }
 
-    // Determine status based on time
     let status: AttendanceStatus = 'PRESENT';
     const record: AttendanceRecord = {
       id: `att-${Date.now()}`,
       sessionId: session.id,
-      courseId: session.courseId,
-      courseCode: session.courseCode,
-      courseTitle: session.courseTitle,
+      classId: session.classId,
+      classCode: session.classCode,
+      sectionName: session.sectionName,
+      subject: session.subject,
+      gradeLevel: session.gradeLevel,
+      category: session.category,
       studentId: student.id,
       studentName: student.name,
       studentEmail: student.email,
@@ -58,9 +60,13 @@ export class AttendanceService {
       verifiedLocation: req.latitude && req.longitude ? {
         latitude: req.latitude,
         longitude: req.longitude,
-        distanceMeters: 15,
+        distanceMeters: 12,
       } : undefined,
-      notes: 'Verified live check-in',
+      notes: 'Verified live class check-in',
+      // Backward compatibility aliases
+      courseId: session.classId,
+      courseCode: session.classCode,
+      courseTitle: session.sectionName,
     };
 
     return dbStore.addAttendanceRecord(record);
@@ -81,9 +87,12 @@ export class AttendanceService {
     const record: AttendanceRecord = {
       id: `att-${Date.now()}`,
       sessionId: session.id,
-      courseId: session.courseId,
-      courseCode: session.courseCode,
-      courseTitle: session.courseTitle,
+      classId: session.classId,
+      classCode: session.classCode,
+      sectionName: session.sectionName,
+      subject: session.subject,
+      gradeLevel: session.gradeLevel,
+      category: session.category,
       studentId: student.id,
       studentName: student.name,
       studentEmail: student.email,
@@ -92,6 +101,10 @@ export class AttendanceService {
       status: data.status,
       method: 'MANUAL_ENTRY',
       notes: data.notes || 'Manual override by Instructor/Admin',
+      // Backward compatibility aliases
+      courseId: session.classId,
+      courseCode: session.classCode,
+      courseTitle: session.sectionName,
     };
 
     return dbStore.addAttendanceRecord(record);

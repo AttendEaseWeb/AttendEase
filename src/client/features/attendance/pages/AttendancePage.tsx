@@ -73,10 +73,10 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+          <h2 className="text-headline-small text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
             Attendance Log Records
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1">
             Real-time verified student presence, location logs, and session activity audits.
           </p>
         </div>
@@ -120,6 +120,32 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
               Scan Check-in
             </Button>
           )}
+        </div>
+      </div>
+
+      {/* KPI Metrics Summary Strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="p-4 rounded-2xl bg-expressive-surface border border-m3-sys-light-outline-variant/30 shadow-expressive-sm">
+          <div className="text-label-small font-semibold text-m3-sys-light-on-surface-variant">Total Logs</div>
+          <div className="text-title-large font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mt-1">{records.length}</div>
+        </div>
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 shadow-expressive-sm">
+          <div className="text-label-small font-semibold text-emerald-700 dark:text-emerald-400">Present On-Time</div>
+          <div className="text-title-large font-bold text-emerald-800 dark:text-emerald-300 mt-1">
+            {records.filter((r) => r.status === 'PRESENT').length}
+          </div>
+        </div>
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 shadow-expressive-sm">
+          <div className="text-label-small font-semibold text-amber-700 dark:text-amber-400">Late Arrivals</div>
+          <div className="text-title-large font-bold text-amber-800 dark:text-amber-300 mt-1">
+            {records.filter((r) => r.status === 'LATE').length}
+          </div>
+        </div>
+        <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 shadow-expressive-sm">
+          <div className="text-label-small font-semibold text-purple-700 dark:text-purple-400">Excused / Other</div>
+          <div className="text-title-large font-bold text-purple-800 dark:text-purple-300 mt-1">
+            {records.filter((r) => r.status === 'EXCUSED' || r.status === 'ABSENT').length}
+          </div>
         </div>
       </div>
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AttendanceRecord, AttendanceStatus } from '../../../../shared/types/attendance';
 import { Badge } from '../../../components/common/Badge';
 import { formatDateTime } from '../../../../shared/utils/date';
-import { QrCode, UserCheck, Search, Filter, Shield } from 'lucide-react';
+import { QrCode, UserCheck, Search, Filter } from 'lucide-react';
 
 interface AttendanceTableProps {
   records: AttendanceRecord[];
@@ -15,39 +15,57 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [gradeCategoryFilter, setGradeCategoryFilter] = useState<string>('ALL');
 
   const filtered = records.filter((record) => {
+    const code = record.classCode || record.courseCode || '';
+    const section = record.sectionName || record.courseTitle || '';
     const matchesSearch =
       record.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       record.studentEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      record.courseCode.toLowerCase().includes(searchTerm.toLowerCase());
+      code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      section.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = statusFilter === 'ALL' || record.status === statusFilter;
+    const isJHS = record.category === 'JUNIOR_HIGH' || (record.gradeLevel && record.gradeLevel <= 10);
+    const matchesCategory =
+      gradeCategoryFilter === 'ALL' ||
+      (gradeCategoryFilter === 'JUNIOR_HIGH' && isJHS) ||
+      (gradeCategoryFilter === 'SENIOR_HIGH' && !isJHS);
 
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
   return (
     <div className="space-y-4">
       {/* Table Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant" />
           <input
             type="text"
-            placeholder="Search student name or course..."
+            placeholder="Search student name, class section..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-3 py-2 text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm transition-shadow"
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <Filter className="w-3.5 h-3.5 text-slate-400" />
+        <div className="flex items-center gap-2 flex-wrap">
+          <select
+            value={gradeCategoryFilter}
+            onChange={(e) => setGradeCategoryFilter(e.target.value)}
+            className="text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full px-4 py-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm"
+          >
+            <option value="ALL">All Grade Categories</option>
+            <option value="JUNIOR_HIGH">Junior High (7-10)</option>
+            <option value="SENIOR_HIGH">Senior High (11-12)</option>
+          </select>
+
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full px-4 py-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm"
           >
             <option value="ALL">All Statuses</option>
             <option value="PRESENT">Present</option>
@@ -59,76 +77,90 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
       </div>
 
       {/* Table Component */}
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <table className="w-full text-left text-xs border-collapse">
+      <div className="overflow-x-auto rounded-3xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface shadow-expressive-sm">
+        <table className="w-full text-left text-body-medium border-collapse">
           <thead>
-            <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-semibold">
-              <th className="p-3.5">Student Details</th>
-              <th className="p-3.5">Course / Session</th>
-              <th className="p-3.5">Check-in Time</th>
-              <th className="p-3.5">Method</th>
-              <th className="p-3.5">Status</th>
+            <tr className="bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface-variant/40 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant border-b border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 font-semibold">
+              <th className="p-4">Student Details</th>
+              <th className="p-4">Class Section / Level</th>
+              <th className="p-4">Subject</th>
+              <th className="p-4">Check-in Time</th>
+              <th className="p-4">Method</th>
+              <th className="p-4">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+          <tbody className="divide-y divide-m3-sys-light-outline-variant/20 dark:divide-m3-sys-dark-outline-variant/20 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-8 text-center text-slate-400 text-xs">
+                <td colSpan={6} className="p-8 text-center text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant text-body-medium">
                   No attendance records found matching filters.
                 </td>
               </tr>
             ) : (
-              filtered.map((record) => (
-                <tr key={record.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
-                  <td className="p-3.5">
-                    <div>
-                      <span className="font-bold text-slate-900 dark:text-slate-100 block">
-                        {record.studentName}
+              filtered.map((record) => {
+                const isJHS = record.category === 'JUNIOR_HIGH' || (record.gradeLevel && record.gradeLevel <= 10);
+                const section = record.sectionName || record.courseTitle || 'Class Section';
+                const code = record.classCode || record.courseCode || 'CLS';
+
+                return (
+                  <tr key={record.id} className="hover:bg-m3-sys-light-surface-variant/20 dark:hover:bg-m3-sys-dark-surface-variant/20 transition-colors">
+                    <td className="p-4">
+                      <div>
+                        <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface block text-label-large">
+                          {record.studentName}
+                        </span>
+                        <span className="text-label-small text-m3-sys-light-on-surface-variant font-mono">{record.studentEmail}</span>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-label-large">
+                            {section}
+                          </span>
+                        </div>
+                        <Badge variant={isJHS ? 'success' : 'primary'}>
+                          {record.gradeLevel ? `Grade ${record.gradeLevel}` : code}
+                        </Badge>
+                      </div>
+                    </td>
+                    <td className="p-4 text-m3-sys-light-on-surface-variant font-medium">
+                      {record.subject || code}
+                    </td>
+                    <td className="p-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant whitespace-nowrap">
+                      {formatDateTime(record.checkInTime)}
+                    </td>
+                    <td className="p-4">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-m3-sys-light-surface-variant/50 dark:bg-m3-sys-dark-surface-variant/50 text-label-small font-medium text-m3-sys-light-on-surface-variant border border-m3-sys-light-outline-variant/30">
+                        {record.method === 'QR_SCAN' ? (
+                          <>
+                            <QrCode className="w-3.5 h-3.5 text-m3-sys-light-primary dark:text-m3-sys-dark-primary" /> Dynamic QR
+                          </>
+                        ) : (
+                          <>
+                            <UserCheck className="w-3.5 h-3.5 text-m3-sys-light-tertiary dark:text-m3-sys-dark-tertiary" /> Manual Override
+                          </>
+                        )}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-mono">{record.studentEmail}</span>
-                    </div>
-                  </td>
-                  <td className="p-3.5">
-                    <div>
-                      <span className="font-semibold text-slate-900 dark:text-slate-100 block">
-                        {record.courseCode}
-                      </span>
-                      <span className="text-[10px] text-slate-400 line-clamp-1">{record.courseTitle}</span>
-                    </div>
-                  </td>
-                  <td className="p-3.5 text-slate-500 whitespace-nowrap">
-                    {formatDateTime(record.checkInTime)}
-                  </td>
-                  <td className="p-3.5">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-medium text-slate-600 dark:text-slate-400">
-                      {record.method === 'QR_SCAN' ? (
-                        <>
-                          <QrCode className="w-3 h-3 text-indigo-500" /> Dynamic QR
-                        </>
-                      ) : (
-                        <>
-                          <UserCheck className="w-3 h-3 text-emerald-500" /> Manual Override
-                        </>
-                      )}
-                    </span>
-                  </td>
-                  <td className="p-3.5">
-                    <Badge
-                      variant={
-                        record.status === 'PRESENT'
-                          ? 'emerald'
-                          : record.status === 'LATE'
-                          ? 'amber'
-                          : record.status === 'EXCUSED'
-                          ? 'purple'
-                          : 'rose'
-                      }
-                    >
-                      {record.status}
-                    </Badge>
-                  </td>
-                </tr>
-              ))
+                    </td>
+                    <td className="p-4">
+                      <Badge
+                        variant={
+                          record.status === 'PRESENT'
+                            ? 'emerald'
+                            : record.status === 'LATE'
+                            ? 'amber'
+                            : record.status === 'EXCUSED'
+                            ? 'purple'
+                            : 'rose'
+                        }
+                      >
+                        {record.status}
+                      </Badge>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

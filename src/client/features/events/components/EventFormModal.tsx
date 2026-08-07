@@ -93,12 +93,12 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
         />
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">Description</label>
+          <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface ml-1">Description</label>
           <textarea
             rows={2}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 p-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full rounded-2xl border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-4 text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary transition-shadow shadow-sm"
             placeholder="Brief overview of course syllabus..."
           />
         </div>
@@ -125,11 +125,11 @@ export const EventFormModal: React.FC<EventFormModalProps> = ({
           onChange={(e) => setTotalStudents(e.target.value)}
         />
 
-        <div className="pt-3 flex justify-end gap-2 border-t border-slate-100 dark:border-slate-800">
+        <div className="pt-5 flex justify-end gap-3 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20">
           <Button variant="outline" type="button" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit" isLoading={isSubmitting}>
+          <Button type="submit" isLoading={isSubmitting} variant="primary">
             Create Course
           </Button>
         </div>

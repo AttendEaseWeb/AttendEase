@@ -72,32 +72,33 @@ export const AuthPage: React.FC = () => {
   return (
     <div className="min-h-screen w-full bg-m3-sys-light-background dark:bg-m3-sys-dark-background text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background flex items-center justify-center p-4 sm:p-6 md:p-10 relative overflow-hidden font-sans">
       {/* Background Decorative Blur Elements */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container rounded-full blur-3xl pointer-events-none opacity-50" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container rounded-full blur-3xl pointer-events-none opacity-50" />
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container rounded-full blur-[120px] pointer-events-none opacity-30 dark:opacity-20" />
 
       <div className="w-full max-w-md mx-auto space-y-6 relative z-10">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container text-label-small">
+          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container text-label-small shadow-sm">
             <CheckCircle2 className="w-4 h-4" />
             <span>AttendEase Portal v1.0</span>
           </div>
-          <h1 className="text-headline-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+          <h1 className="text-display-small font-medium tracking-tight text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mt-2">
             {mode === 'LOGIN' ? 'Sign In to Your Account' : 'Create New Account'}
           </h1>
-          <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant max-w-xs mx-auto">
+          <p className="text-body-large text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant max-w-xs mx-auto leading-relaxed">
             Dynamic QR verification, session attendance management, and real-time student logs.
           </p>
         </div>
 
         {/* Auth Mode Tabs */}
-        <div className="flex bg-m3-sys-light-surface-variant dark:bg-m3-sys-dark-surface-variant border border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant p-1 rounded-full">
+        <div className="flex bg-expressive-surface p-1.5 rounded-full shadow-sm">
           <button
             type="button"
             onClick={() => setMode('LOGIN')}
-            className={`flex-1 py-2 rounded-full text-label-large transition-all cursor-pointer ${
+            className={`flex-1 py-2.5 rounded-full text-label-large transition-all cursor-pointer ${
               mode === 'LOGIN'
-                ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-sm'
+                ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm scale-[1.02]'
                 : 'text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface'
             }`}
           >
@@ -106,9 +107,9 @@ export const AuthPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setMode('REGISTER')}
-            className={`flex-1 py-2 rounded-full text-label-large transition-all cursor-pointer ${
+            className={`flex-1 py-2.5 rounded-full text-label-large transition-all cursor-pointer ${
               mode === 'REGISTER'
-                ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-sm'
+                ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm scale-[1.02]'
                 : 'text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface'
             }`}
           >
@@ -117,41 +118,41 @@ export const AuthPage: React.FC = () => {
         </div>
 
         {/* Quick Test Accounts Banner */}
-        <div className="p-4 rounded-3xl bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface-variant/40 border border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant space-y-3">
+        <div className="p-4 rounded-[28px] bg-expressive-surface border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 space-y-3 shadow-sm">
           <div className="flex items-center gap-1.5 text-label-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant uppercase tracking-wider">
             <Key className="w-3.5 h-3.5" />
             <span>1-Click Temporary Test Accounts</span>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-3">
             <button
               type="button"
               onClick={() => handleQuickLogin('test.student@attendease.edu', 'STUDENT')}
-              className="px-2 py-2 rounded-2xl bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container hover:opacity-90 border border-transparent text-label-medium text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-1"
+              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container hover:opacity-90 hover:scale-105 border border-transparent text-label-medium text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
-              <GraduationCap className="w-4 h-4" />
+              <GraduationCap className="w-5 h-5" />
               <span className="truncate">Student</span>
             </button>
             <button
               type="button"
               onClick={() => handleQuickLogin('test.instructor@attendease.edu', 'INSTRUCTOR')}
-              className="px-2 py-2 rounded-2xl bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container hover:opacity-90 border border-transparent text-label-medium text-m3-sys-light-on-tertiary-container dark:text-m3-sys-dark-on-tertiary-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-1"
+              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container hover:opacity-90 hover:scale-105 border border-transparent text-label-medium text-m3-sys-light-on-tertiary-container dark:text-m3-sys-dark-on-tertiary-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
-              <UserCheck className="w-4 h-4" />
+              <UserCheck className="w-5 h-5" />
               <span className="truncate">Instructor</span>
             </button>
             <button
               type="button"
               onClick={() => handleQuickLogin('test.admin@attendease.edu', 'ADMIN')}
-              className="px-2 py-2 rounded-2xl bg-m3-sys-light-error-container dark:bg-m3-sys-dark-error-container hover:opacity-90 border border-transparent text-label-medium text-m3-sys-light-on-error-container dark:text-m3-sys-dark-on-error-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-1"
+              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-error-container dark:bg-m3-sys-dark-error-container hover:opacity-90 hover:scale-105 border border-transparent text-label-medium text-m3-sys-light-on-error-container dark:text-m3-sys-dark-on-error-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
-              <Shield className="w-4 h-4" />
+              <Shield className="w-5 h-5" />
               <span className="truncate">Admin</span>
             </button>
           </div>
         </div>
 
         {/* Main Auth Form */}
-        <form onSubmit={handleSubmit} className="p-6 sm:p-8 rounded-[32px] bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant shadow-xl space-y-5">
+        <form onSubmit={handleSubmit} className="p-6 sm:p-8 rounded-[36px] bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-expressive space-y-6">
           {/* Role Picker */}
           <div className="space-y-2">
             <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">Account Type</label>

@@ -4,7 +4,7 @@ import { Button } from '../../../components/common/Button';
 import { useAuth } from '../../../context/AuthContext';
 import { useNotification } from '../../../context/NotificationContext';
 import { generateSimpleSVGPath, generateDynamicQRToken } from '../../../../shared/utils/qr';
-import { QrCode, CheckCircle2, ShieldCheck, MapPin, RefreshCw, Smartphone, Sparkles } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, RefreshCw, Smartphone } from 'lucide-react';
 
 interface QRCheckInModalProps {
   isOpen: boolean;
@@ -57,7 +57,7 @@ export const QRCheckInModal: React.FC<QRCheckInModalProps> = ({
         const active = sessions.find((s: any) => s.status === 'ACTIVE') || sessions[0];
         setActiveSession(active);
         if (active) {
-          const generated = generateDynamicQRToken(active.id, active.courseCode);
+          const generated = generateDynamicQRToken(active.id, active.classCode || active.courseCode || 'CLS');
           setQrToken(generated.token);
         }
       }
@@ -68,7 +68,7 @@ export const QRCheckInModal: React.FC<QRCheckInModalProps> = ({
 
   const refreshQR = () => {
     if (!activeSession) return;
-    const generated = generateDynamicQRToken(activeSession.id, activeSession.courseCode);
+    const generated = generateDynamicQRToken(activeSession.id, activeSession.classCode || activeSession.courseCode || 'CLS');
     setQrToken(generated.token);
     setTimer(30);
   };
@@ -113,63 +113,65 @@ export const QRCheckInModal: React.FC<QRCheckInModalProps> = ({
       title={user?.role === 'STUDENT' ? 'Live QR Check-in' : 'Session Attendance QR Code'}
       maxWidth="md"
     >
-      <div className="flex flex-col items-center text-center p-2 space-y-5">
-        {/* Course Header */}
+      <div className="flex flex-col items-center text-center p-2 space-y-6">
+        {/* Class Section Header */}
         {activeSession && (
-          <div className="w-full bg-slate-100 dark:bg-slate-800/60 p-3 rounded-xl flex items-center justify-between text-xs">
-            <span className="font-bold text-indigo-600 dark:text-indigo-400">
-              {activeSession.courseCode}: {activeSession.title}
+          <div className="w-full bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between text-label-large gap-2 border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30">
+            <span className="font-bold text-m3-sys-light-primary dark:text-m3-sys-dark-primary">
+              {activeSession.classCode || activeSession.courseCode}: {activeSession.sectionName || activeSession.title} ({activeSession.subject})
             </span>
-            <span className="text-slate-500 font-medium">{activeSession.room}</span>
+            <span className="text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant font-medium bg-m3-sys-light-surface-variant/50 dark:bg-m3-sys-dark-surface-variant/50 px-2.5 py-1 rounded-md">
+              {activeSession.room}
+            </span>
           </div>
         )}
 
         {/* Check-in Success State for Students */}
         {checkInCompleted ? (
-          <div className="py-8 flex flex-col items-center gap-3">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-500 flex items-center justify-center animate-bounce">
+          <div className="py-8 flex flex-col items-center gap-4">
+            <div className="w-20 h-20 rounded-full bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container flex items-center justify-center animate-bounce shadow-expressive">
               <CheckCircle2 className="w-10 h-10" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+            <h3 className="text-display-small font-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
               Attendance Verified!
             </h3>
-            <p className="text-xs text-slate-500 max-w-xs">
-              You are officially marked <strong className="text-emerald-600">PRESENT</strong> for {activeSession?.courseCode}.
+            <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant max-w-xs">
+              You are officially marked <strong className="text-m3-sys-light-primary dark:text-m3-sys-dark-primary">PRESENT</strong> for {activeSession?.sectionName || activeSession?.classCode}.
             </p>
-            <Button className="mt-2" onClick={onClose}>
+            <Button className="mt-4 shadow-expressive-sm" onClick={onClose}>
               Done
             </Button>
           </div>
         ) : (
           <>
             {/* Visual Dynamic QR Canvas */}
-            <div className="relative p-6 bg-white dark:bg-slate-950 border-2 border-indigo-500/30 rounded-3xl shadow-xl flex flex-col items-center justify-center">
+            <div className="relative p-8 bg-white dark:bg-slate-950 border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 rounded-[32px] shadow-expressive flex flex-col items-center justify-center bg-expressive-surface">
               <svg
                 viewBox="0 0 150 150"
-                className="w-48 h-48 text-slate-900 dark:text-slate-100"
+                className="w-48 h-48 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface"
                 dangerouslySetInnerHTML={{ __html: svgPath }}
               />
 
               {/* Dynamic Refresh Indicator */}
-              <div className="mt-4 flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950 text-[11px] font-semibold text-indigo-700 dark:text-indigo-300">
-                <RefreshCw className="w-3 h-3 animate-spin text-indigo-500" />
+              <div className="mt-5 flex items-center gap-2 px-4 py-1.5 rounded-full bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container text-label-small font-semibold text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container shadow-sm border border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20">
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 <span>Refreshes in {timer}s</span>
               </div>
             </div>
 
             {/* Role Action Explanations */}
             {user?.role === 'STUDENT' ? (
-              <div className="w-full space-y-3 pt-2">
-                <div className="flex items-center justify-center gap-2 text-xs text-slate-500">
-                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                  <span>GPS Geofence: <strong className="text-slate-700 dark:text-slate-300">Verified On-Site</strong></span>
+              <div className="w-full space-y-4 pt-2">
+                <div className="flex items-center justify-center gap-2 text-label-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
+                  <ShieldCheck className="w-4 h-4 text-m3-sys-light-primary dark:text-m3-sys-dark-primary" />
+                  <span>GPS Geofence: <strong className="text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">Verified On-Site</strong></span>
                 </div>
 
                 <Button
                   id="submit-student-checkin-btn"
                   size="lg"
                   variant="primary"
-                  className="w-full font-bold shadow-lg shadow-indigo-600/30"
+                  className="w-full font-bold shadow-expressive-sm rounded-full py-4 text-title-medium hover:scale-105 transition-transform"
                   onClick={handleStudentCheckIn}
                   isLoading={isCheckingIn}
                   icon={<Smartphone className="w-5 h-5" />}
@@ -178,15 +180,16 @@ export const QRCheckInModal: React.FC<QRCheckInModalProps> = ({
                 </Button>
               </div>
             ) : (
-              <div className="w-full space-y-3 pt-2">
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+              <div className="w-full space-y-4 pt-2">
+                <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
                   Display this screen on classroom projector or mobile device. Students scan to log presence instantly.
                 </p>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={refreshQR}
-                  icon={<RefreshCw className="w-3.5 h-3.5" />}
+                  icon={<RefreshCw className="w-4 h-4" />}
+                  className="rounded-full shadow-sm"
                 >
                   Force Refresh QR Token
                 </Button>

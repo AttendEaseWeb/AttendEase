@@ -1,6 +1,5 @@
-@import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import "tailwindcss";
 
 @theme {
   --font-sans: 'Roboto', 'Inter', system-ui, sans-serif;
@@ -113,8 +112,73 @@
   .text-label-small {
     @apply text-[11px] leading-[16px] font-medium tracking-[0.5px];
   }
+
+  .bg-expressive-gradient-primary {
+    @apply bg-gradient-to-br from-m3-sys-light-primary-container via-m3-sys-light-surface to-m3-sys-light-tertiary-container dark:from-m3-sys-dark-primary-container dark:via-m3-sys-dark-surface dark:to-m3-sys-dark-tertiary-container;
+  }
+  .bg-expressive-gradient-secondary {
+    @apply bg-gradient-to-br from-m3-sys-light-secondary-container via-m3-sys-light-surface to-m3-sys-light-primary-container dark:from-m3-sys-dark-secondary-container dark:via-m3-sys-dark-surface dark:to-m3-sys-dark-primary-container;
+  }
+  .bg-expressive-surface {
+    @apply bg-white dark:bg-zinc-900 border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-[0_8px_32px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)];
+  }
+  .shadow-expressive {
+    @apply shadow-[0_12px_36px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.35)];
+  }
+  .shadow-expressive-sm {
+    @apply shadow-[0_4px_20px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)];
+  }
+  .shadow-expressive-lg {
+    @apply shadow-[0_20px_50px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)];
+  }
+
+  .m3-card {
+    @apply bg-white/85 dark:bg-zinc-900/85 backdrop-blur-2xl rounded-[28px] border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 transition-all duration-300;
+  }
+  .m3-card-hover {
+    @apply hover:border-m3-sys-light-primary/40 dark:hover:border-m3-sys-dark-primary/40 hover:-translate-y-0.5 hover:shadow-[0_12px_36px_rgba(0,0,0,0.08)];
+  }
+  .m3-pill-active {
+    @apply bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-sm font-semibold;
+  }
+  .m3-pill-inactive {
+    @apply bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface-variant/40 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/70 dark:hover:bg-m3-sys-dark-surface-variant/70;
+  }
+
+  /* Hide scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom Scrollbar for smooth M3 look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(121, 116, 126, 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(121, 116, 126, 0.5);
 }
 
 body {
-  @apply bg-m3-sys-light-background text-m3-sys-light-on-background dark:bg-m3-sys-dark-background dark:text-m3-sys-dark-on-background font-sans antialiased;
+  @apply bg-m3-sys-light-surface text-m3-sys-light-on-background dark:bg-m3-sys-dark-surface dark:text-m3-sys-dark-on-background font-sans antialiased;
+  background-image: radial-gradient(circle at 15% 50%, rgba(103, 80, 164, 0.05), transparent 40%),
+                    radial-gradient(circle at 85% 30%, rgba(103, 80, 164, 0.08), transparent 40%);
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background-image: radial-gradient(circle at 15% 50%, rgba(208, 188, 255, 0.08), transparent 40%),
+                      radial-gradient(circle at 85% 30%, rgba(208, 188, 255, 0.12), transparent 40%);
+  }
 }

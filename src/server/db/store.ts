@@ -1,12 +1,12 @@
 import { User } from '../../shared/types/auth';
-import { Course, Session } from '../../shared/types/event';
+import { ClassSection, ClassSession } from '../../shared/types/class';
 import { AttendanceRecord, AttendanceStats } from '../../shared/types/attendance';
-import { SEED_USERS, SEED_COURSES, SEED_SESSIONS, SEED_ATTENDANCE } from './seed';
+import { SEED_USERS, SEED_CLASSES, SEED_SESSIONS, SEED_ATTENDANCE } from './seed';
 
 class DataStore {
   private users: User[] = [...SEED_USERS];
-  private courses: Course[] = [...SEED_COURSES];
-  private sessions: Session[] = [...SEED_SESSIONS];
+  private classes: ClassSection[] = [...SEED_CLASSES];
+  private sessions: ClassSession[] = [...SEED_SESSIONS];
   private attendanceRecords: AttendanceRecord[] = [...SEED_ATTENDANCE];
 
   // User Methods
@@ -27,52 +27,70 @@ class DataStore {
     return user;
   }
 
-  // Course Methods
-  getCourses(): Course[] {
-    return this.courses;
+  // Class Methods
+  getClasses(): ClassSection[] {
+    return this.classes;
   }
 
-  getCourseById(id: string): Course | undefined {
-    return this.courses.find((c) => c.id === id);
+  getClassById(id: string): ClassSection | undefined {
+    return this.classes.find((c) => c.id === id);
   }
 
-  addCourse(course: Course): Course {
-    this.courses.push(course);
-    return course;
+  addClass(cls: ClassSection): ClassSection {
+    this.classes.push(cls);
+    return cls;
   }
 
-  updateCourse(id: string, updates: Partial<Course>): Course | undefined {
-    const idx = this.courses.findIndex((c) => c.id === id);
+  updateClass(id: string, updates: Partial<ClassSection>): ClassSection | undefined {
+    const idx = this.classes.findIndex((c) => c.id === id);
     if (idx === -1) return undefined;
-    this.courses[idx] = { ...this.courses[idx], ...updates };
-    return this.courses[idx];
+    this.classes[idx] = { ...this.classes[idx], ...updates };
+    return this.classes[idx];
   }
 
-  deleteCourse(id: string): boolean {
-    const initialLen = this.courses.length;
-    this.courses = this.courses.filter((c) => c.id !== id);
-    return this.courses.length < initialLen;
+  deleteClass(id: string): boolean {
+    const initialLen = this.classes.length;
+    this.classes = this.classes.filter((c) => c.id !== id);
+    return this.classes.length < initialLen;
+  }
+
+  enrollStudentToClass(classId: string, studentId: string): ClassSection | undefined {
+    const cls = this.getClassById(classId);
+    if (!cls) return undefined;
+    if (!cls.enrolledStudentIds.includes(studentId)) {
+      cls.enrolledStudentIds.push(studentId);
+      cls.totalStudents = cls.enrolledStudentIds.length;
+    }
+    return cls;
+  }
+
+  removeStudentFromClass(classId: string, studentId: string): ClassSection | undefined {
+    const cls = this.getClassById(classId);
+    if (!cls) return undefined;
+    cls.enrolledStudentIds = cls.enrolledStudentIds.filter((id) => id !== studentId);
+    cls.totalStudents = cls.enrolledStudentIds.length;
+    return cls;
   }
 
   // Session Methods
-  getSessions(): Session[] {
+  getSessions(): ClassSession[] {
     return this.sessions;
   }
 
-  getSessionById(id: string): Session | undefined {
+  getSessionById(id: string): ClassSession | undefined {
     return this.sessions.find((s) => s.id === id);
   }
 
-  getSessionsByCourseId(courseId: string): Session[] {
-    return this.sessions.filter((s) => s.courseId === courseId);
+  getSessionsByClassId(classId: string): ClassSession[] {
+    return this.sessions.filter((s) => s.classId === classId);
   }
 
-  addSession(session: Session): Session {
+  addSession(session: ClassSession): ClassSession {
     this.sessions.push(session);
     return session;
   }
 
-  updateSession(id: string, updates: Partial<Session>): Session | undefined {
+  updateSession(id: string, updates: Partial<ClassSession>): ClassSession | undefined {
     const idx = this.sessions.findIndex((s) => s.id === id);
     if (idx === -1) return undefined;
     this.sessions[idx] = { ...this.sessions[idx], ...updates };
@@ -93,7 +111,6 @@ class DataStore {
   }
 
   addAttendanceRecord(record: AttendanceRecord): AttendanceRecord {
-    // Check if record already exists for this student and session
     const existingIdx = this.attendanceRecords.findIndex(
       (a) => a.sessionId === record.sessionId && a.studentId === record.studentId
     );
@@ -102,7 +119,6 @@ class DataStore {
       this.attendanceRecords[existingIdx] = record;
     } else {
       this.attendanceRecords.unshift(record);
-      // Increment attended count on session
       const session = this.getSessionById(record.sessionId);
       if (session) {
         session.attendedCount += 1;
@@ -136,14 +152,27 @@ class DataStore {
     const denominator = totalSessions > 0 ? totalSessions : 1;
     const attendanceRate = Math.min(100, Math.round((attendedCount / denominator) * 100));
 
+    // Calculate rates per category
+    const jhsRecords = records.filter((r) => r.category === 'JUNIOR_HIGH');
+    const shsRecords = records.filter((r) => r.category === 'SENIOR_HIGH');
+
+    const jhsPresent = jhsRecords.filter((r) => r.status === 'PRESENT' || r.status === 'LATE').length;
+    const shsPresent = shsRecords.filter((r) => r.status === 'PRESENT' || r.status === 'LATE').length;
+
+    const juniorHighRate = jhsRecords.length > 0 ? Math.round((jhsPresent / jhsRecords.length) * 100) : 100;
+    const seniorHighRate = shsRecords.length > 0 ? Math.round((shsPresent / shsRecords.length) * 100) : 100;
+
     return {
+      totalClasses: this.classes.length,
       totalSessions,
       totalPresent,
       totalLate,
       totalAbsent,
       totalExcused,
       attendanceRate,
-      recentActivity: records.slice(0, 10),
+      juniorHighRate,
+      seniorHighRate,
+      recentActivity: records.slice(0, 15),
     };
   }
 }

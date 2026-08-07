@@ -1,13 +1,13 @@
-import { QRTokenData } from '../types/event';
+import { QRTokenData } from '../types/class';
 
-export function generateDynamicQRToken(sessionId: string, courseCode: string): { token: string; expiresAt: string } {
+export function generateDynamicQRToken(sessionId: string, classCode: string): { token: string; expiresAt: string } {
   const now = Date.now();
   const ttlMs = 30000; // 30 second dynamic rotation window
   const expiresAtMs = now + ttlMs;
   
   const tokenPayload: QRTokenData = {
     sessionId,
-    courseCode,
+    classCode,
     timestamp: now,
     expiresAt: expiresAtMs,
     secret: Math.random().toString(36).substring(2, 10),
@@ -41,7 +41,6 @@ export function generateSimpleSVGPath(data: string): string {
   
   const size = 15;
   const rects: string[] = [];
-  const cellSize = 10;
   
   // Outer finder patterns
   const addFinder = (x: number, y: number) => {

@@ -24,22 +24,22 @@ export const UserTable: React.FC<UserTableProps> = ({ users }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant" />
           <input
             type="text"
             placeholder="Search by name, email, department..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full pl-9 pr-3 py-2 text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm transition-shadow"
           />
         </div>
 
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full px-4 py-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm transition-shadow appearance-none pr-8 bg-no-repeat bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M7%2010l5%205%205-5z%22%20fill%3D%22%2349454f%22%2F%3E%3C%2Fsvg%3E')] dark:bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M7%2010l5%205%205-5z%22%20fill%3D%22%23cac4d0%22%2F%3E%3C%2Fsvg%3E')] bg-[position:calc(100%-8px)_center] bg-[length:24px_24px]"
         >
           <option value="ALL">All Roles</option>
           <option value="ADMIN">Admin</option>
@@ -48,35 +48,35 @@ export const UserTable: React.FC<UserTableProps> = ({ users }) => {
         </select>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <table className="w-full text-left text-xs border-collapse">
+      <div className="overflow-x-auto rounded-3xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface shadow-expressive-sm">
+        <table className="w-full text-left text-body-medium border-collapse">
           <thead>
-            <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 font-semibold">
-              <th className="p-3.5">User</th>
-              <th className="p-3.5">Department</th>
-              <th className="p-3.5">ID / Code</th>
-              <th className="p-3.5">System Role</th>
+            <tr className="bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface-variant/40 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant border-b border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 font-semibold">
+              <th className="p-4">User</th>
+              <th className="p-4">Department</th>
+              <th className="p-4">ID / Code</th>
+              <th className="p-4">System Role</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+          <tbody className="divide-y divide-m3-sys-light-outline-variant/20 dark:divide-m3-sys-dark-outline-variant/20 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
             {filtered.map((u) => (
-              <tr key={u.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
-                <td className="p-3.5">
+              <tr key={u.id} className="hover:bg-m3-sys-light-surface-variant/20 dark:hover:bg-m3-sys-dark-surface-variant/20 transition-colors">
+                <td className="p-4">
                   <div className="flex items-center gap-3">
                     <img
                       src={u.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
                       alt={u.name}
-                      className="w-8 h-8 rounded-full object-cover shrink-0"
+                      className="w-10 h-10 rounded-full object-cover shrink-0"
                     />
                     <div>
-                      <span className="font-bold text-slate-900 dark:text-slate-100 block">{u.name}</span>
-                      <span className="text-[10px] text-slate-400">{u.email}</span>
+                      <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface block text-label-large">{u.name}</span>
+                      <span className="text-label-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">{u.email}</span>
                     </div>
                   </div>
                 </td>
-                <td className="p-3.5 text-slate-500">{u.department || 'N/A'}</td>
-                <td className="p-3.5 font-mono text-slate-500">{u.studentId || u.id}</td>
-                <td className="p-3.5">
+                <td className="p-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">{u.department || 'N/A'}</td>
+                <td className="p-4 font-mono text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">{u.studentId || u.id}</td>
+                <td className="p-4">
                   <Badge
                     variant={
                       u.role === 'ADMIN'

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authRouter } from './auth.routes';
+import { classRouter } from './class.routes';
 import { eventRouter } from './event.routes';
 import { attendanceRouter } from './attendance.routes';
 import { userRouter } from './user.routes';
@@ -19,6 +20,7 @@ apiRouter.get('/health', (_req, res) => {
 
 // API Sub-routes
 apiRouter.use('/auth', authRouter);
+apiRouter.use('/', classRouter);
 apiRouter.use('/', eventRouter);
 apiRouter.use('/attendance', attendanceRouter);
 apiRouter.use('/users', userRouter);
