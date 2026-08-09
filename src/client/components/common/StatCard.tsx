@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 
 export interface StatCardProps {
   title: string;
@@ -45,13 +46,15 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <div
       id={id}
-      className="bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-[28px] p-5 shadow-expressive-sm hover:shadow-expressive transition-all duration-300 hover:-translate-y-1 group"
+      className="bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-[28px] p-5 shadow-expressive-sm hover:shadow-expressive hover:-translate-y-1 transition-all duration-200 transform-gpu group"
     >
       <div className="flex items-center justify-between gap-2">
         <span className="text-title-small font-semibold text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant truncate">
           {title}
         </span>
-        <div className={`p-2.5 rounded-2xl border ${colorBg[color]} shrink-0 transition-transform group-hover:scale-110`}>
+        <div
+          className={`p-2.5 rounded-2xl border ${colorBg[color]} shrink-0 transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3 transform-gpu`}
+        >
           {icon}
         </div>
       </div>
@@ -75,9 +78,11 @@ export const StatCard: React.FC<StatCardProps> = ({
 
       {progress !== undefined && (
         <div className="mt-3 w-full bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface-variant/40 h-2 rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ${progressBg[color]}`}
-            style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className={`h-full rounded-full ${progressBg[color]}`}
           />
         </div>
       )}

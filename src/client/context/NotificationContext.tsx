@@ -35,7 +35,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   return (
     <NotificationContext.Provider value={{ showToast }}>
       {children}
-      <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full px-4">
+      <div className="fixed bottom-5 right-5 z-[70] flex flex-col gap-2 max-w-md w-full px-4">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div

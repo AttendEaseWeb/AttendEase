@@ -6,14 +6,13 @@ import { Button } from '../../../components/common/Button';
 import {
   GraduationCap,
   Users,
-  MapPin,
-  Clock,
   QrCode,
   Edit,
   Trash2,
   ChevronDown,
   ChevronUp,
   UserCheck,
+  BookOpen,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -40,6 +39,10 @@ export const ClassCard: React.FC<ClassCardProps> = ({
   const isJuniorHigh = cls.category === 'JUNIOR_HIGH';
   const canManage = user?.role === 'ADMIN' || user?.role === 'INSTRUCTOR';
 
+  const subjectList = cls.subjects && cls.subjects.length > 0
+    ? cls.subjects
+    : (cls.subject ? [cls.subject] : []);
+
   const loadRoster = async () => {
     if (!isRosterOpen && enrolledStudentNames.length === 0 && cls.enrolledStudentIds?.length > 0) {
       setIsLoadingRoster(true);
@@ -65,7 +68,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
       <div className={`h-2.5 w-full ${isJuniorHigh ? 'bg-emerald-500' : 'bg-indigo-600'}`} />
 
       <div className="p-5 space-y-4 flex-1">
-        {/* Header Badges & Code */}
+        {/* Header Badges & Actions */}
         <div className="flex items-start justify-between gap-2">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
@@ -81,24 +84,31 @@ export const ClassCard: React.FC<ClassCardProps> = ({
             <h3 className="text-title-large font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mt-1">
               {cls.sectionName}
             </h3>
-            <p className="text-body-medium font-medium text-m3-sys-light-primary dark:text-m3-sys-dark-primary">
-              {cls.subject} ({cls.code})
-            </p>
           </div>
 
-          {canManage && onEditClass && (
-            <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-              <button
-                onClick={() => onEditClass(cls)}
-                className="p-1.5 rounded-lg hover:bg-m3-sys-light-surface-variant text-m3-sys-light-on-surface-variant"
-                title="Edit Class Section & Students"
-              >
-                <Edit className="w-4 h-4" />
-              </button>
+          {canManage && (
+            <div className="flex items-center gap-1 opacity-90 group-hover:opacity-100 transition-opacity">
+              {onEditClass && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEditClass(cls);
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-m3-sys-light-surface-variant text-m3-sys-light-on-surface-variant cursor-pointer transition-colors"
+                  title="Edit Class Section & Subjects"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+              )}
               {onDeleteClass && (
                 <button
-                  onClick={() => onDeleteClass(cls)}
-                  className="p-1.5 rounded-lg hover:bg-m3-sys-light-error-container text-m3-sys-light-error"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteClass(cls);
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-m3-sys-light-error-container text-m3-sys-light-error cursor-pointer transition-colors"
                   title="Delete Class Section"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -108,19 +118,33 @@ export const ClassCard: React.FC<ClassCardProps> = ({
           )}
         </div>
 
-        {/* Schedule & Room Details */}
-        <div className="space-y-2 text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant pt-1 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20">
+        {/* Subjects List Under Section */}
+        <div className="space-y-1.5 pt-1">
+          <div className="text-label-small font-semibold text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant flex items-center gap-1.5">
+            <BookOpen className="w-3.5 h-3.5 text-m3-sys-light-primary" />
+            Subjects ({subjectList.length}):
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {subjectList.length > 0 ? (
+              subjectList.map((sub, idx) => (
+                <span
+                  key={`${sub}-${idx}`}
+                  className="text-label-small font-medium px-2.5 py-1 rounded-full bg-m3-sys-light-surface-variant/60 dark:bg-m3-sys-dark-surface-variant/60 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface border border-m3-sys-light-outline-variant/40 dark:border-m3-sys-dark-outline-variant/40"
+                >
+                  {sub}
+                </span>
+              ))
+            ) : (
+              <span className="text-label-small italic text-m3-sys-light-on-surface-variant">No subjects assigned</span>
+            )}
+          </div>
+        </div>
+
+        {/* Instructor Details */}
+        <div className="space-y-2 text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant pt-2 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20">
           <div className="flex items-center gap-2">
             <GraduationCap className="w-4 h-4 text-m3-sys-light-primary shrink-0" />
             <span className="truncate">Adviser/Instructor: <strong>{cls.instructorName}</strong></span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-m3-sys-light-primary shrink-0" />
-            <span>{cls.schedule}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-m3-sys-light-primary shrink-0" />
-            <span>{cls.room}</span>
           </div>
         </div>
 
@@ -136,7 +160,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
           <button
             type="button"
             onClick={loadRoster}
-            className="w-full flex items-center justify-between text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface hover:text-m3-sys-light-primary py-1 transition-colors"
+            className="w-full flex items-center justify-between text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface hover:text-m3-sys-light-primary py-1 transition-colors cursor-pointer"
           >
             <span className="flex items-center gap-2 font-semibold">
               <Users className="w-4 h-4 text-m3-sys-light-primary" />
@@ -145,22 +169,28 @@ export const ClassCard: React.FC<ClassCardProps> = ({
             {isRosterOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
 
-          {isRosterOpen && (
-            <div className="mt-2 p-3 bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 rounded-xl space-y-1.5 text-label-small">
-              {isLoadingRoster ? (
-                <p className="text-m3-sys-light-on-surface-variant text-center py-1">Loading roster...</p>
-              ) : enrolledStudentNames.length > 0 ? (
-                enrolledStudentNames.map((s) => (
-                  <div key={s.id} className="flex items-center gap-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-                    <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>{s.name}</span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-m3-sys-light-on-surface-variant italic">No students enrolled yet. Edit class to add students.</p>
-              )}
+          <div
+            className={`grid transition-all duration-300 ease-out transform-gpu ${
+              isRosterOpen ? 'grid-rows-[1fr] opacity-100 mt-2' : 'grid-rows-[0fr] opacity-0 mt-0'
+            }`}
+          >
+            <div className="overflow-hidden">
+              <div className="p-3 bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 rounded-xl space-y-1.5 text-label-small">
+                {isLoadingRoster ? (
+                  <p className="text-m3-sys-light-on-surface-variant text-center py-1">Loading roster...</p>
+                ) : enrolledStudentNames.length > 0 ? (
+                  enrolledStudentNames.map((s) => (
+                    <div key={s.id} className="flex items-center gap-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+                      <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
+                      <span>{s.name}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-m3-sys-light-on-surface-variant italic">No students enrolled yet. Edit class to add students.</p>
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
@@ -172,7 +202,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
           className="rounded-full text-xs"
           onClick={() => onSelectClass(cls)}
         >
-          View Details
+          View Section
         </Button>
 
         {canManage && (
@@ -183,7 +213,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
             onClick={() => onCreateSession(cls)}
             icon={<QrCode className="w-3.5 h-3.5" />}
           >
-            Launch QR Attendance
+            Launch Attendance
           </Button>
         )}
       </div>

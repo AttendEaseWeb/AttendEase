@@ -11,13 +11,20 @@ export class ClassService {
     return dbStore.getClassById(id);
   }
 
-  static createClass(data: Omit<ClassSection, 'id' | 'createdAt' | 'category' | 'totalStudents'> & { category?: 'JUNIOR_HIGH' | 'SENIOR_HIGH' }): ClassSection {
+  static createClass(data: Omit<ClassSection, 'id' | 'createdAt' | 'category' | 'totalStudents'> & { category?: 'JUNIOR_HIGH' | 'SENIOR_HIGH'; subject?: string }): ClassSection {
     const gradeLevel = Number(data.gradeLevel) as 7 | 8 | 9 | 10 | 11 | 12;
     const category = gradeLevel <= 10 ? 'JUNIOR_HIGH' : 'SENIOR_HIGH';
     const enrolledStudentIds = data.enrolledStudentIds || [];
+    
+    // Ensure subjects is an array
+    let subjects = data.subjects || [];
+    if (subjects.length === 0 && data.subject) {
+      subjects = [data.subject];
+    }
 
     const newClass: ClassSection = {
       ...data,
+      subjects,
       gradeLevel,
       category,
       id: `cls-${Date.now()}`,
@@ -79,20 +86,22 @@ export class ClassService {
 
   static createSession(data: Omit<ClassSession, 'id' | 'attendedCount'>): ClassSession {
     const cls = dbStore.getClassById(data.classId);
+    const primarySubject = cls?.subjects?.[0] || cls?.subject || data.subject || 'General Class';
+    const classCode = cls?.code || data.classCode || cls?.sectionName || 'SEC';
     const session: ClassSession = {
       ...data,
       id: `sess-${Date.now()}`,
       sectionName: cls ? cls.sectionName : data.sectionName,
-      classCode: cls ? cls.code : data.classCode,
+      classCode,
       gradeLevel: cls ? cls.gradeLevel : data.gradeLevel,
       category: cls ? cls.category : (data.gradeLevel <= 10 ? 'JUNIOR_HIGH' : 'SENIOR_HIGH'),
-      subject: cls ? cls.subject : data.subject,
+      subject: data.subject || primarySubject,
       attendedCount: 0,
       totalExpectedCount: cls ? cls.enrolledStudentIds.length : (data.totalExpectedCount || 25),
     };
 
     if (session.status === 'ACTIVE') {
-      const qrData = generateDynamicQRToken(session.id, session.classCode);
+      const qrData = generateDynamicQRToken(session.id, session.classCode || session.sectionName);
       session.qrToken = qrData.token;
       session.qrExpiresAt = qrData.expiresAt;
     }
@@ -104,7 +113,7 @@ export class ClassService {
     const session = dbStore.getSessionById(sessionId);
     if (!session) throw new Error('Session not found');
 
-    const qrData = generateDynamicQRToken(session.id, session.classCode);
+    const qrData = generateDynamicQRToken(session.id, session.classCode || session.sectionName);
     dbStore.updateSession(sessionId, {
       qrToken: qrData.token,
       qrExpiresAt: qrData.expiresAt,

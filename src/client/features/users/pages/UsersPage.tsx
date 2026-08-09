@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { User } from '../../../../shared/types/auth';
 import { UserTable } from '../components/UserTable';
+import { AddUserModal } from '../components/AddUserModal';
 import { Card } from '../../../components/common/Card';
 import { useNotification } from '../../../context/NotificationContext';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, UserPlus } from 'lucide-react';
 import { Button } from '../../../components/common/Button';
 
 export const UsersPage: React.FC = () => {
   const { showToast } = useNotification();
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -31,7 +33,7 @@ export const UsersPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-headline-small text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+          <h2 className="text-headline-small text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface font-semibold">
             User Directory
           </h2>
           <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1">
@@ -39,45 +41,76 @@ export const UsersPage: React.FC = () => {
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={fetchUsers}
-          icon={<RefreshCw className="w-3.5 h-3.5" />}
-        >
-          Refresh Directory
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchUsers}
+            icon={<RefreshCw className="w-4 h-4" />}
+          >
+            Refresh
+          </Button>
+
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => setIsAddUserOpen(true)}
+            icon={<UserPlus className="w-4 h-4" />}
+            className="rounded-full shadow-expressive-sm"
+          >
+            Add Student Account
+          </Button>
+        </div>
       </div>
 
-      {/* Directory Quick Summary Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-4 rounded-2xl bg-expressive-surface border border-m3-sys-light-outline-variant/30 shadow-expressive-sm">
-          <div className="text-label-small font-semibold text-m3-sys-light-on-surface-variant">Total Accounts</div>
-          <div className="text-title-large font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mt-1">{users.length}</div>
-        </div>
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 shadow-expressive-sm">
-          <div className="text-label-small font-semibold text-rose-700 dark:text-rose-400">Administrators</div>
-          <div className="text-title-large font-bold text-rose-800 dark:text-rose-300 mt-1">
-            {users.filter((u) => u.role === 'ADMIN').length}
+        <div className="p-4 rounded-2xl bg-expressive-surface border border-m3-sys-light-outline-variant/30 shadow-expressive-sm flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-m3-sys-light-primary-container text-m3-sys-light-on-primary-container">
+            <UserPlus className="w-5 h-5" />
+          </div>
+          <div>
+             <div className="text-title-medium font-bold text-m3-sys-light-on-surface">{users.length}</div>
+             <div className="text-label-small text-m3-sys-light-on-surface-variant">Total Accounts</div>
           </div>
         </div>
-        <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 shadow-expressive-sm">
-          <div className="text-label-small font-semibold text-indigo-700 dark:text-indigo-400">Instructors</div>
-          <div className="text-title-large font-bold text-indigo-800 dark:text-indigo-300 mt-1">
-            {users.filter((u) => u.role === 'INSTRUCTOR').length}
+        <div className="p-4 rounded-2xl bg-expressive-surface border border-m3-sys-light-outline-variant/30 shadow-expressive-sm flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+            <UserPlus className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-title-medium font-bold text-m3-sys-light-on-surface">{users.filter((u) => u.role === 'STUDENT').length}</div>
+            <div className="text-label-small text-m3-sys-light-on-surface-variant">Students</div>
           </div>
         </div>
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 shadow-expressive-sm">
-          <div className="text-label-small font-semibold text-emerald-700 dark:text-emerald-400">Enrolled Students</div>
-          <div className="text-title-large font-bold text-emerald-800 dark:text-emerald-300 mt-1">
-            {users.filter((u) => u.role === 'STUDENT').length}
+        <div className="p-4 rounded-2xl bg-expressive-surface border border-m3-sys-light-outline-variant/30 shadow-expressive-sm flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+            <UserPlus className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-title-medium font-bold text-m3-sys-light-on-surface">{users.filter((u) => u.role === 'INSTRUCTOR').length}</div>
+            <div className="text-label-small text-m3-sys-light-on-surface-variant">Instructors</div>
+          </div>
+        </div>
+        <div className="p-4 rounded-2xl bg-expressive-surface border border-m3-sys-light-outline-variant/30 shadow-expressive-sm flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400">
+            <UserPlus className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-title-medium font-bold text-m3-sys-light-on-surface">{users.filter((u) => u.role === 'ADMIN').length}</div>
+            <div className="text-label-small text-m3-sys-light-on-surface-variant">Admins</div>
           </div>
         </div>
       </div>
 
-      <Card title="User Roster" subtitle="Manage account roles and permissions">
-        <UserTable users={users} />
+      <Card title="User Roster" subtitle="Manage system accounts and student details">
+        <UserTable users={users} onUserDeleted={fetchUsers} />
       </Card>
+
+      <AddUserModal
+        isOpen={isAddUserOpen}
+        onClose={() => setIsAddUserOpen(false)}
+        onUserAdded={fetchUsers}
+      />
     </div>
   );
 };

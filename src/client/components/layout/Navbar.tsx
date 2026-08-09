@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="navbar-qr-scanner-btn"
               onClick={onOpenQRScanner}
-              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-m3-sys-light-primary hover:bg-m3-sys-light-primary/90 text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary rounded-full text-label-large font-semibold shadow-sm transition-all cursor-pointer shrink-0 hover:scale-105"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-m3-sys-light-primary hover:bg-m3-sys-light-primary/90 text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary rounded-full text-label-large font-semibold shadow-sm transition-all duration-150 ease-out hover:scale-[1.04] active:scale-[0.96] transform-gpu cursor-pointer shrink-0"
               title={user?.role === 'STUDENT' ? 'Scan & Check In' : 'Display Session QR'}
             >
               <QrCode className="w-4 h-4 shrink-0" />
@@ -92,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Notifications Trigger */}
           <button
             onClick={() => setHasNotifications(false)}
-            className="relative p-2 rounded-full text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface hover:bg-m3-sys-light-surface-variant/60 dark:hover:bg-m3-sys-dark-surface-variant/60 transition-colors shrink-0"
+            className="relative p-2 rounded-full text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface hover:bg-m3-sys-light-surface-variant/60 dark:hover:bg-m3-sys-dark-surface-variant/60 transition-all duration-150 ease-out hover:scale-110 active:scale-90 transform-gpu shrink-0 cursor-pointer"
             title="Notifications"
           >
             <Bell className="w-4 h-4 shrink-0" />
@@ -125,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center pl-1.5 sm:pl-2 border-l border-m3-sys-light-outline-variant/40 dark:border-m3-sys-dark-outline-variant/40 shrink-0">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center gap-2 rounded-full hover:opacity-90 transition-all focus:outline-none cursor-pointer p-0.5 shrink-0"
+                className="flex items-center gap-2 rounded-full focus:outline-none cursor-pointer p-0.5 transition-transform duration-150 ease-out hover:scale-[1.05] active:scale-[0.95] transform-gpu shrink-0"
                 title="Account Info"
               >
                 <img
@@ -153,16 +153,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
                     className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-40"
                     onClick={() => setIsProfileOpen(false)}
                   />
 
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    initial={{ opacity: 0, scale: 0.95, y: -8 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-72 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-2xl z-50"
+                    exit={{ opacity: 0, scale: 0.95, y: -8 }}
+                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute right-0 mt-2 w-72 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-2xl z-50 transform-gpu"
                   >
                     {/* Account Info Header */}
                   <div className="flex items-center gap-3 pb-3 border-b border-zinc-100 dark:border-zinc-800">

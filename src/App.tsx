@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthProvider, useAuth } from './client/context/AuthContext';
 import { NotificationProvider } from './client/context/NotificationContext';
@@ -16,11 +16,15 @@ function MainLayout() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
+  const effectiveTab = activeTab === 'users' && user?.role !== 'ADMIN' ? 'dashboard' : activeTab;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [effectiveTab]);
+
   if (!isAuthenticated) {
     return <AuthPage />;
   }
-
-  const effectiveTab = activeTab === 'users' && user?.role !== 'ADMIN' ? 'dashboard' : activeTab;
 
   return (
     <div className="flex min-h-screen font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary relative overflow-x-hidden">
@@ -35,10 +39,10 @@ function MainLayout() {
           <AnimatePresence mode="wait">
             <motion.div
               key={effectiveTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.12, ease: 'easeOut' }}
               className="space-y-6"
             >
               {effectiveTab === 'dashboard' && (

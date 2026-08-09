@@ -155,20 +155,16 @@
   }
 }
 
-/* Custom Scrollbar for smooth M3 look */
+/* Hide scrollbars globally to remove the scroll progress indicator on the right */
+html, body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(121, 116, 126, 0.3);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(121, 116, 126, 0.5);
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 body {

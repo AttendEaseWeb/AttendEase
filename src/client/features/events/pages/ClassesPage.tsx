@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { ClassSection, ClassSession, GradeCategory, GradeLevel } from '../../../../shared/types/class';
 import { ClassCard } from '../components/ClassCard';
 import { ClassFormModal } from '../components/ClassFormModal';
+import { SectionDetailModal } from '../components/SectionDetailModal';
+import { AddUserModal } from '../../users/components/AddUserModal';
+import { QRCheckInModal } from '../../attendance/components/QRCheckInModal';
+import { ManualCheckInModal } from '../../attendance/components/ManualCheckInModal';
 import { Button } from '../../../components/common/Button';
 import { Card } from '../../../components/common/Card';
 import { Badge } from '../../../components/common/Badge';
 import { useAuth } from '../../../context/AuthContext';
 import { useNotification } from '../../../context/NotificationContext';
-import { Plus, GraduationCap, QrCode, Search, School, BookOpen, ChevronDown, ChevronUp, ChevronsUpDown, Layers } from 'lucide-react';
+import { Plus, UserPlus, GraduationCap, QrCode, Search, School, BookOpen, ChevronDown, ChevronUp, ChevronsUpDown, Layers } from 'lucide-react';
 
 interface ClassesPageProps {
   onOpenQRScanner: () => void;
@@ -75,6 +79,15 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
   const [selectedClassToEdit, setSelectedClassToEdit] = useState<ClassSection | null>(null);
   const [defaultCreateGrade, setDefaultCreateGrade] = useState<GradeLevel>(7);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
+  const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
+
+  // Section Detail View Modal State
+  const [selectedSectionForView, setSelectedSectionForView] = useState<ClassSection | null>(null);
+  const [isSectionDetailOpen, setIsSectionDetailOpen] = useState(false);
+
+  // Attendance Session Modals
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   
   // Collapsible Grade Cards State
   const [expandedGrades, setExpandedGrades] = useState<Record<number, boolean>>({
@@ -145,21 +158,22 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
 
   const handleCreateQuickSession = async (cls: ClassSection) => {
     try {
+      const primarySubject = cls.subjects?.[0] || cls.subject || 'General Subject';
       const res = await fetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           classId: cls.id,
-          classCode: cls.code,
+          classCode: cls.sectionName,
           sectionName: cls.sectionName,
           gradeLevel: cls.gradeLevel,
           category: cls.category,
-          subject: cls.subject,
-          title: `Class Attendance: ${cls.sectionName} (${cls.subject})`,
+          subject: primarySubject,
+          title: `Class Attendance: ${cls.sectionName} (${primarySubject})`,
           date: new Date().toISOString().split('T')[0],
           startTime: '08:00 AM',
           endTime: '09:30 AM',
-          room: cls.room,
+          room: 'Main Room',
           status: 'ACTIVE',
           allowGeofence: true,
           attendedCount: 0,
@@ -178,16 +192,19 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
   };
 
   const handleDeleteClass = async (cls: ClassSection) => {
-    if (!window.confirm(`Are you sure you want to delete class section ${cls.sectionName}?`)) return;
+    if (!window.confirm(`Are you sure you want to delete class section "${cls.sectionName}"?`)) return;
 
     try {
       const res = await fetch(`/api/classes/${cls.id}`, { method: 'DELETE' });
       if (res.ok) {
         showToast(`Deleted class section ${cls.sectionName}`, 'info');
         fetchData();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || 'Failed to delete class section', 'error');
       }
     } catch {
-      showToast('Error deleting class', 'error');
+      showToast('Error deleting class section', 'error');
     }
   };
 
@@ -195,6 +212,19 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     setSelectedClassToEdit(cls);
     setDefaultCreateGrade(cls.gradeLevel);
     setIsClassModalOpen(true);
+  };
+
+  const handleViewSection = (cls: ClassSection) => {
+    setSelectedSectionForView(cls);
+    setIsSectionDetailOpen(true);
+  };
+
+  const handleLaunchQRFromSection = (_session: ClassSession) => {
+    setIsQRModalOpen(true);
+  };
+
+  const handleOpenManualFromSection = (_session: ClassSession) => {
+    setIsManualModalOpen(true);
   };
 
   const handleOpenCreateForGrade = (grade: GradeLevel) => {
@@ -228,13 +258,12 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
       if (Number(cls.gradeLevel) !== Number(gradeLevel)) return false;
       if (!searchQuery) return true;
       const query = searchQuery.toLowerCase();
+      const matchSubjects = cls.subjects?.some((s) => s.toLowerCase().includes(query)) || cls.subject?.toLowerCase().includes(query);
       return (
         cls.sectionName.toLowerCase().includes(query) ||
-        cls.code.toLowerCase().includes(query) ||
-        cls.subject.toLowerCase().includes(query) ||
+        matchSubjects ||
         cls.instructorName.toLowerCase().includes(query) ||
-        (cls.strand && cls.strand.toLowerCase().includes(query)) ||
-        cls.room.toLowerCase().includes(query)
+        (cls.strand && cls.strand.toLowerCase().includes(query))
       );
     });
   };
@@ -247,21 +276,28 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
           <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-headline-small font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-2.5">
               <School className="w-7 h-7 text-m3-sys-light-primary dark:text-m3-sys-dark-primary" />
-              Class Sections by Grade Level
+              Class Sections
             </h2>
             <Badge variant={isAdmin ? 'purple' : isInstructor ? 'indigo' : 'emerald'}>
-              {isAdmin ? 'Administrator Mode (All Grades)' : isInstructor ? 'Instructor Mode' : 'Student Mode'}
+              {isAdmin ? 'Admin View' : isInstructor ? 'Instructor View' : 'Student View'}
             </Badge>
           </div>
           <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1 max-w-2xl">
-            {isAdmin
-              ? 'Administrator access: Showing all 6 grade level cards (Grades 7–12) for complete system oversight.'
-              : 'Instructor view: Grade level collapsible cards appear automatically as sections are created for Grades 7 through 12.'}
+            Manage academic sections, subjects, and student rosters across all grade levels.
           </p>
         </div>
 
         {canManage && (
           <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              onClick={() => setIsAddStudentOpen(true)}
+              icon={<UserPlus className="w-4 h-4" />}
+              variant="outline"
+              className="shadow-expressive-sm shrink-0 self-start lg:self-auto bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface"
+            >
+              Add Student
+            </Button>
+
             <Button
               onClick={() => handleOpenCreateForGrade(defaultCreateGrade)}
               icon={<Plus className="w-4 h-4" />}
@@ -589,7 +625,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                           <ClassCard
                             key={cls.id}
                             cls={cls}
-                            onSelectClass={() => {}}
+                            onSelectClass={handleViewSection}
                             onCreateSession={handleCreateQuickSession}
                             onEditClass={canManage ? handleOpenEdit : undefined}
                             onDeleteClass={canManage ? handleDeleteClass : undefined}
@@ -684,6 +720,49 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
         currentUserRole={user?.role}
         currentUserId={user?.id}
         currentUserName={user?.name}
+      />
+
+      {/* Section Detail & Subject Management Screen/Modal */}
+      <SectionDetailModal
+        isOpen={isSectionDetailOpen}
+        onClose={() => {
+          setIsSectionDetailOpen(false);
+          setSelectedSectionForView(null);
+        }}
+        cls={selectedSectionForView}
+        onOpenEditSection={(clsToEdit) => {
+          setIsSectionDetailOpen(false);
+          handleOpenEdit(clsToEdit);
+        }}
+        onLaunchQRModal={handleLaunchQRFromSection}
+        onOpenManualCheckIn={handleOpenManualFromSection}
+        onSectionUpdated={fetchData}
+      />
+
+      {/* Dynamic QR Check-in Modal */}
+      <QRCheckInModal
+        isOpen={isQRModalOpen}
+        onClose={() => {
+          setIsQRModalOpen(false);
+        }}
+        onCheckInSuccess={fetchData}
+      />
+
+      {/* Manual Check-in Modal */}
+      <ManualCheckInModal
+        isOpen={isManualModalOpen}
+        onClose={() => {
+          setIsManualModalOpen(false);
+        }}
+        onSuccess={fetchData}
+      />
+
+      {/* Add Student / Account Modal */}
+      <AddUserModal
+        isOpen={isAddStudentOpen}
+        onClose={() => setIsAddStudentOpen(false)}
+        onUserAdded={fetchData}
+        defaultRole="STUDENT"
       />
     </div>
   );

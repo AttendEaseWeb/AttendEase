@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../../../context/AuthContext';
 import { useNotification } from '../../../context/NotificationContext';
 import { UserRole } from '../../../../shared/types/auth';
@@ -121,33 +122,42 @@ export const AuthPage: React.FC = () => {
         <div className="p-4 rounded-[28px] bg-expressive-surface border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 space-y-3 shadow-sm">
           <div className="flex items-center gap-1.5 text-label-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant uppercase tracking-wider">
             <Key className="w-3.5 h-3.5" />
-            <span>1-Click Temporary Test Accounts</span>
+            <span>1-Click Test Login</span>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            <button
+            <motion.button
               type="button"
-              onClick={() => handleQuickLogin('test.student@attendease.edu', 'STUDENT')}
-              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container hover:opacity-90 hover:scale-105 border border-transparent text-label-medium text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              onClick={() => handleQuickLogin('student.test@attendease.edu', 'STUDENT')}
+              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container text-label-medium text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container transition-colors text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
               <GraduationCap className="w-5 h-5" />
               <span className="truncate">Student</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="button"
-              onClick={() => handleQuickLogin('test.instructor@attendease.edu', 'INSTRUCTOR')}
-              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container hover:opacity-90 hover:scale-105 border border-transparent text-label-medium text-m3-sys-light-on-tertiary-container dark:text-m3-sys-dark-on-tertiary-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              onClick={() => handleQuickLogin('instructor.test@attendease.edu', 'INSTRUCTOR')}
+              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container text-label-medium text-m3-sys-light-on-tertiary-container dark:text-m3-sys-dark-on-tertiary-container transition-colors text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
               <UserCheck className="w-5 h-5" />
               <span className="truncate">Instructor</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="button"
-              onClick={() => handleQuickLogin('test.admin@attendease.edu', 'ADMIN')}
-              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-error-container dark:bg-m3-sys-dark-error-container hover:opacity-90 hover:scale-105 border border-transparent text-label-medium text-m3-sys-light-on-error-container dark:text-m3-sys-dark-on-error-container transition-all text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              onClick={() => handleQuickLogin('admin.test@attendease.edu', 'ADMIN')}
+              className="px-2 py-3 rounded-[20px] bg-m3-sys-light-error-container dark:bg-m3-sys-dark-error-container text-label-medium text-m3-sys-light-on-error-container dark:text-m3-sys-dark-on-error-container transition-colors text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
               <Shield className="w-5 h-5" />
               <span className="truncate">Admin</span>
-            </button>
+            </motion.button>
           </div>
         </div>
 

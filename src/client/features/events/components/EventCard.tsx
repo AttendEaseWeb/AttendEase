@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Course } from '../../../../shared/types/event';
 import { Badge } from '../../../components/common/Badge';
 import { Button } from '../../../components/common/Button';
@@ -18,7 +19,9 @@ export const EventCard: React.FC<EventCardProps> = ({
   userRole,
 }) => {
   return (
-    <div className="bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-[28px] p-6 shadow-expressive-sm hover:shadow-expressive transition-all flex flex-col justify-between group">
+    <div
+      className="bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-[28px] p-6 shadow-expressive-sm hover:shadow-expressive hover:-translate-y-1 transition-all duration-200 transform-gpu flex flex-col justify-between group"
+    >
       <div>
         {/* Header Badges */}
         <div className="flex items-center justify-between mb-4">

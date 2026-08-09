@@ -18,12 +18,18 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({ activeTab, setActive
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // Check initially
     handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);
@@ -37,15 +43,11 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({ activeTab, setActive
   ];
 
   return (
-    <div className="fixed bottom-7 left-1/2 -translate-x-1/2 z-[60] max-w-[calc(100vw-1.5rem)] pointer-events-none flex justify-center">
-      <motion.div
-        layout
-        className={`bg-white dark:bg-zinc-900 backdrop-blur-2xl border border-zinc-200/90 dark:border-zinc-700/90 ring-1 ring-black/10 dark:ring-white/15 shadow-[0_25px_60px_-10px_rgba(0,0,0,0.22),0_10px_24px_-6px_rgba(0,0,0,0.12)] dark:shadow-[0_28px_70px_-10px_rgba(0,0,0,0.85),0_12px_28px_-6px_rgba(0,0,0,0.6)] rounded-full p-2.5 sm:p-3 flex items-center transition-all duration-300 pointer-events-auto max-w-full overflow-x-auto no-scrollbar ${
+    <div className="fixed bottom-7 left-1/2 -translate-x-1/2 z-30 max-w-[calc(100vw-1.5rem)] pointer-events-none flex justify-center">
+      <div
+        className={`bg-white dark:bg-zinc-900 backdrop-blur-2xl border border-zinc-200/90 dark:border-zinc-700/90 ring-1 ring-black/10 dark:ring-white/15 shadow-[0_25px_60px_-10px_rgba(0,0,0,0.22),0_10px_24px_-6px_rgba(0,0,0,0.12)] dark:shadow-[0_28px_70px_-10px_rgba(0,0,0,0.85),0_12px_28px_-6px_rgba(0,0,0,0.6)] rounded-full p-2.5 sm:p-3 flex items-center transition-all duration-300 transform-gpu pointer-events-auto max-w-full overflow-x-auto no-scrollbar ${
           isScrolled ? 'gap-2.5 sm:gap-3.5' : 'gap-2 sm:gap-3'
         }`}
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
       >
         {navItems.map((item) => {
           const isActive = activeTab === item.id;
@@ -57,9 +59,8 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({ activeTab, setActive
               key={item.id}
               onClick={() => {
                 setActiveTab(item.id);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`relative flex items-center justify-center py-3 sm:py-3.5 rounded-full transition-all duration-300 cursor-pointer shrink-0 ${
+              className={`relative flex items-center justify-center py-3 sm:py-3.5 rounded-full transition-all duration-200 ease-out transform-gpu hover:scale-[1.04] active:scale-[0.96] cursor-pointer shrink-0 ${
                 showLabel 
                   ? 'px-5 sm:px-6.5' 
                   : 'px-3.5 sm:px-4.5'
@@ -74,11 +75,17 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({ activeTab, setActive
                 <motion.div
                   layoutId="dock-active-bg"
                   className="absolute inset-0 bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container ring-1 ring-m3-sys-light-primary/40 dark:ring-m3-sys-dark-primary/50 shadow-md rounded-full"
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 28 }}
                 />
               )}
               
-              <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5 relative z-10 shrink-0 transition-transform duration-300" strokeWidth={isActive ? 2.5 : 2} />
+              <div
+                className={`relative z-10 flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                  isActive ? 'scale-105' : 'scale-100'
+                }`}
+              >
+                <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5 relative z-10 shrink-0" strokeWidth={isActive ? 2.5 : 2} />
+              </div>
               
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out relative z-10 flex items-center ${
@@ -92,7 +99,7 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({ activeTab, setActive
             </button>
           );
         })}
-      </motion.div>
+      </div>
     </div>
   );
 };

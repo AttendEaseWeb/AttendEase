@@ -27,6 +27,15 @@ class DataStore {
     return user;
   }
 
+  deleteUser(id: string): boolean {
+    const idx = this.users.findIndex((u) => u.id === id);
+    if (idx !== -1) {
+      this.users.splice(idx, 1);
+      return true;
+    }
+    return false;
+  }
+
   // Class Methods
   getClasses(): ClassSection[] {
     return this.classes;

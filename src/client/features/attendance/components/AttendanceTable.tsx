@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AttendanceRecord, AttendanceStatus } from '../../../../shared/types/attendance';
 import { Badge } from '../../../components/common/Badge';
 import { formatDateTime } from '../../../../shared/utils/date';
-import { QrCode, UserCheck, Search, Filter } from 'lucide-react';
+import { QrCode, UserCheck, Search } from 'lucide-react';
 
 interface AttendanceTableProps {
   records: AttendanceRecord[];
@@ -103,7 +103,10 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
                 const code = record.classCode || record.courseCode || 'CLS';
 
                 return (
-                  <tr key={record.id} className="hover:bg-m3-sys-light-surface-variant/20 dark:hover:bg-m3-sys-dark-surface-variant/20 transition-colors">
+                  <tr
+                    key={record.id}
+                    className="hover:bg-m3-sys-light-surface-variant/20 dark:hover:bg-m3-sys-dark-surface-variant/20 transition-colors"
+                  >
                     <td className="p-4">
                       <div>
                         <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface block text-label-large">
