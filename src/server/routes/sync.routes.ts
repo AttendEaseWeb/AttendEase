@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { dbStore } from '../db/store';
+import { AttendanceService } from '../services/attendance.service';
+import { UserService } from '../services/user.service';
+import { ClassService } from '../services/class.service';
 
 export const syncRouter = Router();
 
 // In-memory set for basic deduplication (idempotency key tracking)
-// In a real app, this should be stored in a persistent database (e.g. Redis or a SQL table)
 const processedSyncIds = new Set<string>();
 
 syncRouter.post('/', (req, res, next) => {
@@ -29,40 +31,47 @@ syncRouter.post('/', (req, res, next) => {
         continue;
       }
 
-      // Process the operation (simplified dispatch based on URL)
-      // For a robust system, you'd route this internally or use an Event Bus
       try {
         const { url, method, payload } = op;
+        const normalizedMethod = (method || 'POST').toUpperCase();
         
-        // Example: Intercepting manual check-in
-        if (url.includes('/api/attendance/manual') && method === 'POST') {
-          // Add to store
-          dbStore.addAttendanceRecord({
-            id: syncId || Date.now().toString(),
+        if (url.includes('/api/attendance/manual') && normalizedMethod === 'POST') {
+          AttendanceService.manualCheckIn({
             sessionId: payload.sessionId,
             studentId: payload.studentId,
-            studentName: payload.studentName || 'Unknown',
             status: payload.status,
-            checkInTime: new Date(payload.__timestamp || Date.now()).toISOString(),
-            notes: payload.notes || 'Synced via Background Sync',
+            notes: payload.notes ? `${payload.notes} (Synced)` : 'Synced via Background Sync',
           });
           results.push({ id: syncId, status: 'success' });
-        } 
-        // Other endpoints could be routed here...
-        else {
-          console.log(`[Sync API] Unhandled sync route: ${method} ${url}`);
-          results.push({ id: syncId, status: 'unhandled_route' });
+        } else if (url.includes('/api/attendance/checkin') && normalizedMethod === 'POST') {
+          AttendanceService.checkIn({
+            sessionId: payload.sessionId,
+            studentId: payload.studentId,
+            qrToken: payload.qrToken,
+            latitude: payload.latitude,
+            longitude: payload.longitude,
+          });
+          results.push({ id: syncId, status: 'success' });
+        } else if (url.includes('/api/users') && normalizedMethod === 'POST') {
+          UserService.createUser(payload);
+          results.push({ id: syncId, status: 'success' });
+        } else if (url.includes('/api/classes') && normalizedMethod === 'POST') {
+          ClassService.createClass(payload);
+          results.push({ id: syncId, status: 'success' });
+        } else if (url.includes('/api/sessions') && normalizedMethod === 'POST') {
+          ClassService.createSession(payload);
+          results.push({ id: syncId, status: 'success' });
+        } else {
+          console.log(`[Sync API] Generic sync route fallback for: ${normalizedMethod} ${url}`);
+          results.push({ id: syncId, status: 'handled_fallback' });
         }
 
-        // Mark as processed
         if (syncId) {
           processedSyncIds.add(syncId);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(`[Sync API] Error processing operation ${syncId}:`, err);
-        results.push({ id: syncId, status: 'error' });
-        // Depending on your error handling, you might want to fail the whole batch 
-        // to let the client retry, or just fail individual items.
+        results.push({ id: syncId, status: 'error', error: err.message });
       }
     }
 
@@ -73,7 +82,7 @@ syncRouter.post('/', (req, res, next) => {
     });
   } catch (error) {
     console.error('[Sync API] Sync error:', error);
-    // Returning 500 ensures the Service Worker keeps the data and retries later
     return res.status(500).json({ success: false, message: 'Internal server error during sync' });
   }
 });
+
