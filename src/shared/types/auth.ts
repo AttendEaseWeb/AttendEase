@@ -12,13 +12,6 @@ export interface User {
   createdAt: string;
 }
 
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-}
-
 export interface LoginRequest {
   email: string;
   password?: string;

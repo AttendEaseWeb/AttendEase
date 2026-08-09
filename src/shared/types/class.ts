@@ -25,7 +25,7 @@ export interface ClassSection {
   room?: string;
 }
 
-export type SessionStatus = 'UPCOMING' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
+type SessionStatus = 'UPCOMING' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
 
 export interface ClassSession {
   id: string;

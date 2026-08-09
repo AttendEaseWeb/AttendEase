@@ -5,7 +5,7 @@ import { NotificationProvider } from './client/context/NotificationContext';
 import { Navbar } from './client/components/layout/Navbar';
 import { FloatingDock } from './client/components/layout/FloatingDock';
 import { DashboardPage } from './client/features/dashboard/pages/DashboardPage';
-import { EventsPage } from './client/features/events/pages/EventsPage';
+import { ClassesPage } from './client/features/events/pages/ClassesPage';
 import { AttendancePage } from './client/features/attendance/pages/AttendancePage';
 import { UsersPage } from './client/features/users/pages/UsersPage';
 import { QRCheckInModal } from './client/features/attendance/components/QRCheckInModal';
@@ -53,7 +53,7 @@ function MainLayout() {
               )}
 
               {effectiveTab === 'events' && (
-                <EventsPage onOpenQRScanner={() => setIsQRModalOpen(true)} />
+                <ClassesPage onOpenQRScanner={() => setIsQRModalOpen(true)} />
               )}
 
               {effectiveTab === 'attendance' && (
