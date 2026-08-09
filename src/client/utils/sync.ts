@@ -47,10 +47,13 @@ export async function registerServiceWorkerAndSync() {
       const registration = await navigator.serviceWorker.register('/sw.js');
       console.log('[App] Service Worker registered with scope:', registration.scope);
 
+      // Wait for the service worker to be ready before registering sync
+      const readyRegistration = await navigator.serviceWorker.ready;
+
       // Request background sync permission if available
-      if ('sync' in registration) {
+      if ('sync' in readyRegistration) {
         try {
-          await (registration as any).sync.register('sync-data');
+          await (readyRegistration as any).sync.register('sync-data');
           console.log('[App] Background Sync registered for tag: sync-data');
         } catch (err) {
           console.error('[App] Background Sync registration failed:', err);
