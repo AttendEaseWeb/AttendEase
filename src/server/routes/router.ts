@@ -4,6 +4,7 @@ import { classRouter } from './class.routes';
 import { eventRouter } from './event.routes';
 import { attendanceRouter } from './attendance.routes';
 import { userRouter } from './user.routes';
+import { syncRouter } from './sync.routes';
 
 export const apiRouter = Router();
 
@@ -24,3 +25,4 @@ apiRouter.use('/', classRouter);
 apiRouter.use('/', eventRouter);
 apiRouter.use('/attendance', attendanceRouter);
 apiRouter.use('/users', userRouter);
+apiRouter.use('/sync', syncRouter);
