@@ -55,8 +55,8 @@ export async function registerServiceWorkerAndSync() {
         try {
           await (readyRegistration as any).sync.register('sync-data');
           console.log('[App] Background Sync registered for tag: sync-data');
-        } catch (err) {
-          console.error('[App] Background Sync registration failed:', err);
+        } catch (err: any) {
+          console.warn('[App] Background Sync registration failed (expected in some iframe environments):', err.message || err);
         }
       }
     } catch (error) {
@@ -94,7 +94,7 @@ export async function offlineCapableFetch(url: string, options: RequestInit = {}
     if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.ready;
       if ('sync' in reg) {
-        await (reg as any).sync.register('sync-data').catch(console.error);
+        await (reg as any).sync.register('sync-data').catch((e: any) => console.warn('Sync register skipped:', e.message || e));
       }
     }
     
@@ -125,7 +125,7 @@ export async function offlineCapableFetch(url: string, options: RequestInit = {}
       if ('serviceWorker' in navigator) {
         const reg = await navigator.serviceWorker.ready;
         if ('sync' in reg) {
-          await (reg as any).sync.register('sync-data').catch(console.error);
+          await (reg as any).sync.register('sync-data').catch((e: any) => console.warn('Sync register skipped:', e.message || e));
         }
       }
       
