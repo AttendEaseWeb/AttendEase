@@ -143,7 +143,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               placeholder="e.g. Juan De La Cruz"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-sm"
+              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary shadow-sm"
             />
           </div>
 
@@ -158,7 +158,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               placeholder="e.g. 09171234567"
               value={parentPhone}
               onChange={(e) => setParentPhone(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-sm"
+              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary shadow-sm"
             />
           </div>
         </div>
@@ -175,7 +175,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               placeholder="e.g. 2026-10492"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary font-mono shadow-sm"
+              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary font-mono shadow-sm"
             />
           </div>
 
@@ -187,7 +187,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
             <select
               value={selectedClassId}
               onChange={(e) => setSelectedClassId(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-sm"
+              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary shadow-sm"
             >
               <option value="">-- No Initial Assignment --</option>
               {availableClasses.map((cls) => (

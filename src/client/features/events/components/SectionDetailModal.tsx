@@ -484,7 +484,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleAddSubjectToSection();
                   }}
-                  className="flex-1 px-3.5 py-2 rounded-xl border border-m3-sys-light-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary"
+                  className="flex-1 px-3.5 py-2 rounded-xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary"
                 />
                 <Button
                   size="sm"
@@ -805,7 +805,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                     placeholder="Search enrolled students..."
                     value={studentSearch}
                     onChange={(e) => setStudentSearch(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-2xl border border-m3-sys-light-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary"
+                    className="w-full pl-10 pr-4 py-2 rounded-2xl border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary"
                   />
                 </div>
 
