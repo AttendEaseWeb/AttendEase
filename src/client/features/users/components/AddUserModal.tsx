@@ -140,7 +140,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
             <input
               type="text"
               required
-              placeholder="e.g. Juan De La Cruz"
+              placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary shadow-sm"
@@ -155,7 +155,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
             <input
               type="tel"
               required
-              placeholder="e.g. 09171234567"
+              placeholder="Phone Number"
               value={parentPhone}
               onChange={(e) => setParentPhone(e.target.value)}
               className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary shadow-sm"
@@ -172,7 +172,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
             </label>
             <input
               type="text"
-              placeholder="e.g. 2026-10492"
+              placeholder="Student ID"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
               className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary font-mono shadow-sm"

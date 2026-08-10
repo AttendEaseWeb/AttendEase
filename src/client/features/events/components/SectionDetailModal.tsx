@@ -478,7 +478,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="e.g. General Biology, Mathematics, Filipino..."
+                  placeholder="Type subject name..."
                   value={newSubjectName}
                   onChange={(e) => setNewSubjectName(e.target.value)}
                   onKeyDown={(e) => {

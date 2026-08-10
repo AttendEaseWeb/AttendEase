@@ -356,14 +356,14 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             label="Section Name / Identifier"
-            placeholder="e.g. 7-A St. Jude or 11-STEM Alpha"
+            placeholder="Section Name"
             value={sectionName}
             onChange={(e) => handleSectionNameChange(e.target.value)}
             required
           />
           <Input
             label="Instructor / Adviser"
-            placeholder="e.g. Prof. David Miller"
+            placeholder="Instructor Name"
             value={instructorName}
             onChange={(e) => setInstructorName(e.target.value)}
           />
@@ -385,7 +385,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
           <div className="flex gap-2">
             <input
               type="text"
-              placeholder="Type subject name (e.g. Mathematics, Science, General Chemistry)..."
+              placeholder="Type subject name..."
               value={newSubjectInput}
               onChange={(e) => setNewSubjectInput(e.target.value)}
               onKeyDown={(e) => {
