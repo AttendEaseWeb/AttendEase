@@ -40,7 +40,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
     if (isOpen) {
       setName('');
       setParentPhone('');
-      setStudentId(`2026-${Math.floor(10000 + Math.random() * 90000)}`);
+      setStudentId('');
       setSelectedClassId(defaultClassId || '');
       fetchClasses();
     }

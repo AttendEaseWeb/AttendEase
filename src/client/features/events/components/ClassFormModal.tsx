@@ -181,9 +181,9 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
       } else {
         setSectionName('');
         setGradeLevel(defaultGradeLevel);
-        setStrand(defaultGradeLevel >= 11 ? 'STEM' : 'STEM');
-        setSubjects(defaultGradeLevel <= 10 ? ['Mathematics', 'Science', 'English'] : ['General Mathematics', 'Oral Communication']);
-        setInstructorName(currentUserName || 'Instructor');
+        setStrand('STEM');
+        setSubjects([]);
+        setInstructorName('');
         setDescription('');
         setSelectedStudentIds([]);
       }
