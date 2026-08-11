@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/common/Modal';
 import { Input } from '../../../components/common/Input';
@@ -33,7 +34,7 @@ export const ManualCheckInModal: React.FC<ManualCheckInModalProps> = ({
 
   const fetchOptions = async () => {
     try {
-      const [sRes, uRes] = await Promise.all([fetch('/api/sessions'), fetch('/api/users')]);
+      const [sRes, uRes] = await Promise.all([offlineCapableFetch('/api/sessions'), offlineCapableFetch('/api/users')]);
       if (sRes.ok) {
         const sData = await sRes.json();
         setSessions(sData);
@@ -59,7 +60,7 @@ export const ManualCheckInModal: React.FC<ManualCheckInModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/attendance/manual', {
+      const res = await offlineCapableFetch('/api/attendance/manual', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

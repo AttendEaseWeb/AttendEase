@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../utils/sync';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole, LoginRequest, RegisterRequest } from '../../shared/types/auth';
 
@@ -48,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (req: LoginRequest) => {
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await offlineCapableFetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(req),
@@ -78,7 +79,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = async (req: RegisterRequest) => {
-    const res = await fetch('/api/auth/register', {
+    const res = await offlineCapableFetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req),

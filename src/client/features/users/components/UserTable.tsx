@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useState } from 'react';
 import { User } from '../../../../shared/types/auth';
 import { Badge } from '../../../components/common/Badge';
@@ -18,7 +19,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onUserDeleted }) =>
     if (!window.confirm(`Are you sure you want to delete account "${u.name}" (${u.email})?`)) return;
 
     try {
-      const res = await fetch(`/api/users/${u.id}`, { method: 'DELETE' });
+      const res = await offlineCapableFetch(`/api/users/${u.id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete user');
       showToast(`Deleted account for ${u.name}`, 'success');
       if (onUserDeleted) onUserDeleted();

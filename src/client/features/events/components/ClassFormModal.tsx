@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/common/Modal';
 import { Button } from '../../../components/common/Button';
@@ -152,7 +153,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
   };
 
   const loadStudents = () => {
-    fetch('/api/users')
+    offlineCapableFetch('/api/users')
       .then((res) => res.json())
       .then((users: User[]) => {
         const students = users.filter((u) => u.role === 'STUDENT');
@@ -237,7 +238,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
       const url = initialClass ? `/api/classes/${initialClass.id}` : '/api/classes';
       const method = initialClass ? 'PUT' : 'POST';
 
-      const response = await fetch(url, {
+      const response = await offlineCapableFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -263,7 +264,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`/api/classes/${initialClass.id}`, { method: 'DELETE' });
+      const response = await offlineCapableFetch(`/api/classes/${initialClass.id}`, { method: 'DELETE' });
       if (!response.ok) {
         throw new Error('Failed to delete class section');
       }

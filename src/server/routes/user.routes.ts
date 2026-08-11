@@ -47,7 +47,7 @@ userRouter.post('/', (req, res, next) => {
     }
 
     const newUser: User = {
-      id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      id: req.body.id || `usr_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
       name: name.trim(),
       email: effectiveEmail,
       parentPhone: parentPhone ? parentPhone.trim() : undefined,
@@ -55,7 +55,7 @@ userRouter.post('/', (req, res, next) => {
       studentId: cleanStudentId,
       department: department || 'General Education',
       avatarUrl: avatarUrl || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150`,
-      createdAt: new Date().toISOString(),
+      createdAt: req.body.createdAt || new Date().toISOString(),
     };
 
     const created = UserService.createUser(newUser);

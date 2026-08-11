@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useEffect, useState } from 'react';
 import { User } from '../../../../shared/types/auth';
 import { UserTable } from '../components/UserTable';
@@ -20,7 +21,7 @@ export const UsersPage: React.FC = () => {
   const fetchUsers = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/users');
+      const res = await offlineCapableFetch('/api/users');
       if (res.ok) setUsers(await res.json());
     } catch {
       showToast('Error loading user directory', 'error');

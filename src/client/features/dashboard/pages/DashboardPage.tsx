@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useEffect, useState } from 'react';
 import { DashboardStats } from '../components/DashboardStats';
 import { RecentActivityList } from '../components/RecentActivityList';
@@ -31,8 +32,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     try {
       const studentIdParam = user?.role === 'STUDENT' ? `?studentId=${user.id}` : '';
       const [statsRes, sessionsRes] = await Promise.all([
-        fetch(`/api/attendance/stats${studentIdParam}`),
-        fetch('/api/sessions'),
+        offlineCapableFetch(`/api/attendance/stats${studentIdParam}`),
+        offlineCapableFetch('/api/sessions'),
       ]);
 
       if (statsRes.ok) {

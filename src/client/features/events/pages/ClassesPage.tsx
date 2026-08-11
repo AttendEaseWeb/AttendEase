@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useEffect, useState } from 'react';
 import { ClassSection, ClassSession, GradeCategory, GradeLevel } from '../../../../shared/types/class';
 import { ClassCard } from '../components/ClassCard';
@@ -113,8 +114,8 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     setIsLoading(true);
     try {
       const [classesRes, sessionsRes] = await Promise.all([
-        fetch('/api/classes'),
-        fetch('/api/sessions'),
+        offlineCapableFetch('/api/classes'),
+        offlineCapableFetch('/api/sessions'),
       ]);
       if (classesRes.ok) {
         const loadedClasses: ClassSection[] = await classesRes.json();
@@ -159,7 +160,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
   const handleCreateQuickSession = async (cls: ClassSection) => {
     try {
       const primarySubject = cls.subjects?.[0] || cls.subject || 'General Subject';
-      const res = await fetch('/api/sessions', {
+      const res = await offlineCapableFetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -195,7 +196,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     if (!window.confirm(`Are you sure you want to delete class section "${cls.sectionName}"?`)) return;
 
     try {
-      const res = await fetch(`/api/classes/${cls.id}`, { method: 'DELETE' });
+      const res = await offlineCapableFetch(`/api/classes/${cls.id}`, { method: 'DELETE' });
       if (res.ok) {
         showToast(`Deleted class section ${cls.sectionName}`, 'info');
         fetchData();

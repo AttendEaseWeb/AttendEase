@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/common/Modal';
 import { Button } from '../../../components/common/Button';
@@ -48,7 +49,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 
   const fetchClasses = async () => {
     try {
-      const res = await fetch('/api/classes');
+      const res = await offlineCapableFetch('/api/classes');
       if (res.ok) {
         setAvailableClasses(await res.json());
       }
@@ -73,7 +74,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 
     try {
       // 1. Create Student Account
-      const res = await fetch('/api/users', {
+      const res = await offlineCapableFetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -94,13 +95,13 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 
       // 2. If a Class Section was selected for enrollment, add student to section
       if (selectedClassId) {
-        const clsRes = await fetch(`/api/classes/${selectedClassId}`);
+        const clsRes = await offlineCapableFetch(`/api/classes/${selectedClassId}`);
         if (clsRes.ok) {
           const classData: ClassSection = await clsRes.json();
           const currentEnrolled = classData.enrolledStudentIds || [];
           if (!currentEnrolled.includes(createdUser.id)) {
             const updatedEnrolled = [...currentEnrolled, createdUser.id];
-            await fetch(`/api/classes/${selectedClassId}`, {
+            await offlineCapableFetch(`/api/classes/${selectedClassId}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

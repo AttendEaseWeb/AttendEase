@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useEffect, useState } from 'react';
 import { AttendanceRecord } from '../../../../shared/types/attendance';
 import { AttendanceTable } from '../components/AttendanceTable';
@@ -27,7 +28,7 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
     setIsLoading(true);
     try {
       const studentParam = user?.role === 'STUDENT' ? `?studentId=${user.id}` : '';
-      const res = await fetch(`/api/attendance${studentParam}`);
+      const res = await offlineCapableFetch(`/api/attendance${studentParam}`);
       if (res.ok) {
         setRecords(await res.json());
       }

@@ -36,8 +36,38 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Skip API requests from caching
+  // Handle API requests (Network first, fallback to cache)
   if (url.pathname.startsWith('/api/')) {
+    if (event.request.method === 'GET') {
+      event.respondWith(
+        fetch(event.request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open('attendease-api-cache').then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        }).catch(() => {
+          return caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+            // If offline and not in cache, return empty array/object based on common patterns
+            // to prevent JSON parse errors in the UI
+            let fallbackBody = [];
+            if (url.pathname.match(/\/api\/(users|classes|sessions|attendance)\/.+/)) {
+               fallbackBody = {}; // single object
+            }
+            return new Response(JSON.stringify(fallbackBody), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json', 'X-Offline-Fallback': 'true' }
+            });
+          });
+        })
+      );
+    }
+    // Let non-GET /api/ requests pass through
     return;
   }
 

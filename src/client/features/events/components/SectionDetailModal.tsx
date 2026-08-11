@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/common/Modal';
 import { Button } from '../../../components/common/Button';
@@ -132,7 +133,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
 
     try {
       // Fetch users to map enrolled students
-      const usersRes = await fetch('/api/users');
+      const usersRes = await offlineCapableFetch('/api/users');
       if (usersRes.ok) {
         const allUsers: User[] = await usersRes.json();
         const matched = allUsers.filter((u) => studentIds.includes(u.id));
@@ -140,7 +141,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
       }
 
       // Fetch sessions for this section
-      const sessionsRes = await fetch('/api/sessions');
+      const sessionsRes = await offlineCapableFetch('/api/sessions');
       if (sessionsRes.ok) {
         const allSessions: ClassSession[] = await sessionsRes.json();
         const sectionSessions = allSessions.filter((s) => s.classId === classId);
@@ -148,7 +149,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
       }
 
       // Fetch attendance records
-      const attRes = await fetch('/api/attendance');
+      const attRes = await offlineCapableFetch('/api/attendance');
       if (attRes.ok) {
         const allRecords: AttendanceRecord[] = await attRes.json();
         const sectionRecords = allRecords.filter((r) => r.classId === classId);
@@ -187,7 +188,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
     setIsSavingSubject(true);
 
     try {
-      const res = await fetch(`/api/classes/${cls.id}`, {
+      const res = await offlineCapableFetch(`/api/classes/${cls.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -233,7 +234,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
         totalExpectedCount: enrolledStudents.length || cls.enrolledStudentIds?.length || 25,
       };
 
-      const res = await fetch('/api/sessions', {
+      const res = await offlineCapableFetch('/api/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -306,7 +307,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
       // Create quick completed/active session
       try {
         const subjName = selectedSubject === 'ALL' ? (subjects[0] || 'General Subject') : selectedSubject;
-        const res = await fetch('/api/sessions', {
+        const res = await offlineCapableFetch('/api/sessions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -339,7 +340,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
     }
 
     try {
-      const res = await fetch('/api/attendance/manual', {
+      const res = await offlineCapableFetch('/api/attendance/manual', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

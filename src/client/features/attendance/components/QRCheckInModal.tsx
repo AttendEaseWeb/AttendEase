@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/common/Modal';
 import { Button } from '../../../components/common/Button';
@@ -51,7 +52,7 @@ export const QRCheckInModal: React.FC<QRCheckInModalProps> = ({
 
   const fetchActiveSession = async () => {
     try {
-      const res = await fetch('/api/sessions');
+      const res = await offlineCapableFetch('/api/sessions');
       if (res.ok) {
         const sessions = await res.json();
         const active = sessions.find((s: any) => s.status === 'ACTIVE') || sessions[0];
@@ -77,7 +78,7 @@ export const QRCheckInModal: React.FC<QRCheckInModalProps> = ({
     if (!activeSession || !user) return;
     setIsCheckingIn(true);
     try {
-      const res = await fetch('/api/attendance/checkin', {
+      const res = await offlineCapableFetch('/api/attendance/checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

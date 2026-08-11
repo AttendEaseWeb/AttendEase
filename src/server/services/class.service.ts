@@ -27,7 +27,7 @@ export class ClassService {
       subjects,
       gradeLevel,
       category,
-      id: `cls-${Date.now()}`,
+      id: (data as any).id || `cls-${Date.now()}`,
       enrolledStudentIds,
       totalStudents: enrolledStudentIds.length,
       createdAt: new Date().toISOString(),
@@ -90,7 +90,7 @@ export class ClassService {
     const classCode = cls?.code || data.classCode || cls?.sectionName || 'SEC';
     const session: ClassSession = {
       ...data,
-      id: `sess-${Date.now()}`,
+      id: (data as any).id || `sess-${Date.now()}`,
       sectionName: cls ? cls.sectionName : data.sectionName,
       classCode,
       gradeLevel: cls ? cls.gradeLevel : data.gradeLevel,

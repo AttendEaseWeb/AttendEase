@@ -53,13 +53,43 @@ syncRouter.post('/', (req, res, next) => {
           });
           results.push({ id: syncId, status: 'success' });
         } else if (url.includes('/api/users') && normalizedMethod === 'POST') {
-          UserService.createUser(payload);
+          const name = payload.name || 'Unknown';
+          const cleanStudentId = payload.studentId || `STU-${Math.floor(100000 + Math.random() * 900000)}`;
+          let effectiveEmail = payload.email;
+          if (!effectiveEmail) {
+            const slug = name.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            effectiveEmail = `${slug}.${cleanStudentId.toLowerCase().replace(/[^a-z0-9]/g, '')}@school.edu.ph`;
+          }
+          const newUser = {
+             id: payload.id || `usr_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+             name: name.trim(),
+             email: effectiveEmail,
+             parentPhone: payload.parentPhone ? payload.parentPhone.trim() : undefined,
+             role: payload.role || 'STUDENT',
+             studentId: cleanStudentId,
+             department: payload.department || 'General Education',
+             avatarUrl: payload.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+             createdAt: payload.createdAt || new Date().toISOString()
+          };
+          UserService.createUser(newUser);
           results.push({ id: syncId, status: 'success' });
         } else if (url.includes('/api/classes') && normalizedMethod === 'POST') {
           ClassService.createClass(payload);
           results.push({ id: syncId, status: 'success' });
         } else if (url.includes('/api/sessions') && normalizedMethod === 'POST') {
           ClassService.createSession(payload);
+          results.push({ id: syncId, status: 'success' });
+        } else if (url.match(/\/api\/classes\/([^\/]+)$/) && normalizedMethod === 'PUT') {
+          const match = url.match(/\/api\/classes\/([^\/]+)$/);
+          if (match) ClassService.updateClass(match[1], payload);
+          results.push({ id: syncId, status: 'success' });
+        } else if (url.match(/\/api\/classes\/([^\/]+)$/) && normalizedMethod === 'DELETE') {
+          const match = url.match(/\/api\/classes\/([^\/]+)$/);
+          if (match) ClassService.deleteClass(match[1]);
+          results.push({ id: syncId, status: 'success' });
+        } else if (url.match(/\/api\/users\/([^\/]+)$/) && normalizedMethod === 'DELETE') {
+          const match = url.match(/\/api\/users\/([^\/]+)$/);
+          if (match) dbStore.deleteUser(match[1]);
           results.push({ id: syncId, status: 'success' });
         } else {
           console.log(`[Sync API] Generic sync route fallback for: ${normalizedMethod} ${url}`);

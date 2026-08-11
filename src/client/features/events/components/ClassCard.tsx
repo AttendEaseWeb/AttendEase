@@ -1,3 +1,4 @@
+import { offlineCapableFetch } from '../../../utils/sync';
 import React, { useState } from 'react';
 import { ClassSection } from '../../../../shared/types/class';
 import { Card } from '../../../components/common/Card';
@@ -47,7 +48,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
     if (!isRosterOpen && enrolledStudentNames.length === 0 && cls.enrolledStudentIds?.length > 0) {
       setIsLoadingRoster(true);
       try {
-        const res = await fetch('/api/users');
+        const res = await offlineCapableFetch('/api/users');
         if (res.ok) {
           const allUsers = await res.json();
           const students = allUsers.filter((u: any) => cls.enrolledStudentIds.includes(u.id));
