@@ -19,7 +19,9 @@ function MainLayout() {
   const effectiveTab = activeTab === 'users' && user?.role !== 'ADMIN' ? 'dashboard' : activeTab;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const el = document.getElementById('main-scroll-container');
+    if (el) el.scrollTo(0, 0);
+    else window.scrollTo(0, 0);
   }, [effectiveTab]);
 
   if (!isAuthenticated) {
@@ -27,15 +29,22 @@ function MainLayout() {
   }
 
   return (
-    <div className="flex min-h-screen font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary relative overflow-x-hidden">
+    <div className="flex h-[100dvh] font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary relative overflow-hidden">
+      <Navbar
+        activeTab={effectiveTab}
+        onOpenQRScanner={() => setIsQRModalOpen(true)}
+      />
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 pb-32">
-        <Navbar
-          activeTab={effectiveTab}
-          onOpenQRScanner={() => setIsQRModalOpen(true)}
-        />
+      <div 
+        id="main-scroll-container"
+        className="flex-1 overflow-y-auto min-w-0 flex flex-col"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent 0px, black 80px, black calc(100% - 120px), transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0px, black 80px, black calc(100% - 120px), transparent 100%)"
+        }}
+      >
 
-        <main className="flex-1 p-3.5 sm:p-6 pt-24 sm:pt-28 max-w-7xl w-full mx-auto min-w-0">
+        <main className="flex-1 p-3.5 sm:p-6 pt-24 sm:pt-28 pb-32 sm:pb-40 max-w-7xl w-full mx-auto min-w-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={effectiveTab}
