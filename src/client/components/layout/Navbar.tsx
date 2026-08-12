@@ -43,17 +43,17 @@ export const Navbar: React.FC<NavbarProps> = ({
       <AnimatePresence>
         {isProfileOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm pointer-events-auto"
+            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
+            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="fixed inset-0 bg-black/20 dark:bg-black/40 pointer-events-auto"
             style={{ zIndex: -1 }}
             onClick={() => setIsProfileOpen(false)}
           />
         )}
       </AnimatePresence>
-      <header className={`pointer-events-auto w-full rounded-b-[2rem] px-4 sm:px-6 py-2.5 transition-all duration-300 ${isProfileOpen ? "bg-transparent border-b border-transparent shadow-none" : "bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-b border-zinc-200/90 dark:border-zinc-700/90 shadow-[0_4px_20px_rgb(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.4)]"}`}>
+      <header className={`pointer-events-auto w-full rounded-b-[2rem] px-4 sm:px-6 py-2.5 transition-all duration-300 backdrop-blur-2xl border-b ${isProfileOpen ? "bg-transparent border-transparent shadow-none" : "bg-white/90 dark:bg-zinc-900/90 border-zinc-200/90 dark:border-zinc-700/90 shadow-[0_4px_20px_rgb(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.4)]"}`}>
         <div className="flex items-center justify-between gap-2 sm:gap-4 max-w-7xl mx-auto w-full min-w-0">
         {/* Left Section: Brand / Search */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
