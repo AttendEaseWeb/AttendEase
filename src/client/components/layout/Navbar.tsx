@@ -39,6 +39,20 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <div className="fixed top-0 inset-x-0 z-40 w-full pointer-events-none">
+      {/* Global backdrop for the profile dropdown */}
+      <AnimatePresence>
+        {isProfileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm pointer-events-auto"
+            style={{ zIndex: -1 }}
+            onClick={() => setIsProfileOpen(false)}
+          />
+        )}
+      </AnimatePresence>
       <header className="pointer-events-auto w-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-b border-zinc-200/90 dark:border-zinc-700/90 shadow-[0_4px_20px_rgb(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.4)] rounded-b-[2rem] px-4 sm:px-6 py-2.5 transition-all">
         <div className="flex items-center justify-between gap-2 sm:gap-4 max-w-7xl mx-auto w-full min-w-0">
         {/* Left Section: Brand / Search */}
