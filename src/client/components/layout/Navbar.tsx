@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           />
         )}
       </AnimatePresence>
-      <header className="pointer-events-auto w-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-b border-zinc-200/90 dark:border-zinc-700/90 shadow-[0_4px_20px_rgb(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.4)] rounded-b-[2rem] px-4 sm:px-6 py-2.5 transition-all">
+      <header className={`pointer-events-auto w-full rounded-b-[2rem] px-4 sm:px-6 py-2.5 transition-all duration-300 ${isProfileOpen ? "bg-transparent border-b border-transparent shadow-none" : "bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-b border-zinc-200/90 dark:border-zinc-700/90 shadow-[0_4px_20px_rgb(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.4)]"}`}>
         <div className="flex items-center justify-between gap-2 sm:gap-4 max-w-7xl mx-auto w-full min-w-0">
         {/* Left Section: Brand / Search */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
