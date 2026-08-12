@@ -3,18 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <meta id="theme-color-meta" name="theme-color" content="#ffffff" />
-    <script>
-      function updateThemeColor() {
-        var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var meta = document.getElementById('theme-color-meta');
-        if (meta) {
-          meta.setAttribute('content', isDark ? '#18181b' : '#ffffff');
-        }
-      }
-      updateThemeColor();
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeColor);
-    </script>
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#18181b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="manifest" href="/manifest.json" />
     <title>AttendEase</title>
   </head>
