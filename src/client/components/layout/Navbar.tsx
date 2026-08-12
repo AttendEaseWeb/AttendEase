@@ -38,8 +38,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 bg-expressive-surface border-b border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 px-3 sm:px-6 py-2.5 shadow-expressive-sm transition-all">
-      <div className="flex items-center justify-between gap-2 sm:gap-4 max-w-7xl mx-auto min-w-0">
+    <div className="fixed top-0 inset-x-0 z-40 w-full pointer-events-none">
+      <header className="pointer-events-auto w-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-b border-zinc-200/90 dark:border-zinc-700/90 shadow-[0_4px_20px_rgb(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.4)] rounded-b-[2rem] px-4 sm:px-6 py-2.5 transition-all">
+        <div className="flex items-center justify-between gap-2 sm:gap-4 max-w-7xl mx-auto w-full min-w-0">
         {/* Left Section: Brand / Search */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           {/* Desktop & Mobile Brand Title */}
@@ -217,7 +218,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       </div>
-    </header>
+      </header>
+    </div>
   );
 };
 

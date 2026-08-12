@@ -35,7 +35,7 @@ function MainLayout() {
           onOpenQRScanner={() => setIsQRModalOpen(true)}
         />
 
-        <main className="flex-1 p-3.5 sm:p-6 max-w-7xl w-full mx-auto min-w-0">
+        <main className="flex-1 p-3.5 sm:p-6 pt-24 sm:pt-28 max-w-7xl w-full mx-auto min-w-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={effectiveTab}
