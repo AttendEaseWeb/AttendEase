@@ -86,7 +86,7 @@ function MainLayout() {
         onClose={() => setIsQRModalOpen(false)}
       />
 
-      <FloatingDock activeTab={effectiveTab} setActiveTab={setActiveTab} />
+      <ScheduleModal isOpen={isScheduleModalOpen} onClose={() => setIsScheduleModalOpen(false)} /><FloatingDock activeTab={effectiveTab} setActiveTab={setActiveTab} />
     </div>
   );
 }
