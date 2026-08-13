@@ -317,6 +317,31 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
         )}
       </div>
 
+      {activeSection && currentActiveEntry && (
+        <div className="mb-8">
+          <h3 className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mb-3 flex items-center gap-2">
+            <Star className="w-5 h-5 text-amber-500 fill-amber-500/20" />
+            Ongoing Class Right Now
+          </h3>
+          <div className="ring-2 ring-amber-500/50 rounded-3xl relative overflow-hidden bg-amber-50/30 dark:bg-amber-950/20">
+            <div className="absolute top-0 right-0 px-3 py-1 bg-amber-500 text-white font-bold text-label-small rounded-bl-xl shadow-sm z-10">
+              {currentActiveEntry.subject} ({currentActiveEntry.startTime} - {currentActiveEntry.endTime})
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
+              <div className="md:col-span-1 lg:col-span-1 p-3">
+                <ClassCard
+                  cls={activeSection}
+                  onSelectClass={handleViewSection}
+                  onCreateSession={handleCreateQuickSession}
+                  onEditClass={canManage ? handleOpenEdit : undefined}
+                  onDeleteClass={canManage ? handleDeleteClass : undefined}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Top Summary Metrics Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-4 rounded-2xl bg-expressive-surface border border-m3-sys-light-outline-variant/30 shadow-expressive-sm flex items-center gap-3">
