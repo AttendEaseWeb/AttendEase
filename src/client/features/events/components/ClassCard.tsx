@@ -211,10 +211,10 @@ export const ClassCard: React.FC<ClassCardProps> = ({
         {canManage && (
           <Button
             variant="primary"
-            size="sm"
-            className={`rounded-full shadow-expressive-sm text-xs ${!onSelectClass ? 'w-full' : ''}`}
+            size={!onSelectClass ? 'lg' : 'sm'}
+            className={`rounded-full shadow-expressive-sm ${!onSelectClass ? 'w-full py-4 text-base font-bold' : 'text-xs'}`}
             onClick={() => onCreateSession(cls)}
-            icon={<QrCode className="w-3.5 h-3.5" />}
+            icon={<QrCode className={!onSelectClass ? 'w-5 h-5' : 'w-3.5 h-3.5'} />}
           >
             Launch Attendance
           </Button>
