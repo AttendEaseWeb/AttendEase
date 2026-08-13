@@ -275,6 +275,15 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     ? classes.find(c => c.id === currentActiveEntry.sectionId)
     : null;
 
+  const formatTime12h = (time24: string) => {
+    if (!time24) return '';
+    const [hours, minutes] = time24.split(':');
+    const h = parseInt(hours, 10);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    return `${h12}:${minutes} ${ampm}`;
+  };
+
   return (
     <div className="space-y-8">
       {/* Page Title & Header */}
@@ -325,16 +334,13 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
           </h3>
           <div className="ring-2 ring-amber-500/50 rounded-3xl relative overflow-hidden bg-amber-50/30 dark:bg-amber-950/20">
             <div className="absolute top-0 right-0 px-3 py-1 bg-amber-500 text-white font-bold text-label-small rounded-bl-xl shadow-sm z-10">
-              {currentActiveEntry.subject} ({currentActiveEntry.startTime} - {currentActiveEntry.endTime})
+              {currentActiveEntry.subject} ({formatTime12h(currentActiveEntry.startTime)} - {formatTime12h(currentActiveEntry.endTime)})
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
               <div className="md:col-span-1 lg:col-span-1 p-3">
                 <ClassCard
                   cls={activeSection}
-                  onSelectClass={handleViewSection}
                   onCreateSession={handleCreateQuickSession}
-                  onEditClass={canManage ? handleOpenEdit : undefined}
-                  onDeleteClass={canManage ? handleDeleteClass : undefined}
                 />
               </div>
             </div>

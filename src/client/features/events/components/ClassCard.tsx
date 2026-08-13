@@ -19,7 +19,7 @@ import { useAuth } from '../../../context/AuthContext';
 
 interface ClassCardProps {
   cls: ClassSection;
-  onSelectClass: (cls: ClassSection) => void;
+  onSelectClass?: (cls: ClassSection) => void;
   onCreateSession: (cls: ClassSection) => void;
   onEditClass?: (cls: ClassSection) => void;
   onDeleteClass?: (cls: ClassSection) => void;
