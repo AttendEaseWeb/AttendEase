@@ -197,20 +197,22 @@ export const ClassCard: React.FC<ClassCardProps> = ({
 
       {/* Footer Actions */}
       <div className="p-4 bg-m3-sys-light-surface-variant/20 dark:bg-m3-sys-dark-surface-variant/20 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20 flex items-center justify-between gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-full text-xs"
-          onClick={() => onSelectClass(cls)}
-        >
-          View Section
-        </Button>
+        {onSelectClass && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full text-xs"
+            onClick={() => onSelectClass(cls)}
+          >
+            View Section
+          </Button>
+        )}
 
         {canManage && (
           <Button
             variant="primary"
             size="sm"
-            className="rounded-full shadow-expressive-sm text-xs"
+            className={`rounded-full shadow-expressive-sm text-xs ${!onSelectClass ? 'w-full' : ''}`}
             onClick={() => onCreateSession(cls)}
             icon={<QrCode className="w-3.5 h-3.5" />}
           >
