@@ -11,7 +11,9 @@ import {
   LogOut,
   Bell,
   Sparkles,
+  CalendarClock,
 } from 'lucide-react';
+import { useSchedule } from '../../context/ScheduleContext';
 
 interface NavbarProps {
   onOpenQRScanner?: () => void;
@@ -23,6 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
 }) => {
   const { user, logout } = useAuth();
+  const { setIsScheduleModalOpen } = useSchedule();
   const [hasNotifications, setHasNotifications] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -214,6 +217,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                     )}
                   </div>
 
+                  {/* Instructor Schedule Menu */}
+                  {user?.role === 'INSTRUCTOR' && (
+                    <button
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        setIsScheduleModalOpen(true);
+                      }}
+                      className="w-full mt-3 flex items-center gap-3 py-2.5 px-4 rounded-full bg-m3-sys-light-surface-variant/50 dark:bg-m3-sys-dark-surface-variant/50 hover:bg-m3-sys-light-surface-variant dark:hover:bg-m3-sys-dark-surface-variant text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface font-medium text-label-large transition-colors"
+                    >
+                      <CalendarClock className="w-4 h-4 shrink-0 text-amber-500" />
+                      <span>Configure Schedule</span>
+                    </button>
+                  )}
                   {/* Logout Button in Menu */}
                   <button
                     onClick={() => {

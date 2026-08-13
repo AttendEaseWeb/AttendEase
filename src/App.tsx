@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthProvider, useAuth } from './client/context/AuthContext';
 import { NotificationProvider } from './client/context/NotificationContext';
+import { ScheduleProvider, useSchedule } from './client/context/ScheduleContext';
 import { Navbar } from './client/components/layout/Navbar';
 import { FloatingDock } from './client/components/layout/FloatingDock';
 import { DashboardPage } from './client/features/dashboard/pages/DashboardPage';
@@ -10,9 +11,12 @@ import { AttendancePage } from './client/features/attendance/pages/AttendancePag
 import { UsersPage } from './client/features/users/pages/UsersPage';
 import { QRCheckInModal } from './client/features/attendance/components/QRCheckInModal';
 import { AuthPage } from './client/features/auth/pages/AuthPage';
+import { ScheduleNotice } from './client/components/schedule/ScheduleNotice';
+import { ScheduleModal } from './client/components/schedule/ScheduleModal';
 
 function MainLayout() {
   const { isAuthenticated, user } = useAuth();
+  const { isScheduleModalOpen, setIsScheduleModalOpen } = useSchedule();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
 
@@ -45,6 +49,7 @@ function MainLayout() {
       >
 
         <main className="flex-1 p-3.5 sm:p-6 pt-24 sm:pt-28 pb-32 sm:pb-40 max-w-7xl w-full mx-auto min-w-0">
+          <ScheduleNotice />
           <AnimatePresence mode="wait">
             <motion.div
               key={effectiveTab}
@@ -90,7 +95,9 @@ export default function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
-        <MainLayout />
+        <ScheduleProvider>
+          <MainLayout />
+        </ScheduleProvider>
       </NotificationProvider>
     </AuthProvider>
   );

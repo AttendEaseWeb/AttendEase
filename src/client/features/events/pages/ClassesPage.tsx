@@ -12,7 +12,8 @@ import { Card } from '../../../components/common/Card';
 import { Badge } from '../../../components/common/Badge';
 import { useAuth } from '../../../context/AuthContext';
 import { useNotification } from '../../../context/NotificationContext';
-import { Plus, UserPlus, GraduationCap, QrCode, Search, School, BookOpen, ChevronDown, ChevronUp, ChevronsUpDown, Layers } from 'lucide-react';
+import { useSchedule } from '../../../context/ScheduleContext';
+import { Plus, UserPlus, GraduationCap, QrCode, Search, School, BookOpen, ChevronDown, ChevronUp, ChevronsUpDown, Layers, Star } from 'lucide-react';
 
 interface ClassesPageProps {
   onOpenQRScanner: () => void;
@@ -74,6 +75,7 @@ const GRADE_GROUPS: GradeGroup[] = [
 export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => {
   const { user } = useAuth();
   const { showToast } = useNotification();
+  const { currentActiveEntry } = useSchedule();
 
   const [classes, setClasses] = useState<ClassSection[]>([]);
   const [sessions, setSessions] = useState<ClassSession[]>([]);
@@ -268,6 +270,10 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
       );
     });
   };
+
+  const activeSection = currentActiveEntry 
+    ? classes.find(c => c.id === currentActiveEntry.sectionId)
+    : null;
 
   return (
     <div className="space-y-8">
