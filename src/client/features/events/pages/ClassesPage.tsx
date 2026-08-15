@@ -4,6 +4,7 @@ import { ClassSection, ClassSession, GradeCategory, GradeLevel } from '../../../
 import { ClassCard } from '../components/ClassCard';
 import { ClassFormModal } from '../components/ClassFormModal';
 import { SectionDetailModal } from '../components/SectionDetailModal';
+import { TakeAttendanceModal } from '../components/TakeAttendanceModal';
 import { AddUserModal } from '../../users/components/AddUserModal';
 import { QRCheckInModal } from '../../attendance/components/QRCheckInModal';
 import { ManualCheckInModal } from '../../attendance/components/ManualCheckInModal';
@@ -91,6 +92,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
   // Attendance Session Modals
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
+  const [attendanceModalClass, setAttendanceModalClass] = useState<ClassSection | null>(null);
   
   // Collapsible Grade Cards State
   const [expandedGrades, setExpandedGrades] = useState<Record<number, boolean>>({
@@ -159,39 +161,8 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     setExpandedGrades(allCollapsed);
   };
 
-  const handleCreateQuickSession = async (cls: ClassSection) => {
-    try {
-      const primarySubject = cls.subjects?.[0] || cls.subject || 'General Subject';
-      const res = await offlineCapableFetch('/api/sessions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          classId: cls.id,
-          classCode: cls.sectionName,
-          sectionName: cls.sectionName,
-          gradeLevel: cls.gradeLevel,
-          category: cls.category,
-          subject: primarySubject,
-          title: `Class Attendance: ${cls.sectionName} (${primarySubject})`,
-          date: new Date().toISOString().split('T')[0],
-          startTime: '08:00 AM',
-          endTime: '09:30 AM',
-          room: 'Main Room',
-          status: 'ACTIVE',
-          allowGeofence: true,
-          attendedCount: 0,
-          totalExpectedCount: cls.enrolledStudentIds?.length || 25,
-        }),
-      });
-
-      if (res.ok) {
-        showToast(`Live QR session created for ${cls.sectionName}!`, 'success');
-        fetchData();
-        onOpenQRScanner();
-      }
-    } catch {
-      showToast('Error launching live session', 'error');
-    }
+  const handleCreateQuickSession = (cls: ClassSection) => {
+    setAttendanceModalClass(cls);
   };
 
   const handleDeleteClass = async (cls: ClassSection) => {
@@ -801,6 +772,17 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
         onClose={() => setIsAddStudentOpen(false)}
         onUserAdded={fetchData}
         defaultRole="STUDENT"
+      />
+
+      {/* Take Attendance Modal */}
+      <TakeAttendanceModal
+        isOpen={!!attendanceModalClass}
+        onClose={() => setAttendanceModalClass(null)}
+        onSuccess={() => {
+          fetchData();
+          setAttendanceModalClass(null);
+        }}
+        cls={attendanceModalClass}
       />
     </div>
   );
