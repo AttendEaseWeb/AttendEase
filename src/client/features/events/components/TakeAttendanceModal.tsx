@@ -123,7 +123,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({ isOpen
         className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-200 ${
           isActive
             ? `${colorClass} shadow-sm transform scale-105 border-transparent font-bold`
-            : 'bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border-m3-sys-light-outline-variant/30 text-m3-sys-light-on-surface-variant hover:bg-m3-sys-light-surface-variant/50'
+            : 'bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50'
         }`}
       >
         <Icon className={`w-5 h-5 mb-1 ${isActive ? '' : 'opacity-70'}`} />
@@ -140,12 +140,12 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({ isOpen
         {/* Top Controls */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30">
           <div className="flex-1 space-y-1">
-            <label className="text-label-small font-bold text-m3-sys-light-on-surface-variant">Ongoing Subject</label>
+            <label className="text-label-small font-bold text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">Ongoing Subject</label>
             {cls.subjects && cls.subjects.length > 1 ? (
               <select
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/40 rounded-xl px-3 py-2 text-body-medium focus:ring-2 focus:ring-m3-sys-light-primary"
+                className="w-full bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface border border-m3-sys-light-outline-variant/40 dark:border-m3-sys-dark-outline-variant/40 rounded-xl px-3 py-2 text-body-medium focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary"
               >
                 {cls.subjects.map((sub, idx) => (
                   <option key={idx} value={sub}>
@@ -154,11 +154,11 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({ isOpen
                 ))}
               </select>
             ) : (
-              <div className="font-semibold text-m3-sys-light-on-surface">{subject}</div>
+              <div className="font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">{subject}</div>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-label-small text-m3-sys-light-on-surface-variant whitespace-nowrap">Quick Select All:</span>
+            <span className="text-label-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant whitespace-nowrap">Quick Select All:</span>
             <button onClick={() => handleMarkAll('PRESENT')} className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20" title="All Present">
               <CheckCircle2 className="w-5 h-5" />
             </button>
@@ -171,9 +171,9 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({ isOpen
         {/* Student List */}
         <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
           {isLoading ? (
-            <div className="text-center py-8 text-m3-sys-light-on-surface-variant">Loading roster...</div>
+            <div className="text-center py-8 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">Loading roster...</div>
           ) : students.length === 0 ? (
-            <div className="text-center py-8 text-m3-sys-light-on-surface-variant">
+            <div className="text-center py-8 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
               No students enrolled in this section.
             </div>
           ) : (
@@ -183,12 +183,12 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({ isOpen
                 className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border border-m3-sys-light-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface gap-3 shadow-sm"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-m3-sys-light-primary/10 flex items-center justify-center text-m3-sys-light-primary font-bold text-lg shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-m3-sys-light-primary/10 dark:bg-m3-sys-dark-primary/20 flex items-center justify-center text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-bold text-lg shrink-0">
                     {student.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <div className="font-bold text-m3-sys-light-on-surface">{student.name}</div>
-                    <div className="text-body-small text-m3-sys-light-on-surface-variant">{student.email}</div>
+                    <div className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">{student.name}</div>
+                    <div className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">{student.email}</div>
                   </div>
                 </div>
 
@@ -228,7 +228,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({ isOpen
         </div>
 
         {/* Footer */}
-        <div className="pt-4 border-t border-m3-sys-light-outline-variant/30 flex justify-end gap-3">
+        <div className="pt-4 border-t border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 flex justify-end gap-3">
           <Button variant="outline" onClick={onClose} disabled={isSaving}>
             Cancel
           </Button>
