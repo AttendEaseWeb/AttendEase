@@ -77,8 +77,9 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
       </div>
 
       {/* Table Component */}
-      <div className="overflow-x-auto rounded-3xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface shadow-expressive-sm">
-        <table className="w-full text-left text-body-medium border-collapse">
+      <div>
+        <div className="hidden lg:block w-full overflow-x-auto rounded-3xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface shadow-expressive-sm">
+        <table className="w-full text-left text-body-medium border-collapse whitespace-nowrap">
           <thead>
             <tr className="bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface-variant/40 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant border-b border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 font-semibold">
               <th className="p-4">Student Details</th>
@@ -168,6 +169,85 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
           </tbody>
         </table>
       </div>
+
+      {/* Mobile/Tablet Card Layout */}
+      <div className="lg:hidden space-y-3">
+        {filtered.length === 0 ? (
+          <div className="p-8 text-center text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant text-body-medium bg-m3-sys-light-surface-variant/20 rounded-xl">
+            No attendance records found matching filters.
+          </div>
+        ) : (
+          filtered.map((record) => {
+            const isJHS = record.category === 'JUNIOR_HIGH' || (record.gradeLevel && record.gradeLevel <= 10);
+            const section = record.sectionName || record.courseTitle || 'Class Section';
+            const code = record.classCode || record.courseCode || 'CLS';
+
+            return (
+              <div key={record.id} className="p-4 rounded-xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface space-y-3 shadow-sm relative overflow-hidden">
+                <div className="flex justify-between items-start gap-2">
+                  <div className="space-y-0.5">
+                    <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface block text-label-large">
+                      {record.studentName}
+                    </span>
+                    <span className="text-label-small text-m3-sys-light-on-surface-variant truncate block w-[200px] sm:w-[300px]">
+                      {record.studentEmail}
+                    </span>
+                  </div>
+                  <Badge
+                    variant={
+                      record.status === 'PRESENT'
+                        ? 'emerald'
+                        : record.status === 'LATE'
+                        ? 'amber'
+                        : record.status === 'EXCUSED'
+                        ? 'purple'
+                        : 'rose'
+                    }
+                  >
+                    {record.status}
+                  </Badge>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-label-small">
+                  <div>
+                    <span className="text-m3-sys-light-on-surface-variant block mb-0.5">Class / Level</span>
+                    <div className="font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-1.5 flex-wrap">
+                      {section}
+                      <Badge variant={isJHS ? 'success' : 'primary'}>
+                        {record.gradeLevel ? `Gr ${record.gradeLevel}` : code}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-m3-sys-light-on-surface-variant block mb-0.5">Subject</span>
+                    <span className="font-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface truncate block">
+                      {record.subject || code}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-m3-sys-light-on-surface-variant block mb-0.5">Time</span>
+                    <span className="font-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface truncate block">
+                      {formatDateTime(record.checkInTime).replace(', ', '\n')}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-m3-sys-light-on-surface-variant block mb-0.5">Method</span>
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-m3-sys-light-surface-variant/50 text-m3-sys-light-on-surface-variant border border-m3-sys-light-outline-variant/30 font-medium whitespace-nowrap">
+                      {record.method === 'QR_SCAN' ? (
+                        <><QrCode className="w-3 h-3 text-m3-sys-light-primary dark:text-m3-sys-dark-primary" /> Dynamic QR</>
+                      ) : (
+                        <><UserCheck className="w-3 h-3 text-m3-sys-light-tertiary dark:text-m3-sys-dark-tertiary" /> Manual</>
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+
+      </div>
+    </div>
     </div>
   );
 };
