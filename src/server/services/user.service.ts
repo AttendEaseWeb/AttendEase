@@ -2,15 +2,15 @@ import { User } from '../../shared/types/auth';
 import { dbStore } from '../db/store';
 
 export class UserService {
-  static getAllUsers(): User[] {
-    return dbStore.getUsers();
+  static async getAllUsers(): Promise<User[]> {
+    return await dbStore.getUsers();
   }
 
-  static getUserById(id: string): User | undefined {
-    return dbStore.getUserById(id);
+  static async getUserById(id: string): Promise<User | undefined> {
+    return await dbStore.getUserById(id);
   }
 
-  static createUser(user: User): User {
-    return dbStore.addUser(user);
+  static async createUser(user: User): Promise<User> {
+    return await dbStore.addUser(user);
   }
 }

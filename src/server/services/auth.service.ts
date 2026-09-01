@@ -2,8 +2,8 @@ import { LoginRequest, RegisterRequest, AuthResponse, UserRole } from '../../sha
 import { dbStore } from '../db/store';
 
 export class AuthService {
-  static login(req: LoginRequest): AuthResponse {
-    let user = dbStore.getUserByEmail(req.email);
+  static async login(req: LoginRequest): Promise<AuthResponse> {
+    let user = await dbStore.getUserByEmail(req.email);
 
     if (!user) {
       // Auto register for seamless testing if role provided
@@ -11,7 +11,7 @@ export class AuthService {
       const name = req.email.split('@')[0].replace('.', ' ');
       const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
 
-      user = dbStore.addUser({
+      user = await dbStore.addUser({
         id: `u-${Date.now()}`,
         email: req.email,
         name: capitalizedName,
@@ -37,13 +37,13 @@ export class AuthService {
     };
   }
 
-  static register(req: RegisterRequest): AuthResponse {
-    const existing = dbStore.getUserByEmail(req.email);
+  static async register(req: RegisterRequest): Promise<AuthResponse> {
+    const existing = await dbStore.getUserByEmail(req.email);
     if (existing) {
       throw new Error('User with this email already exists');
     }
 
-    const user = dbStore.addUser({
+    const user = await dbStore.addUser({
       id: `u-${Date.now()}`,
       name: req.name,
       email: req.email,

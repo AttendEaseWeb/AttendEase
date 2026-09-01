@@ -3,25 +3,25 @@ import { dbStore } from '../db/store';
 import { parseQRToken } from '../../shared/utils/qr';
 
 export class AttendanceService {
-  static getAllAttendance(): AttendanceRecord[] {
-    return dbStore.getAttendanceRecords();
+  static async getAllAttendance(): Promise<AttendanceRecord[]> {
+    return await dbStore.getAttendanceRecords();
   }
 
-  static getAttendanceBySession(sessionId: string): AttendanceRecord[] {
-    return dbStore.getAttendanceBySessionId(sessionId);
+  static async getAttendanceBySession(sessionId: string): Promise<AttendanceRecord[]> {
+    return await dbStore.getAttendanceBySessionId(sessionId);
   }
 
-  static getAttendanceByStudent(studentId: string): AttendanceRecord[] {
-    return dbStore.getAttendanceByStudentId(studentId);
+  static async getAttendanceByStudent(studentId: string): Promise<AttendanceRecord[]> {
+    return await dbStore.getAttendanceByStudentId(studentId);
   }
 
-  static checkIn(req: CheckInRequest): AttendanceRecord {
-    const session = dbStore.getSessionById(req.sessionId);
+  static async checkIn(req: CheckInRequest): Promise<AttendanceRecord> {
+    const session = await dbStore.getSessionById(req.sessionId);
     if (!session) {
       throw new Error('Active session not found');
     }
 
-    const student = dbStore.getUserById(req.studentId);
+    const student = await dbStore.getUserById(req.studentId);
     if (!student) {
       throw new Error('Student user record not found');
     }
@@ -69,19 +69,19 @@ export class AttendanceService {
       courseTitle: session.sectionName,
     };
 
-    return dbStore.addAttendanceRecord(record);
+    return await dbStore.addAttendanceRecord(record);
   }
 
-  static manualCheckIn(data: {
+  static async manualCheckIn(data: {
     sessionId: string;
     studentId: string;
     status: AttendanceStatus;
     notes?: string;
   }): AttendanceRecord {
-    const session = dbStore.getSessionById(data.sessionId);
+    const session = await dbStore.getSessionById(data.sessionId);
     if (!session) throw new Error('Session not found');
 
-    const student = dbStore.getUserById(data.studentId);
+    const student = await dbStore.getUserById(data.studentId);
     if (!student) throw new Error('Student not found');
 
     const record: AttendanceRecord = {
@@ -107,10 +107,10 @@ export class AttendanceService {
       courseTitle: session.sectionName,
     };
 
-    return dbStore.addAttendanceRecord(record);
+    return await dbStore.addAttendanceRecord(record);
   }
 
-  static getStats(studentId?: string): AttendanceStats {
-    return dbStore.getAttendanceStats(studentId);
+  static async getStats(studentId?: string): Promise<AttendanceStats> {
+    return await dbStore.getAttendanceStats(studentId);
   }
 }

@@ -5,18 +5,18 @@ import { User } from '../../shared/types/auth';
 
 export const userRouter = Router();
 
-userRouter.get('/', (_req, res, next) => {
+userRouter.get('/', async (_req, res, next) => {
   try {
-    const users = UserService.getAllUsers();
+    const users = await UserService.getAllUsers();
     res.json(users);
   } catch (err) {
     next(err);
   }
 });
 
-userRouter.get('/:id', (req, res, next) => {
+userRouter.get('/:id', async (req, res, next) => {
   try {
-    const user = UserService.getUserById(req.params.id);
+    const user = await UserService.getUserById(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
   } catch (err) {
@@ -24,7 +24,7 @@ userRouter.get('/:id', (req, res, next) => {
   }
 });
 
-userRouter.post('/', (req, res, next) => {
+userRouter.post('/', async (req, res, next) => {
   try {
     const { name, email, parentPhone, role, studentId, department, avatarUrl } = req.body;
     if (!name || !name.trim()) {
@@ -40,7 +40,7 @@ userRouter.post('/', (req, res, next) => {
       effectiveEmail = `${slug}.${cleanStudentId.toLowerCase().replace(/[^a-z0-9]/g, '')}@school.edu.ph`;
     }
 
-    const existing = dbStore.getUserByEmail(effectiveEmail);
+    const existing = await dbStore.getUserByEmail(effectiveEmail);
     if (existing) {
       // Add random salt if duplicate email generated
       effectiveEmail = `${effectiveEmail.split('@')[0]}_${Math.floor(100 + Math.random() * 900)}@school.edu.ph`;
@@ -58,16 +58,16 @@ userRouter.post('/', (req, res, next) => {
       createdAt: req.body.createdAt || new Date().toISOString(),
     };
 
-    const created = UserService.createUser(newUser);
+    const created = await UserService.createUser(newUser);
     res.status(201).json(created);
   } catch (err) {
     next(err);
   }
 });
 
-userRouter.delete('/:id', (req, res, next) => {
+userRouter.delete('/:id', async (req, res, next) => {
   try {
-    const success = dbStore.deleteUser(req.params.id);
+    const success = await dbStore.deleteUser(req.params.id);
     if (!success) return res.status(404).json({ error: 'User not found' });
     res.json({ message: 'User deleted successfully' });
   } catch (err) {

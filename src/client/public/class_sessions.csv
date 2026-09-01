@@ -1,0 +1,2 @@
+id,classId,classCode,sectionName,gradeLevel,category,subject,title,date,startTime,endTime,room,status,qrToken,qrExpiresAt,allowGeofence,latitude,longitude,radiusMeters,attendedCount,totalExpectedCount
+00000000-0000-0000-0000-000000000003,00000000-0000-0000-0000-000000000002,,9-Innovation,9,JUNIOR_HIGH,Mathematics,Class Attendance: 9-Innovation (Mathematics),2026-09-01,08:00 AM,09:30 AM,Main Room,ACTIVE,,,,false,,,,0,25
