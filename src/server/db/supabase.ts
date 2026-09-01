@@ -1,3 +1,12 @@
+/**
+ * ------------------------------------------------------------------
+ * DATABASE CONNECTION (SUPABASE)
+ * ------------------------------------------------------------------
+ * This file creates the secure bridge between our application and 
+ * the Supabase cloud database where all our user, class, and 
+ * attendance data is permanently stored.
+ * ------------------------------------------------------------------
+ */
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;

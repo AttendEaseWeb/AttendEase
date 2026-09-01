@@ -1,3 +1,15 @@
+/**
+ * ------------------------------------------------------------------
+ * ATTENDEASE SERVER ENGINEROOM
+ * ------------------------------------------------------------------
+ * This file is the 'brain' of the AttendEase application's backend.
+ * It starts up the server, listens for requests from the website (like
+ * logging in, marking attendance, or fetching class lists), and routes 
+ * those requests to the correct services.
+ * 
+ * Think of this as the main switchboard operator directing traffic.
+ * ------------------------------------------------------------------
+ */
 import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';

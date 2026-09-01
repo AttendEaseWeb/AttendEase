@@ -1,3 +1,13 @@
+/**
+ * ------------------------------------------------------------------
+ * AUTHENTICATION CONTEXT (USER LOGIN STATE)
+ * ------------------------------------------------------------------
+ * This file is responsible for keeping track of 'who' is currently 
+ * using the app. It securely stores the logged-in user's details 
+ * and shares them with the rest of the application so that screens 
+ * can decide what to show (e.g., hiding Admin tools from Students).
+ * ------------------------------------------------------------------
+ */
 import { offlineCapableFetch } from '../utils/sync';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole, LoginRequest, RegisterRequest } from '../../shared/types/auth';

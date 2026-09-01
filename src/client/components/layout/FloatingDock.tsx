@@ -1,3 +1,13 @@
+/**
+ * ------------------------------------------------------------------
+ * FLOATING NAVIGATION DOCK
+ * ------------------------------------------------------------------
+ * This controls the menu bar you see at the bottom of the screen.
+ * It allows users to switch between the Dashboard, Classes, and 
+ * Attendance pages. We added special logic here to make it collapse
+ * and hide its text when the user starts scrolling to save screen space!
+ * ------------------------------------------------------------------
+ */
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useAuth } from '../../context/AuthContext';

@@ -1,3 +1,16 @@
+/**
+ * ------------------------------------------------------------------
+ * ATTENDEASE MAIN USER INTERFACE (APP COMPONENT)
+ * ------------------------------------------------------------------
+ * This file represents the main visual structure of the app. It acts
+ * as the master layout that decides which screen (Dashboard, Classes, 
+ * Attendance) to show the user based on what they click in the menu.
+ * 
+ * It also wraps the whole app in important 'Providers' - invisible 
+ * wrappers that share things like the user's login status and popup 
+ * notifications across all screens.
+ * ------------------------------------------------------------------
+ */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthProvider, useAuth } from './client/context/AuthContext';
