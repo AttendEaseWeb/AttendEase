@@ -77,7 +77,7 @@ export class AttendanceService {
     studentId: string;
     status: AttendanceStatus;
     notes?: string;
-  }): AttendanceRecord {
+  }): Promise<AttendanceRecord> {
     const session = await dbStore.getSessionById(data.sessionId);
     if (!session) throw new Error('Session not found');
 
