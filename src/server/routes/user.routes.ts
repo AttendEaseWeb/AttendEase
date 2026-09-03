@@ -26,7 +26,7 @@ userRouter.get('/:id', async (req, res, next) => {
 
 userRouter.post('/', async (req, res, next) => {
   try {
-    const { name, email, parentPhone, role, studentId, department, avatarUrl } = req.body;
+    const { name, email, parentPhone, parentEmail, role, studentId, department, avatarUrl } = req.body;
     if (!name || !name.trim()) {
       return res.status(400).json({ error: 'Full Name is required' });
     }
@@ -51,6 +51,7 @@ userRouter.post('/', async (req, res, next) => {
       name: name.trim(),
       email: effectiveEmail,
       parentPhone: parentPhone ? parentPhone.trim() : undefined,
+      parentEmail: parentEmail ? parentEmail.trim() : undefined,
       role: role || 'STUDENT',
       studentId: cleanStudentId,
       department: department || 'General Education',

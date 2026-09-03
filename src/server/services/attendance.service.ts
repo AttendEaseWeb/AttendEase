@@ -1,3 +1,4 @@
+import { EmailService } from './email.service';
 import { AttendanceRecord, CheckInRequest, AttendanceStats, AttendanceStatus } from '../../shared/types/attendance';
 import { dbStore } from '../db/store';
 import { parseQRToken } from '../../shared/utils/qr';
@@ -83,6 +84,11 @@ export class AttendanceService {
 
     const student = await dbStore.getUserById(data.studentId);
     if (!student) throw new Error('Student not found');
+    
+    // Check if there is an existing record to prevent duplicate email notifications
+    const existingRecords = await dbStore.getAttendanceBySessionId(data.sessionId);
+    const existingRecord = existingRecords.find(r => r.studentId === data.studentId);
+    const wasAlreadyAbsent = existingRecord?.status === 'ABSENT';
 
     const record: AttendanceRecord = {
       id: `att-${Date.now()}`,
@@ -107,7 +113,17 @@ export class AttendanceService {
       courseTitle: session.sectionName,
     };
 
-    return await dbStore.addAttendanceRecord(record);
+    const savedRecord = await dbStore.addAttendanceRecord(record);
+
+    // Send email notification if marked ABSENT and wasn't already ABSENT
+    if (data.status === 'ABSENT' && !wasAlreadyAbsent && student.parentEmail) {
+      // We don't await this so it doesn't block the request or fail the attendance record if email fails
+      EmailService.sendParentNotification(student.parentEmail, student.name, savedRecord).catch(err => {
+        console.error('Non-fatal error sending email in background:', err);
+      });
+    }
+
+    return savedRecord;
   }
 
   static async getStats(studentId?: string): Promise<AttendanceStats> {

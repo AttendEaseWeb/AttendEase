@@ -65,6 +65,7 @@ syncRouter.post('/', (req, res, next) => {
              name: name.trim(),
              email: effectiveEmail,
              parentPhone: payload.parentPhone ? payload.parentPhone.trim() : undefined,
+             parentEmail: payload.parentEmail ? payload.parentEmail.trim() : undefined,
              role: payload.role || 'STUDENT',
              studentId: cleanStudentId,
              department: payload.department || 'General Education',

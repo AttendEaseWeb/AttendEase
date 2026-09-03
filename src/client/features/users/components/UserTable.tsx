@@ -33,6 +33,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onUserDeleted }) =>
       u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (u.parentPhone && u.parentPhone.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (u.parentEmail && u.parentEmail.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (u.department && u.department.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesRole = roleFilter === 'ALL' || u.role === roleFilter;
@@ -92,7 +93,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onUserDeleted }) =>
                     <div className="flex flex-col">
                       <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-body-large">{u.name}</span>
                       <span className="text-label-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-                        {u.parentPhone ? `Phone: ${u.parentPhone}` : u.email}
+                        {u.parentEmail ? `Parent Email: ${u.parentEmail} ` : ''}{u.parentPhone ? `Parent Phone: ${u.parentPhone}` : (!u.parentEmail && !u.parentPhone ? u.email : '')}
                       </span>
                     </div>
                   </div>

@@ -31,6 +31,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 
   const [name, setName] = useState('');
   const [parentPhone, setParentPhone] = useState('');
+  const [parentEmail, setParentEmail] = useState('');
   const [studentId, setStudentId] = useState('');
   const [selectedClassId, setSelectedClassId] = useState<string>(defaultClassId || '');
 
@@ -41,6 +42,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
     if (isOpen) {
       setName('');
       setParentPhone('');
+      setParentEmail('');
       setStudentId('');
       setSelectedClassId(defaultClassId || '');
       fetchClasses();
@@ -65,10 +67,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
       return;
     }
 
-    if (!parentPhone.trim()) {
-      showToast("Please provide Parent/Guardian's phone number", 'error');
-      return;
-    }
+
 
     setIsLoading(true);
 
@@ -79,7 +78,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: name.trim(),
-          parentPhone: parentPhone.trim(),
+          parentPhone: parentPhone.trim() || undefined,
+          parentEmail: parentEmail.trim() || undefined,
           role: 'STUDENT',
           studentId: studentId.trim(),
           avatarUrl: DEFAULT_AVATAR,
@@ -151,14 +151,27 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
           <div className="space-y-1.5">
             <label className="text-label-medium font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-1.5">
               <Phone className="w-4 h-4 text-m3-sys-light-primary" />
-              Parent/Guardian Phone
+              Parent/Guardian Phone (Optional)
             </label>
             <input
               type="tel"
-              required
               placeholder="Phone Number"
               value={parentPhone}
               onChange={(e) => setParentPhone(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary shadow-sm"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-label-medium font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-1.5">
+              <UserIcon className="w-4 h-4 text-m3-sys-light-primary" />
+              Parent/Guardian Email (Optional)
+            </label>
+            <input
+              type="email"
+              placeholder="parent@example.com"
+              value={parentEmail}
+              onChange={(e) => setParentEmail(e.target.value)}
               className="w-full px-4 py-2.5 rounded-2xl border border-m3-sys-light-outline-variant/60 dark:border-m3-sys-dark-outline-variant/60 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary shadow-sm"
             />
           </div>
