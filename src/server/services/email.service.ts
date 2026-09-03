@@ -53,7 +53,34 @@ export class EmailService {
       console.log(`Successfully sent EmailJS absence notification to ${parentEmail} for ${studentName}`);
       return true;
     } catch (error) {
-      console.error('Failed to send EmailJS notification:', error);
+      console.warn('Primary EmailJS account failed (possibly quota exceeded):', error);
+
+      // Attempt backup account
+      const backupServiceId = process.env.EMAILJS_SERVICE_ID_BACKUP;
+      const backupTemplateId = process.env.EMAILJS_TEMPLATE_ID_BACKUP;
+      const backupPublicKey = process.env.EMAILJS_PUBLIC_KEY_BACKUP;
+      const backupPrivateKey = process.env.EMAILJS_PRIVATE_KEY_BACKUP;
+
+      if (backupServiceId && backupTemplateId && backupPublicKey && backupPrivateKey) {
+        console.log('Attempting to send via backup EmailJS account...');
+        try {
+          await emailjs.send(
+            backupServiceId,
+            backupTemplateId,
+            templateParams,
+            {
+              publicKey: backupPublicKey,
+              privateKey: backupPrivateKey,
+            }
+          );
+          console.log(`Successfully sent backup EmailJS notification to ${parentEmail} for ${studentName}`);
+          return true;
+        } catch (backupError) {
+          console.error('Failed to send backup EmailJS notification:', backupError);
+          return false;
+        }
+      }
+
       return false;
     }
   }
