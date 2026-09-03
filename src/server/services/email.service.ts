@@ -1,22 +1,19 @@
-import nodemailer from 'nodemailer';
+import emailjs from '@emailjs/nodejs';
 import { AttendanceRecord } from '../../shared/types/attendance';
 
 export class EmailService {
-  private static transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
-    },
-  });
-
   static async sendParentNotification(
     parentEmail: string,
     studentName: string,
     record: AttendanceRecord
   ): Promise<boolean> {
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-      console.warn('Gmail credentials not set in environment variables. Email not sent.');
+    const serviceId = process.env.EMAILJS_SERVICE_ID;
+    const templateId = process.env.EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+    const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+
+    if (!serviceId || !templateId || !publicKey || !privateKey) {
+      console.warn('EmailJS credentials not set in environment variables. Email not sent.');
       return false;
     }
 
@@ -33,40 +30,30 @@ export class EmailService {
         minute: '2-digit',
       });
 
-      const mailOptions = {
-        from: `"AttendEase Notifications" <${process.env.GMAIL_USER}>`,
-        to: parentEmail,
-        subject: `Attendance Alert: ${studentName} marked Absent`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
-            <div style="background-color: #ef4444; color: white; padding: 20px; text-align: center;">
-              <h2 style="margin: 0;">Attendance Notification</h2>
-            </div>
-            <div style="padding: 20px; color: #333;">
-              <p>Dear Parent/Guardian,</p>
-              <p>This is an automated notification from <strong>AttendEase</strong> to inform you that <strong>${studentName}</strong> was marked <strong>ABSENT</strong>.</p>
-              
-              <div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0;">
-                <p style="margin: 5px 0;"><strong>Class/Subject:</strong> ${record.subject} (${record.sectionName})</p>
-                <p style="margin: 5px 0;"><strong>Date:</strong> ${dateString}</p>
-                <p style="margin: 5px 0;"><strong>Time Marked:</strong> ${timeString}</p>
-                ${record.notes ? `<p style="margin: 5px 0;"><strong>Instructor Notes:</strong> ${record.notes}</p>` : ''}
-              </div>
-              
-              <p>If you believe this is an error, please contact the instructor or the school administration office.</p>
-              <br/>
-              <p>Sincerely,</p>
-              <p><strong>The AttendEase Team</strong></p>
-            </div>
-          </div>
-        `,
+      const templateParams = {
+        to_email: parentEmail,
+        student_name: studentName,
+        class_subject: record.subject,
+        class_section: record.sectionName,
+        date_string: dateString,
+        time_string: timeString,
+        notes: record.notes || 'None',
       };
 
-      await this.transporter.sendMail(mailOptions);
-      console.log(`Successfully sent absence notification to ${parentEmail} for ${studentName}`);
+      await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        {
+          publicKey: publicKey,
+          privateKey: privateKey,
+        }
+      );
+
+      console.log(`Successfully sent EmailJS absence notification to ${parentEmail} for ${studentName}`);
       return true;
     } catch (error) {
-      console.error('Failed to send email notification:', error);
+      console.error('Failed to send EmailJS notification:', error);
       return false;
     }
   }
