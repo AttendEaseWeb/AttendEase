@@ -1,0 +1,2 @@
+id,name,email,parentPhone,parentEmail,role,avatarUrl,department,studentId,createdAt
+00000000-0000-0000-0000-000000000001,John Doe,john.doe@example.com,,,ADMIN,,,,"2026-09-01T00:00:00Z"
