@@ -1,5 +1,6 @@
 importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
-const CACHE_NAME = 'attendease-cache-v1';
+
+const CACHE_NAME = 'attendease-cache-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -54,11 +55,9 @@ self.addEventListener('fetch', (event) => {
             if (cachedResponse) {
               return cachedResponse;
             }
-            // If offline and not in cache, return empty array/object based on common patterns
-            // to prevent JSON parse errors in the UI
             let fallbackBody = [];
             if (url.pathname.match(/\/api\/(users|classes|sessions|attendance)\/.+/)) {
-               fallbackBody = {}; // single object
+               fallbackBody = {}; 
             }
             return new Response(JSON.stringify(fallbackBody), {
               status: 200,
@@ -68,15 +67,16 @@ self.addEventListener('fetch', (event) => {
         })
       );
     }
-    // Let non-GET /api/ requests pass through
     return;
   }
 
+  // STATIC ASSETS: Cache First, Fallback to Network
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      // Network falling back to cache strategy
-      const fetchPromise = fetch(event.request).then((networkResponse) => {
-        // Cache dynamic assets if they are successful GET requests
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).then((networkResponse) => {
         if (event.request.method === 'GET' && networkResponse && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -85,17 +85,10 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        // If network fails, return cached response if available
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        // Fallback for document requests (SPA routing)
         if (event.request.mode === 'navigate') {
           return caches.match('/index.html');
         }
       });
-
-      return fetchPromise;
     })
   );
 });
@@ -152,47 +145,29 @@ async function processSyncQueue() {
   const items = await getAllQueueItems();
   
   if (items.length === 0) {
-    console.log('[Service Worker] No items in sync queue.');
     return;
   }
 
   try {
-    console.log(`[Service Worker] Syncing ${items.length} items to /api/sync`);
-    
     const response = await fetch('/api/sync', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ operations: items })
     });
-
     if (response.ok) {
-      console.log(`[Service Worker] Bulk sync successful (Status ${response.status})`);
-      // Clear all items that were successfully synced
       for (const item of items) {
         await deleteQueueItem(item.id);
       }
     } else {
-      console.error(`[Service Worker] Server returned ${response.status} for bulk sync, will retry later.`);
-      if (response.status >= 400 && response.status < 500) {
-          // If it's a client error (e.g. malformed data), we might want to discard to avoid infinite loops,
-          // but for safety, we keep it or handle it in the backend deduplication logic.
-          console.warn('[Service Worker] Client error during sync. Keeping data to prevent loss.');
-      }
+      console.error(`[Service Worker] Server returned ${response.status} for bulk sync.`);
     }
   } catch (err) {
-    console.error(`[Service Worker] Failed to sync bulk items:`, err);
-    // Throwing error here is important! It tells the Background Sync API 
-    // that the sync failed and it should retry the sync event later.
     throw err;
   }
 }
 
-// Listen for messages from frontend to trigger sync manually (fallback)
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'TRIGGER_SYNC') {
-    console.log('[Service Worker] Manual sync triggered from client');
     processSyncQueue();
   }
 });
