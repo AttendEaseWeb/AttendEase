@@ -1,5 +1,4 @@
 import { EmailService } from './email.service';
-import { OneSignalService } from './onesignal.service';
 import { AttendanceRecord, CheckInRequest, AttendanceStats, AttendanceStatus } from '../../shared/types/attendance';
 import { dbStore } from '../db/store';
 import { parseQRToken } from '../../shared/utils/qr';
@@ -121,11 +120,6 @@ export class AttendanceService {
       // We don't await this so it doesn't block the request or fail the attendance record if email fails
       EmailService.sendParentNotification(student.parentEmail, student.name, savedRecord).catch(err => {
         console.error('Non-fatal error sending email in background:', err);
-      });
-      
-      // Also send a Push Notification!
-      OneSignalService.sendAbsencePushNotification(student.parentEmail, student.name, savedRecord).catch(err => {
-        console.error('Non-fatal error sending push notification in background:', err);
       });
     }
 
