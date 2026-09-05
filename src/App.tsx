@@ -13,6 +13,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import OneSignal from 'react-onesignal';
 import { AuthProvider, useAuth } from './client/context/AuthContext';
 import { NotificationProvider } from './client/context/NotificationContext';
 import { ScheduleProvider, useSchedule } from './client/context/ScheduleContext';
@@ -39,7 +40,24 @@ function MainLayout() {
     const el = document.getElementById('main-scroll-container');
     if (el) el.scrollTo(0, 0);
     else window.scrollTo(0, 0);
-  }, [effectiveTab]);
+
+    // Initialize OneSignal
+    const oneSignalAppId = import.meta.env.VITE_ONESIGNAL_APP_ID;
+    if (oneSignalAppId) {
+      OneSignal.init({
+        appId: oneSignalAppId,
+        allowLocalhostAsSecureOrigin: true,
+      }).then(() => {
+        // Automatically prompt users to subscribe when they log in
+        OneSignal.Slidedown.promptPush();
+        
+        // Optionally tag the user so backend can send notifications directly to them
+        if (user?.email) {
+          OneSignal.User.addAlias('external_id', user.email);
+        }
+      }).catch(err => console.error('OneSignal Init Error:', err));
+    }
+  }, [effectiveTab, user]);
 
   if (!isAuthenticated) {
     return <AuthPage />;
