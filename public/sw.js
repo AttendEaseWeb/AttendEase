@@ -1,4 +1,5 @@
-const CACHE_NAME = 'attendease-cache-v5';
+importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+const CACHE_NAME = 'attendease-cache-v6';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
