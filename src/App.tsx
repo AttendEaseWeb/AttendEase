@@ -47,6 +47,8 @@ function MainLayout() {
       OneSignal.init({
         appId: oneSignalAppId,
         allowLocalhostAsSecureOrigin: true,
+        serviceWorkerParam: { scope: "/" },
+        serviceWorkerPath: "sw.js",
       }).then(() => {
         // Automatically prompt users to subscribe when they log in
         OneSignal.Slidedown.promptPush();

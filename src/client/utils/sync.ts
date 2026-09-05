@@ -44,7 +44,7 @@ export async function addToSyncQueue(url: string, method: string, payload: any, 
 export async function registerServiceWorkerAndSync() {
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/OneSignalSDKWorker.js');
+      const registration = await navigator.serviceWorker.register('/sw.js');
       console.log('[App] Service Worker registered with scope:', registration.scope);
 
       // Wait for the service worker to be ready before registering sync
