@@ -1,4 +1,4 @@
-const CACHE_NAME = 'attendease-cache-v1';
+const CACHE_NAME = 'attendease-cache-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -73,9 +73,10 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      // Network falling back to cache strategy
-      const fetchPromise = fetch(event.request).then((networkResponse) => {
-        // Cache dynamic assets if they are successful GET requests
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).then((networkResponse) => {
         if (event.request.method === 'GET' && networkResponse && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -84,17 +85,10 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        // If network fails, return cached response if available
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        // Fallback for document requests (SPA routing)
         if (event.request.mode === 'navigate') {
           return caches.match('/index.html');
         }
       });
-
-      return fetchPromise;
     })
   );
 });
