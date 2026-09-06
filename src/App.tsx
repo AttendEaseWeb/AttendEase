@@ -79,7 +79,7 @@ function MainLayout() {
       } catch (err: any) {
         const errorMsg = String(err?.message || err || '').toLowerCase();
         if (errorMsg.includes('already initialized') || errorMsg.includes('can only be used on')) return;
-        console.error('OneSignal Init Error:', err);
+        // console.error('OneSignal Init Error:', err);
       }
     };
 
@@ -161,3 +161,5 @@ export default function App() {
   );
 }
 
+
+// Cache buster: 3
