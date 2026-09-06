@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AttendanceRecord, AttendanceStatus } from '../../../../shared/types/attendance';
 import { Badge } from '../../../components/common/Badge';
 import { formatDateTime } from '../../../../shared/utils/date';
-import { QrCode, UserCheck, Search } from 'lucide-react';
+import { QrCode, UserCheck, Search, WifiOff } from 'lucide-react';
 
 interface AttendanceTableProps {
   records: AttendanceRecord[];
@@ -110,8 +110,13 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
                   >
                     <td className="p-4">
                       <div>
-                        <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface block text-label-large">
+                        <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-2 text-label-large">
                           {record.studentName}
+                          {(record as any)._isOfflineSync && (
+                            <span title="Pending Offline Sync" className="inline-flex items-center justify-center p-1 bg-amber-100 text-amber-700 rounded-full dark:bg-amber-900/30 dark:text-amber-400">
+                              <WifiOff className="w-3 h-3" />
+                            </span>
+                          )}
                         </span>
                         <span className="text-label-small text-m3-sys-light-on-surface-variant font-mono">{record.studentEmail}</span>
                       </div>
@@ -186,8 +191,13 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
               <div key={record.id} className="p-4 rounded-xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface space-y-3 shadow-sm relative overflow-hidden">
                 <div className="flex justify-between items-start gap-2">
                   <div className="space-y-0.5">
-                    <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface block text-label-large">
+                    <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-2 text-label-large">
                       {record.studentName}
+                      {(record as any)._isOfflineSync && (
+                        <span title="Pending Offline Sync" className="inline-flex items-center justify-center p-0.5 bg-amber-100 text-amber-700 rounded-full dark:bg-amber-900/30 dark:text-amber-400">
+                          <WifiOff className="w-3 h-3" />
+                        </span>
+                      )}
                     </span>
                     <span className="text-label-small text-m3-sys-light-on-surface-variant truncate block w-[200px] sm:w-[300px]">
                       {record.studentEmail}

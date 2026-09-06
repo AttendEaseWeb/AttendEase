@@ -14,6 +14,18 @@ export function openSyncDB(): Promise<IDBDatabase> {
   });
 }
 
+
+export async function getPendingSyncItems(): Promise<any[]> {
+  const db = await openSyncDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction('sync-queue', 'readonly');
+    const store = transaction.objectStore('sync-queue');
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
 export async function addToSyncQueue(url: string, method: string, payload: any, headers: any = {}) {
   const db = await openSyncDB();
   const id = crypto.randomUUID();
@@ -170,17 +182,40 @@ export async function offlineCapableFetch(url: string, options: RequestInit = {}
     } else {
       // It's a GET request that failed (e.g. offline and SW bypassed)
       console.log('[App] GET Request failed, checking cache manually for:', url);
+      let cachedData: any = null;
       if ('caches' in window) {
         try {
           const cache = await caches.open('attendease-api-cache');
           const requestUrl = new URL(url, window.location.origin).toString();
           const cachedResponse = await cache.match(requestUrl);
           if (cachedResponse) {
-            return cachedResponse;
+            cachedData = await cachedResponse.clone().json();
           }
         } catch (e) {
           console.warn('Failed to read from cache:', e);
         }
+      }
+
+      // Merge with pending offline sync items if this is a list request
+      try {
+        if (cachedData && Array.isArray(cachedData)) {
+          const pendingItems = await getPendingSyncItems();
+          // Filter pending items related to this endpoint
+          const relevantPending = pendingItems.filter(item => item.url.includes(url.split('?')[0]) && item.method === 'POST');
+          const mergedData = [...relevantPending.map(item => ({ ...item.payload, _isOfflineSync: true })), ...cachedData];
+          return new Response(JSON.stringify(mergedData), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', 'X-Offline-Fallback': 'true' }
+          });
+        }
+        if (cachedData) {
+          return new Response(JSON.stringify(cachedData), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', 'X-Offline-Fallback': 'true' }
+          });
+        }
+      } catch (err) {
+        console.warn('Failed to merge pending items', err);
       }
       
       let fallbackBody: any = [];
