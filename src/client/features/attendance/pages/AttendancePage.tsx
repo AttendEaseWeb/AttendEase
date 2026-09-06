@@ -40,34 +40,22 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
     }
   };
 
-  const handleExportCSV = () => {
+    const handleExportExcel = () => {
     if (records.length === 0) {
       showToast('No attendance records available to export', 'error');
       return;
     }
+    exportToExcel(records);
+    showToast('Exported Excel Report!', 'success');
+  };
 
-    const headers = ['Student Name', 'Email', 'Course', 'Check-In Time', 'Status', 'Method'];
-    const csvRows = [
-      headers.join(','),
-      ...records.map((r) =>
-        [
-          `"${r.studentName}"`,
-          `"${r.studentEmail}"`,
-          `"${r.courseCode}"`,
-          `"${r.checkInTime}"`,
-          `"${r.status}"`,
-          `"${r.method}"`,
-        ].join(',')
-      ),
-    ];
-
-    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `AttendEase_Attendance_Report_${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    showToast('Exported CSV Attendance Report!', 'success');
+  const handleExportPDF = () => {
+    if (records.length === 0) {
+      showToast('No attendance records available to export', 'error');
+      return;
+    }
+    exportToPDF(records);
+    showToast('Exported PDF Report!', 'success');
   };
 
   return (
