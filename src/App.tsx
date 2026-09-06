@@ -36,27 +36,47 @@ function MainLayout() {
 
   const effectiveTab = activeTab === 'users' && user?.role !== 'ADMIN' ? 'dashboard' : activeTab;
 
-  useEffect(() => {
+    useEffect(() => {
     const el = document.getElementById('main-scroll-container');
     if (el) el.scrollTo(0, 0);
     else window.scrollTo(0, 0);
-    // Initialize OneSignal
+  }, [effectiveTab]);
+
+  useEffect(() => {
     const oneSignalAppId = import.meta.env.VITE_ONESIGNAL_APP_ID;
-    if (oneSignalAppId) {
-      OneSignal.init({
-        appId: oneSignalAppId,
-        allowLocalhostAsSecureOrigin: true,
-        // Safely integrate without overriding our caching SW
-        serviceWorkerParam: { scope: '/' },
-        serviceWorkerPath: 'sw.js'
-      }).then(() => {
+    
+    const setupOneSignal = async () => {
+      if (!oneSignalAppId) return;
+
+      try {
+        // @ts-ignore
+        if (!window.OneSignalInitialized && !OneSignal.initialized) {
+          // @ts-ignore
+          window.OneSignalInitialized = true;
+          await OneSignal.init({
+            appId: oneSignalAppId,
+            allowLocalhostAsSecureOrigin: true,
+            serviceWorkerParam: { scope: '/' },
+            serviceWorkerPath: 'sw.js'
+          });
+        }
+
         OneSignal.Slidedown.promptPush();
+
         if (user?.email) {
           OneSignal.User.addAlias('external_id', user.email);
         }
-      }).catch(err => console.error('OneSignal Init Error:', err));
-    }
-  }, [effectiveTab, user]);
+      } catch (err: any) {
+        const errorMsg = err?.message || String(err);
+        // Ignore expected errors in dev/preview environments
+        if (errorMsg.includes('SDK already initialized')) return;
+        if (errorMsg.includes('Can only be used on')) return;
+        console.error('OneSignal Init Error:', err);
+      }
+    };
+
+    setupOneSignal();
+  }, [user?.email]);
 
   if (!isAuthenticated) {
     return <AuthPage />;
