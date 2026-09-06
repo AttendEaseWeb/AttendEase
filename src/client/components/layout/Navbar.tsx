@@ -123,15 +123,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Network Status Indicator */}
           <div
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-label-medium font-semibold border shrink-0 transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-label-medium font-bold border shrink-0 transition-all shadow-sm ${
               isOnline 
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400' 
-                : 'bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400'
+                ? 'bg-emerald-100 border-emerald-200 text-emerald-800 dark:bg-emerald-900/40 dark:border-emerald-800 dark:text-emerald-300' 
+                : 'bg-amber-500 border-amber-600 text-white animate-pulse'
             }`}
             title={isOnline ? 'System Online' : 'System Offline (Sync Paused)'}
           >
-            {isOnline ? <Wifi className="w-3.5 h-3.5 shrink-0" /> : <WifiOff className="w-3.5 h-3.5 shrink-0" />}
-            <span>{isOnline ? 'Online' : 'Offline'}</span>
+            {isOnline ? <Wifi className="w-3.5 h-3.5 shrink-0" /> : <WifiOff className="w-3.5 h-3.5 shrink-0 animate-pulse" />}
+            <span className="hidden sm:inline">{isOnline ? 'Online' : 'Offline'}</span>
           </div>
 
           {/* Notifications Trigger */}
