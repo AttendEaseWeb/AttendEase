@@ -30,7 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { setIsScheduleModalOpen } = useSchedule();
   const [hasNotifications, setHasNotifications] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -56,6 +56,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <div className="fixed top-0 inset-x-0 z-40 w-full pointer-events-none">
+      {/* FLOATING NETWORK STATUS INDICATOR (Absolute Center) */}
+      <div className="fixed top-2 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto">
+        <div
+          className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold border shadow-md transition-all ${
+            isOnline 
+              ? 'bg-emerald-500 border-emerald-600 text-white' 
+              : 'bg-red-500 border-red-700 text-white animate-pulse'
+          }`}
+          title={isOnline ? 'System Online' : 'System Offline (Sync Paused)'}
+        >
+          {isOnline ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4" />}
+          <span>{isOnline ? 'Online' : 'Offline (No Connection)'}</span>
+        </div>
+      </div>
+
       {/* Global backdrop for the profile dropdown */}
       <AnimatePresence>
         {isProfileOpen && (
@@ -84,18 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </span>
           </div>
 
-          {/* Network Status Indicator */}
-          <div
-            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-label-medium font-bold border shrink-0 transition-all shadow-sm ${
-              isOnline 
-                ? 'bg-emerald-100 border-emerald-200 text-emerald-800 dark:bg-emerald-900/40 dark:border-emerald-800 dark:text-emerald-300' 
-                : 'bg-amber-500 border-amber-600 text-white animate-pulse'
-            }`}
-            title={isOnline ? 'System Online' : 'System Offline (Sync Paused)'}
-          >
-            {isOnline ? <Wifi className="w-3.5 h-3.5 shrink-0" /> : <WifiOff className="w-3.5 h-3.5 shrink-0 animate-pulse" />}
-            <span className="hidden sm:inline">{isOnline ? 'Online' : 'Offline'}</span>
-          </div>
+
 
           {/* Responsive Search Bar */}
           <div className="relative hidden md:block w-36 lg:w-48 xl:w-64 transition-all">
