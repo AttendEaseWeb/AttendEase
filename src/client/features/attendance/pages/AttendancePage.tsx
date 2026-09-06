@@ -7,7 +7,8 @@ import { Button } from '../../../components/common/Button';
 import { Card } from '../../../components/common/Card';
 import { useAuth } from '../../../context/AuthContext';
 import { useNotification } from '../../../context/NotificationContext';
-import { Download, Plus, RefreshCw, QrCode } from 'lucide-react';
+import { Download, Plus, RefreshCw, QrCode, FileSpreadsheet, FileText } from 'lucide-react';
+import { exportToExcel, exportToPDF } from '../../../utils/exportUtils';
 
 interface AttendancePageProps {
   onOpenQRScanner: () => void;
@@ -95,10 +96,18 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
           <Button
             variant="outline"
             size="sm"
-            onClick={handleExportCSV}
-            icon={<Download className="w-3.5 h-3.5" />}
+            onClick={handleExportExcel}
+            icon={<FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />}
           >
-            Export CSV
+            Excel
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportPDF}
+            icon={<FileText className="w-3.5 h-3.5 text-red-500" />}
+          >
+            PDF
           </Button>
 
           {(user?.role === 'INSTRUCTOR' || user?.role === 'ADMIN') && (
