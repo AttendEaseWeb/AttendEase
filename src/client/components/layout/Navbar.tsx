@@ -144,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: -8 }}
                     transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute right-0 mt-2 w-80 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-2xl z-50 transform-gpu"
+                    className="fixed top-[72px] left-1/2 -translate-x-1/2 w-[92vw] sm:w-96 max-w-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-2xl z-50 transform-gpu"
                   >
                     <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800 mb-3">
                       <h3 className="font-bold text-title-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">Notifications</h3>
