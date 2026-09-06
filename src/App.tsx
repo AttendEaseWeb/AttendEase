@@ -14,6 +14,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import OneSignal from 'react-onesignal';
+import posthog from 'posthog-js';
+import { PostHogProvider } from 'posthog-js/react';
+
+// Initialize PostHog outside of component to run once
+const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
+if (posthogKey) {
+  posthog.init(posthogKey, {
+    api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
+    autocapture: true,
+    capture_pageview: true,
+  });
+}
 import { AuthProvider, useAuth } from './client/context/AuthContext';
 import { NotificationProvider } from './client/context/NotificationContext';
 import { ScheduleProvider, useSchedule } from './client/context/ScheduleContext';
@@ -75,6 +87,9 @@ function MainLayout() {
 
         if (user?.email) {
           OneSignal.User.addAlias('external_id', user.email);
+          if (posthogKey) {
+            posthog.identify(user.id, { email: user.email, role: user.role, name: user.name });
+          }
         }
       } catch (err: any) {
         const errorMsg = String(err?.message || err || '').toLowerCase();
@@ -151,13 +166,15 @@ function MainLayout() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <NotificationProvider>
-        <ScheduleProvider>
-          <MainLayout />
-        </ScheduleProvider>
-      </NotificationProvider>
-    </AuthProvider>
+    <PostHogProvider client={posthog}>
+      <AuthProvider>
+        <NotificationProvider>
+          <ScheduleProvider>
+            <MainLayout />
+          </ScheduleProvider>
+        </NotificationProvider>
+      </AuthProvider>
+    </PostHogProvider>
   );
 }
 
