@@ -14,6 +14,7 @@ import {
   CalendarClock,
   Wifi,
   WifiOff,
+  X,
 } from 'lucide-react';
 import { useSchedule } from '../../context/ScheduleContext';
 
@@ -30,6 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { setIsScheduleModalOpen } = useSchedule();
   const [hasNotifications, setHasNotifications] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
 
   useEffect(() => {
@@ -110,20 +112,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span>AY 2026-2027 • Term 1</span>
           </div>
 
-          {/* Quick Check-in Launch QR Button */}
-          {onOpenQRScanner && (
-            <button
-              id="navbar-qr-scanner-btn"
-              onClick={onOpenQRScanner}
-              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-m3-sys-light-primary hover:bg-m3-sys-light-primary/90 text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary rounded-full text-label-large font-semibold shadow-sm transition-all duration-150 ease-out hover:scale-[1.04] active:scale-[0.96] transform-gpu cursor-pointer shrink-0"
-              title={user?.role === 'STUDENT' ? 'Scan & Check In' : 'Display Session QR'}
-            >
-              <QrCode className="w-4 h-4 shrink-0" />
-              <span className="hidden sm:inline text-label-medium">
-                {user?.role === 'STUDENT' ? 'Scan QR' : 'Launch QR'}
-              </span>
-            </button>
-          )}
+          
 
                     {/* Persistent Network Status Indicator */}
           <div
@@ -138,17 +127,64 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="hidden sm:inline">{isOnline ? 'Online' : 'Offline'}</span>
           </div>
 
-          {/* Notifications Trigger */}
-          <button
-            onClick={() => setHasNotifications(false)}
-            className="relative p-2 rounded-full text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface hover:bg-m3-sys-light-surface-variant/60 dark:hover:bg-m3-sys-dark-surface-variant/60 transition-all duration-150 ease-out hover:scale-110 active:scale-90 transform-gpu shrink-0 cursor-pointer"
-            title="Notifications"
-          >
-            <Bell className="w-4 h-4 shrink-0" />
-            {hasNotifications && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-m3-sys-light-error dark:bg-m3-sys-dark-error animate-pulse" />
-            )}
-          </button>
+          {/* Notifications Trigger & Popover */}
+          <div className="relative shrink-0">
+            <button
+              onClick={() => {
+                setHasNotifications(false);
+                setIsNotificationsOpen(!isNotificationsOpen);
+                setIsProfileOpen(false); // close profile if open
+              }}
+              className="relative p-2 rounded-full text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface hover:bg-m3-sys-light-surface-variant/60 dark:hover:bg-m3-sys-dark-surface-variant/60 transition-all duration-150 ease-out hover:scale-110 active:scale-90 transform-gpu shrink-0 cursor-pointer"
+              title="Notifications"
+            >
+              <Bell className="w-4 h-4 shrink-0" />
+              {hasNotifications && (
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-m3-sys-light-error dark:bg-m3-sys-dark-error animate-pulse" />
+              )}
+            </button>
+
+            <AnimatePresence>
+              {isNotificationsOpen && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-40"
+                    onClick={() => setIsNotificationsOpen(false)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -8 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -8 }}
+                    transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute right-0 mt-2 w-80 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-4 shadow-2xl z-50 transform-gpu"
+                  >
+                    <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800 mb-3">
+                      <h3 className="font-bold text-title-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">Notifications</h3>
+                      <button onClick={() => setIsNotificationsOpen(false)} className="text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                      {/* Empty State */}
+                      <div className="flex flex-col items-center justify-center py-6 text-center">
+                        <Bell className="w-8 h-8 text-m3-sys-light-outline-variant dark:text-m3-sys-dark-outline-variant mb-2" />
+                        <p className="text-body-medium font-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
+                          You're all caught up!
+                        </p>
+                        <p className="text-body-small text-m3-sys-light-outline mt-1">
+                          No new notifications right now.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Role Badge Indicator */}
           {user && (
@@ -173,7 +209,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative shrink-0" ref={menuRef}>
             <div className="flex items-center pl-1.5 sm:pl-2 border-l border-m3-sys-light-outline-variant/40 dark:border-m3-sys-dark-outline-variant/40 shrink-0">
               <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                onClick={() => {
+                setIsProfileOpen(!isProfileOpen);
+                setIsNotificationsOpen(false);
+              }}
                 className="flex items-center gap-2 rounded-full focus:outline-none cursor-pointer p-0.5 transition-transform duration-150 ease-out hover:scale-[1.05] active:scale-[0.95] transform-gpu shrink-0"
                 title="Account Info"
               >
