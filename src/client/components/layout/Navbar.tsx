@@ -117,20 +117,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           
 
-                    {/* Persistent Network Status Indicator */}
-          <div
-            className={`flex items-center justify-center gap-1.5 p-1.5 sm:px-3 sm:py-1 rounded-full text-label-medium font-bold border shrink-0 transition-all shadow-sm ${
-              isOnline 
-                ? 'bg-emerald-100 border-emerald-200 text-emerald-800 dark:bg-emerald-900/40 dark:border-emerald-800 dark:text-emerald-300' 
-                : 'bg-amber-500 border-amber-600 text-white animate-pulse'
-            }`}
-            title={isOnline ? 'System Online' : 'System Offline (Sync Paused)'}
-          >
-            {isOnline ? <Wifi className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" /> : <WifiOff className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0 animate-pulse" />}
-            <span className="hidden sm:inline">{isOnline ? 'Online' : 'Offline'}</span>
-          </div>
-
-          {/* Notifications Trigger & Popover */}
+                    
+{/* Notifications Trigger & Popover */}
           <div className="relative shrink-0">
             <button
               onClick={() => {
@@ -182,10 +170,23 @@ export const Navbar: React.FC<NavbarProps> = ({
             </AnimatePresence>
           </div>
 
+          {/* Persistent Network Status Indicator */}
+          <div
+            className={`flex items-center justify-center gap-1.5 p-1.5 sm:px-3 sm:py-1 rounded-full text-label-medium font-bold border shrink-0 transition-all shadow-sm ${
+              isOnline 
+                ? 'bg-emerald-100 border-emerald-200 text-emerald-800 dark:bg-emerald-900/40 dark:border-emerald-800 dark:text-emerald-300' 
+                : 'bg-amber-500 border-amber-600 text-white animate-pulse'
+            }`}
+            title={isOnline ? 'System Online' : 'System Offline (Sync Paused)'}
+          >
+            {isOnline ? <Wifi className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" /> : <WifiOff className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0 animate-pulse" />}
+            <span className="hidden sm:inline">{isOnline ? 'Online' : 'Offline'}</span>
+          </div>
+
           {/* Role Badge Indicator */}
           {user && (
             <div
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-label-medium font-semibold border shrink-0 ${
+              className={`flex items-center justify-center w-8 h-8 rounded-full border shrink-0 ${
                 user.role === 'STUDENT'
                   ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400'
                   : user.role === 'INSTRUCTOR'
@@ -194,10 +195,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
               title={`Logged in as ${user.role.toLowerCase()}`}
             >
-              {user.role === 'STUDENT' && <GraduationCap className="w-3.5 h-3.5 shrink-0" />}
-              {user.role === 'INSTRUCTOR' && <UserCheck className="w-3.5 h-3.5 shrink-0" />}
-              {user.role === 'ADMIN' && <Shield className="w-3.5 h-3.5 shrink-0" />}
-              <span className="capitalize hidden sm:inline">{user.role.toLowerCase()}</span>
+              {user.role === 'STUDENT' && <GraduationCap className="w-4 h-4 shrink-0" />}
+              {user.role === 'INSTRUCTOR' && <UserCheck className="w-4 h-4 shrink-0" />}
+              {user.role === 'ADMIN' && <Shield className="w-4 h-4 shrink-0" />}
             </div>
           )}
 
