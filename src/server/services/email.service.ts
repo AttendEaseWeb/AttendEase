@@ -55,6 +55,27 @@ export class EmailService {
     } catch (error) {
       console.warn('Primary EmailJS account failed (possibly quota exceeded):', error);
 
+      // Re-define template params for backup block
+      const dateString = new Date(record.checkInTime).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      const timeString = new Date(record.checkInTime).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      const templateParams = {
+        to_email: parentEmail,
+        student_name: studentName,
+        class_subject: record.subject,
+        class_section: record.sectionName,
+        date_string: dateString,
+        time_string: timeString,
+        notes: record.notes || 'None',
+      };
+
       // Attempt backup account
       const backupServiceId = process.env.EMAILJS_SERVICE_ID_BACKUP;
       const backupTemplateId = process.env.EMAILJS_TEMPLATE_ID_BACKUP;

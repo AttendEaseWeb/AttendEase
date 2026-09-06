@@ -39,6 +39,7 @@ function MainLayout() {
     else window.scrollTo(0, 0);
   }, [effectiveTab]);
     useEffect(() => {
+    // @ts-ignore
     const oneSignalAppId = import.meta.env.VITE_ONESIGNAL_APP_ID;
     // OneSignal initialization temporarily disabled in preview to prevent persistent console errors.
     // Uncomment this block in your production environment if you need push notifications.
