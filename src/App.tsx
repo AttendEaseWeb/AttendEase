@@ -14,18 +14,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import OneSignal from 'react-onesignal';
-import posthog from 'posthog-js';
-import { PostHogProvider } from 'posthog-js/react';
-
-// Initialize PostHog outside of component to run once
-const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
-if (posthogKey) {
-  posthog.init(posthogKey, {
-    api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
-    autocapture: true,
-    capture_pageview: true,
-  });
-}
 import { AuthProvider, useAuth } from './client/context/AuthContext';
 import { NotificationProvider } from './client/context/NotificationContext';
 import { ScheduleProvider, useSchedule } from './client/context/ScheduleContext';
@@ -39,37 +27,29 @@ import { QRCheckInModal } from './client/features/attendance/components/QRCheckI
 import { AuthPage } from './client/features/auth/pages/AuthPage';
 import { ScheduleNotice } from './client/components/schedule/ScheduleNotice';
 import { ScheduleModal } from './client/components/schedule/ScheduleModal';
-
 function MainLayout() {
   const { isAuthenticated, user } = useAuth();
   const { isScheduleModalOpen, setIsScheduleModalOpen } = useSchedule();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
-
   const effectiveTab = activeTab === 'users' && user?.role !== 'ADMIN' ? 'dashboard' : activeTab;
-
     useEffect(() => {
     const el = document.getElementById('main-scroll-container');
     if (el) el.scrollTo(0, 0);
     else window.scrollTo(0, 0);
   }, [effectiveTab]);
-
     useEffect(() => {
     const oneSignalAppId = import.meta.env.VITE_ONESIGNAL_APP_ID;
-    
     const setupOneSignal = async () => {
       if (!oneSignalAppId) return;
-
       // Prevent initialization in non-production/non-localhost environments to avoid SDK origin errors
       const hostname = window.location.hostname;
       const isRenderProd = hostname === 'attendease-nusg.onrender.com';
       const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
-      
       if (!isRenderProd && !isLocalhost) {
         console.log('OneSignal bypassed: running in preview environment (' + hostname + ')');
         return; // Skip init to prevent "Can only be used on..." errors
       }
-
       try {
         // @ts-ignore
         if (!window.OneSignalInitialized && !OneSignal.initialized) {
@@ -82,14 +62,9 @@ function MainLayout() {
             serviceWorkerPath: 'sw.js'
           });
         }
-
         OneSignal.Slidedown.promptPush();
-
         if (user?.email) {
           OneSignal.User.addAlias('external_id', user.email);
-          if (posthogKey) {
-            posthog.identify(user.id, { email: user.email, role: user.role, name: user.name });
-          }
         }
       } catch (err: any) {
         const errorMsg = String(err?.message || err || '').toLowerCase();
@@ -97,14 +72,11 @@ function MainLayout() {
         // console.error('OneSignal Init Error:', err);
       }
     };
-
     setupOneSignal();
   }, [user?.email]);
-
   if (!isAuthenticated) {
     return <AuthPage />;
   }
-
   return (
     <div className="flex h-[100dvh] font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary relative overflow-hidden">
       <Navbar
@@ -120,7 +92,6 @@ function MainLayout() {
           WebkitMaskImage: "linear-gradient(to bottom, transparent 0px, black 80px, black calc(100% - 120px), transparent 100%)"
         }}
       >
-
         <main className="flex-1 p-3.5 sm:p-6 pt-24 sm:pt-28 pb-32 sm:pb-40 max-w-7xl w-full mx-auto min-w-0">
           <ScheduleNotice />
           <AnimatePresence mode="wait">
@@ -138,45 +109,35 @@ function MainLayout() {
                   onNavigateToTab={(tab) => setActiveTab(tab)}
                 />
               )}
-
               {effectiveTab === 'events' && (
                 <ClassesPage onOpenQRScanner={() => setIsQRModalOpen(true)} />
               )}
-
               {effectiveTab === 'attendance' && (
                 <AttendancePage onOpenQRScanner={() => setIsQRModalOpen(true)} />
               )}
-
               {effectiveTab === 'users' && user?.role === 'ADMIN' && <UsersPage />}
             </motion.div>
           </AnimatePresence>
         </main>
       </div>
-
       {/* Global Live QR Code Check-In Modal */}
       <QRCheckInModal
         isOpen={isQRModalOpen}
         onClose={() => setIsQRModalOpen(false)}
       />
-
       <ScheduleModal isOpen={isScheduleModalOpen} onClose={() => setIsScheduleModalOpen(false)} /><FloatingDock activeTab={effectiveTab} setActiveTab={setActiveTab} />
     </div>
   );
 }
-
 export default function App() {
   return (
-    <PostHogProvider client={posthog}>
-      <AuthProvider>
+    <AuthProvider>
         <NotificationProvider>
           <ScheduleProvider>
             <MainLayout />
           </ScheduleProvider>
         </NotificationProvider>
       </AuthProvider>
-    </PostHogProvider>
   );
 }
-
-
 // Cache buster: 3
