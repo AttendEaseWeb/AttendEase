@@ -123,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Network Status Indicator */}
           <div
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-label-medium font-semibold border shrink-0 transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-label-medium font-semibold border shrink-0 transition-colors ${
               isOnline 
                 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400' 
                 : 'bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400'
