@@ -42,11 +42,21 @@ function MainLayout() {
     else window.scrollTo(0, 0);
   }, [effectiveTab]);
 
-  useEffect(() => {
+    useEffect(() => {
     const oneSignalAppId = import.meta.env.VITE_ONESIGNAL_APP_ID;
     
     const setupOneSignal = async () => {
       if (!oneSignalAppId) return;
+
+      // Prevent initialization in non-production/non-localhost environments to avoid SDK origin errors
+      const hostname = window.location.hostname;
+      const isRenderProd = hostname === 'attendease-nusg.onrender.com';
+      const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+      
+      if (!isRenderProd && !isLocalhost) {
+        console.log('OneSignal bypassed: running in preview environment (' + hostname + ')');
+        return; // Skip init to prevent "Can only be used on..." errors
+      }
 
       try {
         // @ts-ignore
@@ -68,9 +78,7 @@ function MainLayout() {
         }
       } catch (err: any) {
         const errorMsg = String(err?.message || err || '').toLowerCase();
-        // Ignore expected errors in dev/preview environments
-        if (errorMsg.includes('already initialized')) return;
-        if (errorMsg.includes('can only be used on')) return;
+        if (errorMsg.includes('already initialized') || errorMsg.includes('can only be used on')) return;
         console.error('OneSignal Init Error:', err);
       }
     };
