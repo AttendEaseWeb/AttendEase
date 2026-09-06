@@ -13,7 +13,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import OneSignal from 'react-onesignal';
+// import OneSignal from 'react-onesignal';
 import { AuthProvider, useAuth } from './client/context/AuthContext';
 import { NotificationProvider } from './client/context/NotificationContext';
 import { ScheduleProvider, useSchedule } from './client/context/ScheduleContext';
@@ -40,16 +40,21 @@ function MainLayout() {
   }, [effectiveTab]);
     useEffect(() => {
     const oneSignalAppId = import.meta.env.VITE_ONESIGNAL_APP_ID;
+    // OneSignal initialization temporarily disabled in preview to prevent persistent console errors.
+    // Uncomment this block in your production environment if you need push notifications.
+    /*
     const setupOneSignal = async () => {
       if (!oneSignalAppId) return;
-      // Prevent initialization in non-production/non-localhost environments to avoid SDK origin errors
+      
       const hostname = window.location.hostname;
       const isRenderProd = hostname === 'attendease-nusg.onrender.com';
       const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+      
       if (!isRenderProd && !isLocalhost) {
-        console.log('OneSignal bypassed: running in preview environment (' + hostname + ')');
-        return; // Skip init to prevent "Can only be used on..." errors
+        console.log('OneSignal bypassed.');
+        return;
       }
+      
       try {
         // @ts-ignore
         if (!window.OneSignalInitialized && !OneSignal.initialized) {
@@ -67,12 +72,11 @@ function MainLayout() {
           OneSignal.User.addAlias('external_id', user.email);
         }
       } catch (err: any) {
-        const errorMsg = String(err?.message || err || '').toLowerCase();
-        if (errorMsg.includes('already initialized') || errorMsg.includes('can only be used on')) return;
-        
+        // Ignore
       }
     };
     setupOneSignal();
+    */
   }, [user?.email]);
   if (!isAuthenticated) {
     return <AuthPage />;
