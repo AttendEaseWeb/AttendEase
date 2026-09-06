@@ -67,10 +67,10 @@ function MainLayout() {
           OneSignal.User.addAlias('external_id', user.email);
         }
       } catch (err: any) {
-        const errorMsg = err?.message || String(err);
+        const errorMsg = String(err?.message || err || '').toLowerCase();
         // Ignore expected errors in dev/preview environments
-        if (errorMsg.includes('SDK already initialized')) return;
-        if (errorMsg.includes('Can only be used on')) return;
+        if (errorMsg.includes('already initialized')) return;
+        if (errorMsg.includes('can only be used on')) return;
         console.error('OneSignal Init Error:', err);
       }
     };
