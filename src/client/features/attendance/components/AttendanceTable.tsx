@@ -19,6 +19,7 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
   records,
   onStatusChange,
 }) => {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [justificationRecord, setJustificationRecord] = useState<AttendanceRecord | null>(null);
