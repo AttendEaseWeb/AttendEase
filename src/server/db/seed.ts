@@ -1,6 +1,6 @@
-import { User } from '../../shared/types/auth';
-import { ClassSection, ClassSession } from '../../shared/types/class';
-import { AttendanceRecord } from '../../shared/types/attendance';
+import { User } from "../../shared/types/auth";
+import { ClassSection, ClassSession } from "../../shared/types/class";
+import { AttendanceRecord } from "../../shared/types/attendance";
 
 export const SEED_USERS: User[] = [];
 

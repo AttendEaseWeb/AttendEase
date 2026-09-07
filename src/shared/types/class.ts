@@ -1,8 +1,8 @@
 export type GradeLevel = 7 | 8 | 9 | 10 | 11 | 12;
 
-export type GradeCategory = 'JUNIOR_HIGH' | 'SENIOR_HIGH';
+export type GradeCategory = "JUNIOR_HIGH" | "SENIOR_HIGH";
 
-export type SeniorHighStrand = 'STEM' | 'ABM' | 'HUMSS' | 'TVL' | 'GAS';
+export type SeniorHighStrand = "STEM" | "ABM" | "HUMSS" | "TVL" | "GAS";
 
 export interface ClassSection {
   id: string;
@@ -25,7 +25,7 @@ export interface ClassSection {
   room?: string;
 }
 
-type SessionStatus = 'UPCOMING' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
+type SessionStatus = "UPCOMING" | "ACTIVE" | "COMPLETED" | "CANCELLED";
 
 export interface ClassSession {
   id: string;

@@ -1,5 +1,10 @@
-import { LoginRequest, RegisterRequest, AuthResponse, UserRole } from '../../shared/types/auth';
-import { dbStore } from '../db/store';
+import {
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  UserRole,
+} from "../../shared/types/auth";
+import { dbStore } from "../db/store";
 
 export class AuthService {
   static async login(req: LoginRequest): Promise<AuthResponse> {
@@ -7,8 +12,8 @@ export class AuthService {
 
     if (!user) {
       // Auto register for seamless testing if role provided
-      const role: UserRole = req.role || 'STUDENT';
-      const name = req.email.split('@')[0].replace('.', ' ');
+      const role: UserRole = req.role || "STUDENT";
+      const name = req.email.split("@")[0].replace(".", " ");
       const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
 
       user = await dbStore.addUser({
@@ -16,8 +21,11 @@ export class AuthService {
         email: req.email,
         name: capitalizedName,
         role,
-        department: 'Computer Science',
-        studentId: role === 'STUDENT' ? `ST-2026-${Math.floor(1000 + Math.random() * 9000)}` : undefined,
+        department: "Computer Science",
+        studentId:
+          role === "STUDENT"
+            ? `ST-2026-${Math.floor(1000 + Math.random() * 9000)}`
+            : undefined,
         createdAt: new Date().toISOString(),
       });
     }
@@ -29,7 +37,7 @@ export class AuthService {
       role: user.role,
     };
 
-    const token = Buffer.from(JSON.stringify(tokenPayload)).toString('base64');
+    const token = Buffer.from(JSON.stringify(tokenPayload)).toString("base64");
 
     return {
       user,
@@ -40,7 +48,7 @@ export class AuthService {
   static async register(req: RegisterRequest): Promise<AuthResponse> {
     const existing = await dbStore.getUserByEmail(req.email);
     if (existing) {
-      throw new Error('User with this email already exists');
+      throw new Error("User with this email already exists");
     }
 
     const user = await dbStore.addUser({
@@ -48,8 +56,12 @@ export class AuthService {
       name: req.name,
       email: req.email,
       role: req.role,
-      department: req.department || 'Computer Science',
-      studentId: req.studentId || (req.role === 'STUDENT' ? `ST-2026-${Math.floor(1000 + Math.random() * 9000)}` : undefined),
+      department: req.department || "Computer Science",
+      studentId:
+        req.studentId ||
+        (req.role === "STUDENT"
+          ? `ST-2026-${Math.floor(1000 + Math.random() * 9000)}`
+          : undefined),
       createdAt: new Date().toISOString(),
     });
 
@@ -60,7 +72,7 @@ export class AuthService {
       role: user.role,
     };
 
-    const token = Buffer.from(JSON.stringify(tokenPayload)).toString('base64');
+    const token = Buffer.from(JSON.stringify(tokenPayload)).toString("base64");
 
     return { user, token };
   }

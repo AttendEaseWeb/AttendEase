@@ -1,63 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Roboto', 'Inter', system-ui, sans-serif;
-  
+  --font-sans: "Roboto", "Inter", system-ui, sans-serif;
+
   --color-m3-sys-light-primary: #6750a4;
   --color-m3-sys-light-on-primary: #ffffff;
   --color-m3-sys-light-primary-container: #eaddff;
   --color-m3-sys-light-on-primary-container: #21005d;
-  
+
   --color-m3-sys-light-secondary: #625b71;
   --color-m3-sys-light-on-secondary: #ffffff;
   --color-m3-sys-light-secondary-container: #e8def8;
   --color-m3-sys-light-on-secondary-container: #1d192b;
-  
+
   --color-m3-sys-light-tertiary: #7d5260;
   --color-m3-sys-light-on-tertiary: #ffffff;
   --color-m3-sys-light-tertiary-container: #ffd8e4;
   --color-m3-sys-light-on-tertiary-container: #31111d;
-  
+
   --color-m3-sys-light-error: #b3261e;
   --color-m3-sys-light-on-error: #ffffff;
   --color-m3-sys-light-error-container: #f9dedc;
   --color-m3-sys-light-on-error-container: #410e0b;
-  
+
   --color-m3-sys-light-background: #fffbfe;
   --color-m3-sys-light-on-background: #1c1b1f;
-  
+
   --color-m3-sys-light-surface: #fffbfe;
   --color-m3-sys-light-on-surface: #1c1b1f;
   --color-m3-sys-light-surface-variant: #e7e0ec;
   --color-m3-sys-light-on-surface-variant: #49454f;
   --color-m3-sys-light-outline: #79747e;
   --color-m3-sys-light-outline-variant: #cac4d0;
-  
+
   /* Dark mode */
   --color-m3-sys-dark-primary: #d0bcff;
   --color-m3-sys-dark-on-primary: #381e72;
   --color-m3-sys-dark-primary-container: #4f378b;
   --color-m3-sys-dark-on-primary-container: #eaddff;
-  
+
   --color-m3-sys-dark-secondary: #ccc2dc;
   --color-m3-sys-dark-on-secondary: #332d41;
   --color-m3-sys-dark-secondary-container: #4a4458;
   --color-m3-sys-dark-on-secondary-container: #e8def8;
-  
+
   --color-m3-sys-dark-tertiary: #efb8c8;
   --color-m3-sys-dark-on-tertiary: #492532;
   --color-m3-sys-dark-tertiary-container: #633b48;
   --color-m3-sys-dark-on-tertiary-container: #ffd8e4;
-  
+
   --color-m3-sys-dark-error: #f2b8b5;
   --color-m3-sys-dark-on-error: #601410;
   --color-m3-sys-dark-error-container: #8c1d18;
   --color-m3-sys-dark-on-error-container: #f9dedc;
-  
+
   --color-m3-sys-dark-background: #1c1b1f;
   --color-m3-sys-dark-on-background: #e6e1e5;
-  
+
   --color-m3-sys-dark-surface: #1c1b1f;
   --color-m3-sys-dark-on-surface: #e6e1e5;
   --color-m3-sys-dark-surface-variant: #49454f;
@@ -156,7 +156,8 @@
 }
 
 /* Hide scrollbars globally to remove the scroll progress indicator on the right */
-html, body {
+html,
+body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -169,12 +170,30 @@ html, body {
 
 body {
   @apply bg-m3-sys-light-surface text-m3-sys-light-on-background dark:bg-m3-sys-dark-surface dark:text-m3-sys-dark-on-background font-sans antialiased;
-  background-image: radial-gradient(circle at 15% 50%, rgba(103, 80, 164, 0.05), transparent 40%),
-                    radial-gradient(circle at 85% 30%, rgba(103, 80, 164, 0.08), transparent 40%);
+  background-image:
+    radial-gradient(
+      circle at 15% 50%,
+      rgba(103, 80, 164, 0.05),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 85% 30%,
+      rgba(103, 80, 164, 0.08),
+      transparent 40%
+    );
 }
 @media (prefers-color-scheme: dark) {
   body {
-    background-image: radial-gradient(circle at 15% 50%, rgba(208, 188, 255, 0.08), transparent 40%),
-                      radial-gradient(circle at 85% 30%, rgba(208, 188, 255, 0.12), transparent 40%);
+    background-image:
+      radial-gradient(
+        circle at 15% 50%,
+        rgba(208, 188, 255, 0.08),
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 85% 30%,
+        rgba(208, 188, 255, 0.12),
+        transparent 40%
+      );
   }
 }

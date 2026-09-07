@@ -1,35 +1,50 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { useAuth } from '../../../context/AuthContext';
-import { useNotification } from '../../../context/NotificationContext';
-import { UserRole } from '../../../../shared/types/auth';
-import { Button } from '../../../components/common/Button';
-import { Input } from '../../../components/common/Input';
-import { CheckCircle2, Shield, UserCheck, GraduationCap, Lock, Mail, User as UserIcon, Building2, Key, ArrowRight } from 'lucide-react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { useAuth } from "../../../context/AuthContext";
+import { useNotification } from "../../../context/NotificationContext";
+import { UserRole } from "../../../../shared/types/auth";
+import { Button } from "../../../components/common/Button";
+import { Input } from "../../../components/common/Input";
+import {
+  CheckCircle2,
+  Shield,
+  UserCheck,
+  GraduationCap,
+  Lock,
+  Mail,
+  User as UserIcon,
+  Building2,
+  Key,
+  ArrowRight,
+} from "lucide-react";
 
 export const AuthPage: React.FC = () => {
   const { login, register } = useAuth();
   const { showToast } = useNotification();
 
-  const [mode, setMode] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
-  const [role, setRole] = useState<UserRole>('STUDENT');
+  const [mode, setMode] = useState<"LOGIN" | "REGISTER">("LOGIN");
+  const [role, setRole] = useState<UserRole>("STUDENT");
 
   // Form Fields
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [department, setDepartment] = useState('Computer Science');
-  const [studentId, setStudentId] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [department, setDepartment] = useState("Computer Science");
+  const [studentId, setStudentId] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
 
   const handleQuickLogin = async (testEmail: string, testRole: UserRole) => {
     setIsLoading(true);
     try {
-      await login({ email: testEmail, password: 'password123', role: testRole });
-      showToast(`Logged in successfully as ${testRole}`, 'success');
+      await login({
+        email: testEmail,
+        password: "password123",
+        role: testRole,
+      });
+      showToast(`Logged in successfully as ${testRole}`, "success");
     } catch (err: any) {
-      showToast(err.message || 'Login failed', 'error');
+      showToast(err.message || "Login failed", "error");
     } finally {
       setIsLoading(false);
     }
@@ -38,18 +53,18 @@ export const AuthPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      showToast('Please provide both email and password', 'error');
+      showToast("Please provide both email and password", "error");
       return;
     }
 
     setIsLoading(true);
     try {
-      if (mode === 'LOGIN') {
+      if (mode === "LOGIN") {
         await login({ email, password, role });
-        showToast('Welcome back to AttendEase!', 'success');
+        showToast("Welcome back to AttendEase!", "success");
       } else {
         if (!name) {
-          showToast('Please enter your full name', 'error');
+          showToast("Please enter your full name", "error");
           setIsLoading(false);
           return;
         }
@@ -59,12 +74,16 @@ export const AuthPage: React.FC = () => {
           password,
           role,
           department,
-          studentId: role === 'STUDENT' ? studentId || `ST-2026-${Math.floor(1000 + Math.random() * 9000)}` : undefined,
+          studentId:
+            role === "STUDENT"
+              ? studentId ||
+                `ST-2026-${Math.floor(1000 + Math.random() * 9000)}`
+              : undefined,
         });
-        showToast('Account created successfully!', 'success');
+        showToast("Account created successfully!", "success");
       }
     } catch (err: any) {
-      showToast(err.message || 'Authentication error', 'error');
+      showToast(err.message || "Authentication error", "error");
     } finally {
       setIsLoading(false);
     }
@@ -85,10 +104,13 @@ export const AuthPage: React.FC = () => {
             <span>AttendEase Portal v1.0</span>
           </div>
           <h1 className="text-display-small font-medium tracking-tight text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mt-2">
-            {mode === 'LOGIN' ? 'Sign In to Your Account' : 'Create New Account'}
+            {mode === "LOGIN"
+              ? "Sign In to Your Account"
+              : "Create New Account"}
           </h1>
           <p className="text-body-large text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant max-w-xs mx-auto leading-relaxed">
-            Dynamic QR verification, session attendance management, and real-time student logs.
+            Dynamic QR verification, session attendance management, and
+            real-time student logs.
           </p>
         </div>
 
@@ -96,22 +118,22 @@ export const AuthPage: React.FC = () => {
         <div className="flex bg-expressive-surface p-1.5 rounded-full shadow-sm">
           <button
             type="button"
-            onClick={() => setMode('LOGIN')}
+            onClick={() => setMode("LOGIN")}
             className={`flex-1 py-2.5 rounded-full text-label-large transition-all cursor-pointer ${
-              mode === 'LOGIN'
-                ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm scale-[1.02]'
-                : 'text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface'
+              mode === "LOGIN"
+                ? "bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm scale-[1.02]"
+                : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface"
             }`}
           >
             Sign In
           </button>
           <button
             type="button"
-            onClick={() => setMode('REGISTER')}
+            onClick={() => setMode("REGISTER")}
             className={`flex-1 py-2.5 rounded-full text-label-large transition-all cursor-pointer ${
-              mode === 'REGISTER'
-                ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm scale-[1.02]'
-                : 'text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface'
+              mode === "REGISTER"
+                ? "bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm scale-[1.02]"
+                : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface"
             }`}
           >
             Sign Up
@@ -129,8 +151,10 @@ export const AuthPage: React.FC = () => {
               type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              onClick={() => handleQuickLogin('student.test@attendease.edu', 'STUDENT')}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              onClick={() =>
+                handleQuickLogin("student.test@attendease.edu", "STUDENT")
+              }
               className="px-2 py-3 rounded-[20px] bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container text-label-medium text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container transition-colors text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
               <GraduationCap className="w-5 h-5" />
@@ -140,8 +164,10 @@ export const AuthPage: React.FC = () => {
               type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              onClick={() => handleQuickLogin('instructor.test@attendease.edu', 'INSTRUCTOR')}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              onClick={() =>
+                handleQuickLogin("instructor.test@attendease.edu", "INSTRUCTOR")
+              }
               className="px-2 py-3 rounded-[20px] bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container text-label-medium text-m3-sys-light-on-tertiary-container dark:text-m3-sys-dark-on-tertiary-container transition-colors text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
               <UserCheck className="w-5 h-5" />
@@ -151,8 +177,10 @@ export const AuthPage: React.FC = () => {
               type="button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              onClick={() => handleQuickLogin('admin.test@attendease.edu', 'ADMIN')}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              onClick={() =>
+                handleQuickLogin("admin.test@attendease.edu", "ADMIN")
+              }
               className="px-2 py-3 rounded-[20px] bg-m3-sys-light-error-container dark:bg-m3-sys-dark-error-container text-label-medium text-m3-sys-light-on-error-container dark:text-m3-sys-dark-on-error-container transition-colors text-center truncate cursor-pointer flex flex-col items-center gap-2 shadow-sm"
             >
               <Shield className="w-5 h-5" />
@@ -162,18 +190,23 @@ export const AuthPage: React.FC = () => {
         </div>
 
         {/* Main Auth Form */}
-        <form onSubmit={handleSubmit} className="p-6 sm:p-8 rounded-[36px] bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-expressive space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="p-6 sm:p-8 rounded-[36px] bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-expressive space-y-6"
+        >
           {/* Role Picker */}
           <div className="space-y-2">
-            <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">Account Type</label>
+            <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+              Account Type
+            </label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => setRole('STUDENT')}
+                onClick={() => setRole("STUDENT")}
                 className={`p-2 rounded-2xl text-label-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
-                  role === 'STUDENT'
-                    ? 'bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container'
-                    : 'bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30'
+                  role === "STUDENT"
+                    ? "bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container"
+                    : "bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30"
                 }`}
               >
                 <GraduationCap className="w-4 h-4 shrink-0" />
@@ -181,11 +214,11 @@ export const AuthPage: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setRole('INSTRUCTOR')}
+                onClick={() => setRole("INSTRUCTOR")}
                 className={`p-2 rounded-2xl text-label-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
-                  role === 'INSTRUCTOR'
-                    ? 'bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container'
-                    : 'bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30'
+                  role === "INSTRUCTOR"
+                    ? "bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container"
+                    : "bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30"
                 }`}
               >
                 <UserCheck className="w-4 h-4 shrink-0" />
@@ -193,11 +226,11 @@ export const AuthPage: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setRole('ADMIN')}
+                onClick={() => setRole("ADMIN")}
                 className={`p-2 rounded-2xl text-label-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
-                  role === 'ADMIN'
-                    ? 'bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container'
-                    : 'bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30'
+                  role === "ADMIN"
+                    ? "bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container"
+                    : "bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30"
                 }`}
               >
                 <Shield className="w-4 h-4 shrink-0" />
@@ -206,7 +239,7 @@ export const AuthPage: React.FC = () => {
             </div>
           </div>
 
-          {mode === 'REGISTER' && (
+          {mode === "REGISTER" && (
             <>
               <Input
                 label="Full Name"
@@ -225,7 +258,7 @@ export const AuthPage: React.FC = () => {
                   onChange={(e) => setDepartment(e.target.value)}
                   icon={<Building2 className="w-4 h-4 text-slate-400" />}
                 />
-                {role === 'STUDENT' && (
+                {role === "STUDENT" && (
                   <Input
                     label="Student ID (Optional)"
                     placeholder="ST-2026-1234"
@@ -262,7 +295,11 @@ export const AuthPage: React.FC = () => {
             isLoading={isLoading}
             className="w-full py-4 text-label-large bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary hover:bg-m3-sys-light-primary/90 text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary rounded-full shadow-sm flex items-center justify-center gap-2 mt-4"
           >
-            <span>{mode === 'LOGIN' ? 'Sign In to Portal' : 'Create AttendEase Account'}</span>
+            <span>
+              {mode === "LOGIN"
+                ? "Sign In to Portal"
+                : "Create AttendEase Account"}
+            </span>
             <ArrowRight className="w-5 h-5" />
           </Button>
         </form>

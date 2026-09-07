@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React from "react";
+import { motion } from "motion/react";
 
 export interface StatCardProps {
   title: string;
@@ -10,7 +10,7 @@ export interface StatCardProps {
     value: string;
     isPositive: boolean;
   };
-  color?: 'indigo' | 'emerald' | 'amber' | 'purple' | 'rose' | 'teal';
+  color?: "indigo" | "emerald" | "amber" | "purple" | "rose" | "teal";
   progress?: number;
   id?: string;
 }
@@ -21,26 +21,30 @@ export const StatCard: React.FC<StatCardProps> = ({
   subtitle,
   icon,
   trend,
-  color = 'indigo',
+  color = "indigo",
   progress,
   id,
 }) => {
   const colorBg = {
-    indigo: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20',
-    emerald: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
-    teal: 'bg-teal-500/10 text-teal-700 dark:text-teal-400 border-teal-500/20',
-    amber: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20',
-    purple: 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20',
-    rose: 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20',
+    indigo:
+      "bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20",
+    emerald:
+      "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
+    teal: "bg-teal-500/10 text-teal-700 dark:text-teal-400 border-teal-500/20",
+    amber:
+      "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
+    purple:
+      "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20",
+    rose: "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20",
   };
 
   const progressBg = {
-    indigo: 'bg-indigo-600',
-    emerald: 'bg-emerald-600',
-    teal: 'bg-teal-600',
-    amber: 'bg-amber-500',
-    purple: 'bg-purple-600',
-    rose: 'bg-rose-600',
+    indigo: "bg-indigo-600",
+    emerald: "bg-emerald-600",
+    teal: "bg-teal-600",
+    amber: "bg-amber-500",
+    purple: "bg-purple-600",
+    rose: "bg-rose-600",
   };
 
   return (
@@ -67,8 +71,8 @@ export const StatCard: React.FC<StatCardProps> = ({
           <span
             className={`text-label-small font-bold px-2 py-0.5 rounded-full ${
               trend.isPositive
-                ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
-                : 'bg-rose-500/10 text-rose-700 dark:text-rose-400'
+                ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                : "bg-rose-500/10 text-rose-700 dark:text-rose-400"
             }`}
           >
             {trend.value}

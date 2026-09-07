@@ -1,4 +1,4 @@
-import { ClassService } from './class.service';
+import { ClassService } from "./class.service";
 
 export class EventService {
   static getAllCourses() {

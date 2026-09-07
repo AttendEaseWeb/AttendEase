@@ -2,16 +2,16 @@
  * ------------------------------------------------------------------
  * DATABASE CONNECTION (SUPABASE)
  * ------------------------------------------------------------------
- * This file creates the secure bridge between our application and 
- * the Supabase cloud database where all our user, class, and 
+ * This file creates the secure bridge between our application and
+ * the Supabase cloud database where all our user, class, and
  * attendance data is permanently stored.
  * ------------------------------------------------------------------
  */
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+const supabaseKey =
+  process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
-export const supabase = (supabaseUrl && supabaseKey) 
-  ? createClient(supabaseUrl, supabaseKey)
-  : null;
+export const supabase =
+  supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;

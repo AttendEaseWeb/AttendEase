@@ -1,30 +1,40 @@
-import { offlineCapableFetch } from '../../../utils/sync';
-import React, { useState } from 'react';
-import { User } from '../../../../shared/types/auth';
-import { Badge } from '../../../components/common/Badge';
-import { Search, Trash2 } from 'lucide-react';
-import { useNotification } from '../../../context/NotificationContext';
+import { offlineCapableFetch } from "../../../utils/sync";
+import React, { useState } from "react";
+import { User } from "../../../../shared/types/auth";
+import { Badge } from "../../../components/common/Badge";
+import { Search, Trash2 } from "lucide-react";
+import { useNotification } from "../../../context/NotificationContext";
 
 interface UserTableProps {
   users: User[];
   onUserDeleted?: () => void;
 }
 
-export const UserTable: React.FC<UserTableProps> = ({ users, onUserDeleted }) => {
+export const UserTable: React.FC<UserTableProps> = ({
+  users,
+  onUserDeleted,
+}) => {
   const { showToast } = useNotification();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('ALL');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("ALL");
 
   const handleDeleteUser = async (u: User) => {
-    if (!window.confirm(`Are you sure you want to delete account "${u.name}" (${u.email})?`)) return;
+    if (
+      !window.confirm(
+        `Are you sure you want to delete account "${u.name}" (${u.email})?`,
+      )
+    )
+      return;
 
     try {
-      const res = await offlineCapableFetch(`/api/users/${u.id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete user');
-      showToast(`Deleted account for ${u.name}`, 'success');
+      const res = await offlineCapableFetch(`/api/users/${u.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete user");
+      showToast(`Deleted account for ${u.name}`, "success");
       if (onUserDeleted) onUserDeleted();
     } catch (err: any) {
-      showToast(err.message || 'Error deleting account', 'error');
+      showToast(err.message || "Error deleting account", "error");
     }
   };
 
@@ -32,11 +42,14 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onUserDeleted }) =>
     const matchesSearch =
       u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (u.parentPhone && u.parentPhone.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (u.parentEmail && u.parentEmail.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (u.department && u.department.toLowerCase().includes(searchTerm.toLowerCase()));
+      (u.parentPhone &&
+        u.parentPhone.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (u.parentEmail &&
+        u.parentEmail.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (u.department &&
+        u.department.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    const matchesRole = roleFilter === 'ALL' || u.role === roleFilter;
+    const matchesRole = roleFilter === "ALL" || u.role === roleFilter;
 
     return matchesSearch && matchesRole;
   });
@@ -86,30 +99,46 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onUserDeleted }) =>
                 <td className="p-4 pl-6">
                   <div className="flex items-center gap-3">
                     <img
-                      src={u.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
+                      src={
+                        u.avatarUrl ||
+                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+                      }
                       alt={u.name}
                       className="w-10 h-10 rounded-full object-cover shrink-0 border border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20 shadow-sm"
                     />
                     <div className="flex flex-col">
-                      <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-body-large">{u.name}</span>
+                      <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-body-large">
+                        {u.name}
+                      </span>
                       <span className="text-label-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-                        {u.parentEmail ? `Parent Email: ${u.parentEmail} ` : ''}{u.parentPhone ? `Parent Phone: ${u.parentPhone}` : (!u.parentEmail && !u.parentPhone ? u.email : '')}
+                        {u.parentEmail ? `Parent Email: ${u.parentEmail} ` : ""}
+                        {u.parentPhone
+                          ? `Parent Phone: ${u.parentPhone}`
+                          : !u.parentEmail && !u.parentPhone
+                            ? u.email
+                            : ""}
                       </span>
                     </div>
                   </div>
                 </td>
-                <td className="p-4 font-mono text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">{u.studentId || u.id}</td>
+                <td className="p-4 font-mono text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
+                  {u.studentId || u.id}
+                </td>
                 <td className="p-4">
                   <Badge
                     variant={
-                      u.role === 'ADMIN'
-                        ? 'rose'
-                        : u.role === 'INSTRUCTOR'
-                        ? 'indigo'
-                        : 'emerald'
+                      u.role === "ADMIN"
+                        ? "rose"
+                        : u.role === "INSTRUCTOR"
+                          ? "indigo"
+                          : "emerald"
                     }
                   >
-                    {u.role === 'STUDENT' ? 'Student' : u.role === 'INSTRUCTOR' ? 'Instructor' : 'Admin'}
+                    {u.role === "STUDENT"
+                      ? "Student"
+                      : u.role === "INSTRUCTOR"
+                        ? "Instructor"
+                        : "Admin"}
                   </Badge>
                 </td>
                 <td className="p-4 pr-6 text-right">

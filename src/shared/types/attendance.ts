@@ -1,6 +1,6 @@
-import { GradeLevel, GradeCategory } from './class';
+import { GradeLevel, GradeCategory } from "./class";
 
-export type AttendanceStatus = 'PRESENT' | 'LATE' | 'ABSENT' | 'EXCUSED';
+export type AttendanceStatus = "PRESENT" | "LATE" | "ABSENT" | "EXCUSED";
 
 export interface AttendanceRecord {
   id: string;
@@ -17,7 +17,7 @@ export interface AttendanceRecord {
   studentNumber?: string;
   checkInTime: string;
   status: AttendanceStatus;
-  method: 'QR_SCAN' | 'MANUAL_ENTRY' | 'GEO_CHECKIN';
+  method: "QR_SCAN" | "MANUAL_ENTRY" | "GEO_CHECKIN";
   verifiedLocation?: {
     latitude: number;
     longitude: number;

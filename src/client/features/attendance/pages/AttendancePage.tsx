@@ -1,20 +1,29 @@
-import { offlineCapableFetch } from '../../../utils/sync';
-import React, { useEffect, useState } from 'react';
-import { AttendanceRecord } from '../../../../shared/types/attendance';
-import { AttendanceTable } from '../components/AttendanceTable';
-import { ManualCheckInModal } from '../components/ManualCheckInModal';
-import { Button } from '../../../components/common/Button';
-import { Card } from '../../../components/common/Card';
-import { useAuth } from '../../../context/AuthContext';
-import { useNotification } from '../../../context/NotificationContext';
-import { Download, Plus, RefreshCw, QrCode, FileSpreadsheet, FileText } from 'lucide-react';
-import { exportToExcel, exportToPDF } from '../../../utils/exportUtils';
+import { offlineCapableFetch } from "../../../utils/sync";
+import React, { useEffect, useState } from "react";
+import { AttendanceRecord } from "../../../../shared/types/attendance";
+import { AttendanceTable } from "../components/AttendanceTable";
+import { ManualCheckInModal } from "../components/ManualCheckInModal";
+import { Button } from "../../../components/common/Button";
+import { Card } from "../../../components/common/Card";
+import { useAuth } from "../../../context/AuthContext";
+import { useNotification } from "../../../context/NotificationContext";
+import {
+  Download,
+  Plus,
+  RefreshCw,
+  QrCode,
+  FileSpreadsheet,
+  FileText,
+} from "lucide-react";
+import { exportToExcel, exportToPDF } from "../../../utils/exportUtils";
 
 interface AttendancePageProps {
   onOpenQRScanner: () => void;
 }
 
-export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner }) => {
+export const AttendancePage: React.FC<AttendancePageProps> = ({
+  onOpenQRScanner,
+}) => {
   const { user } = useAuth();
   const { showToast } = useNotification();
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
@@ -28,34 +37,35 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
   const fetchRecords = async () => {
     setIsLoading(true);
     try {
-      const studentParam = user?.role === 'STUDENT' ? `?studentId=${user.id}` : '';
+      const studentParam =
+        user?.role === "STUDENT" ? `?studentId=${user.id}` : "";
       const res = await offlineCapableFetch(`/api/attendance${studentParam}`);
       if (res.ok) {
         setRecords(await res.json());
       }
     } catch {
-      showToast('Error loading attendance logs', 'error');
+      showToast("Error loading attendance logs", "error");
     } finally {
       setIsLoading(false);
     }
   };
 
-    const handleExportExcel = () => {
+  const handleExportExcel = () => {
     if (records.length === 0) {
-      showToast('No attendance records available to export', 'error');
+      showToast("No attendance records available to export", "error");
       return;
     }
     exportToExcel(records);
-    showToast('Exported Excel Report!', 'success');
+    showToast("Exported Excel Report!", "success");
   };
 
   const handleExportPDF = () => {
     if (records.length === 0) {
-      showToast('No attendance records available to export', 'error');
+      showToast("No attendance records available to export", "error");
       return;
     }
     exportToPDF(records);
-    showToast('Exported PDF Report!', 'success');
+    showToast("Exported PDF Report!", "success");
   };
 
   return (
@@ -67,7 +77,8 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
             Attendance Log Records
           </h2>
           <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1">
-            Real-time verified student presence, location logs, and session activity audits.
+            Real-time verified student presence, location logs, and session
+            activity audits.
           </p>
         </div>
 
@@ -98,7 +109,7 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
             PDF
           </Button>
 
-          {(user?.role === 'INSTRUCTOR' || user?.role === 'ADMIN') && (
+          {(user?.role === "INSTRUCTOR" || user?.role === "ADMIN") && (
             <Button
               id="manual-override-btn"
               size="sm"
@@ -109,7 +120,7 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
             </Button>
           )}
 
-          {user?.role === 'STUDENT' && (
+          {user?.role === "STUDENT" && (
             <Button
               size="sm"
               onClick={onOpenQRScanner}
@@ -124,31 +135,48 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({ onOpenQRScanner 
       {/* KPI Metrics Summary Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-4 rounded-2xl bg-expressive-surface border border-m3-sys-light-outline-variant/30 shadow-expressive-sm">
-          <div className="text-label-small font-semibold text-m3-sys-light-on-surface-variant">Total Logs</div>
-          <div className="text-title-large font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mt-1">{records.length}</div>
+          <div className="text-label-small font-semibold text-m3-sys-light-on-surface-variant">
+            Total Logs
+          </div>
+          <div className="text-title-large font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mt-1">
+            {records.length}
+          </div>
         </div>
         <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 shadow-expressive-sm">
-          <div className="text-label-small font-semibold text-emerald-700 dark:text-emerald-400">Present On-Time</div>
+          <div className="text-label-small font-semibold text-emerald-700 dark:text-emerald-400">
+            Present On-Time
+          </div>
           <div className="text-title-large font-bold text-emerald-800 dark:text-emerald-300 mt-1">
-            {records.filter((r) => r.status === 'PRESENT').length}
+            {records.filter((r) => r.status === "PRESENT").length}
           </div>
         </div>
         <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 shadow-expressive-sm">
-          <div className="text-label-small font-semibold text-amber-700 dark:text-amber-400">Late Arrivals</div>
+          <div className="text-label-small font-semibold text-amber-700 dark:text-amber-400">
+            Late Arrivals
+          </div>
           <div className="text-title-large font-bold text-amber-800 dark:text-amber-300 mt-1">
-            {records.filter((r) => r.status === 'LATE').length}
+            {records.filter((r) => r.status === "LATE").length}
           </div>
         </div>
         <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 shadow-expressive-sm">
-          <div className="text-label-small font-semibold text-purple-700 dark:text-purple-400">Excused / Other</div>
+          <div className="text-label-small font-semibold text-purple-700 dark:text-purple-400">
+            Excused / Other
+          </div>
           <div className="text-title-large font-bold text-purple-800 dark:text-purple-300 mt-1">
-            {records.filter((r) => r.status === 'EXCUSED' || r.status === 'ABSENT').length}
+            {
+              records.filter(
+                (r) => r.status === "EXCUSED" || r.status === "ABSENT",
+              ).length
+            }
           </div>
         </div>
       </div>
 
       {/* Main Table */}
-      <Card title="Detailed Check-in Ledger" subtitle="Search and filter verified student logs">
+      <Card
+        title="Detailed Check-in Ledger"
+        subtitle="Search and filter verified student logs"
+      >
         <AttendanceTable records={records} />
       </Card>
 

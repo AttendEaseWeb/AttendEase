@@ -1,0 +1,2 @@
+id,sessionId,classId,classCode,sectionName,subject,gradeLevel,category,studentId,studentName,studentEmail,studentNumber,checkInTime,status,method,verifiedLocation,notes
+00000000-0000-0000-0000-000000000004,00000000-0000-0000-0000-000000000003,00000000-0000-0000-0000-000000000002,,9-Innovation,Mathematics,9,JUNIOR_HIGH,00000000-0000-0000-0000-000000000005,Jane Student,jane@example.com,,2026-09-01T08:05:00Z,PRESENT,MANUAL_ENTRY,{}

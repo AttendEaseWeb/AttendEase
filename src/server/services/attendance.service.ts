@@ -1,48 +1,57 @@
-import { EmailService } from './email.service';
-import { OneSignalService } from './onesignal.service';
-import { AttendanceRecord, CheckInRequest, AttendanceStats, AttendanceStatus } from '../../shared/types/attendance';
-import { dbStore } from '../db/store';
-import { parseQRToken } from '../../shared/utils/qr';
+import { EmailService } from "./email.service";
+import { OneSignalService } from "./onesignal.service";
+import {
+  AttendanceRecord,
+  CheckInRequest,
+  AttendanceStats,
+  AttendanceStatus,
+} from "../../shared/types/attendance";
+import { dbStore } from "../db/store";
+import { parseQRToken } from "../../shared/utils/qr";
 
 export class AttendanceService {
   static async getAllAttendance(): Promise<AttendanceRecord[]> {
     return await dbStore.getAttendanceRecords();
   }
 
-  static async getAttendanceBySession(sessionId: string): Promise<AttendanceRecord[]> {
+  static async getAttendanceBySession(
+    sessionId: string,
+  ): Promise<AttendanceRecord[]> {
     return await dbStore.getAttendanceBySessionId(sessionId);
   }
 
-  static async getAttendanceByStudent(studentId: string): Promise<AttendanceRecord[]> {
+  static async getAttendanceByStudent(
+    studentId: string,
+  ): Promise<AttendanceRecord[]> {
     return await dbStore.getAttendanceByStudentId(studentId);
   }
 
   static async checkIn(req: CheckInRequest): Promise<AttendanceRecord> {
     const session = await dbStore.getSessionById(req.sessionId);
     if (!session) {
-      throw new Error('Active session not found');
+      throw new Error("Active session not found");
     }
 
     const student = await dbStore.getUserById(req.studentId);
     if (!student) {
-      throw new Error('Student user record not found');
+      throw new Error("Student user record not found");
     }
 
     // Verify QR token if provided
     if (req.qrToken) {
       const decoded = parseQRToken(req.qrToken);
       if (!decoded) {
-        throw new Error('Invalid QR Code format');
+        throw new Error("Invalid QR Code format");
       }
       if (decoded.sessionId !== req.sessionId) {
-        throw new Error('QR code is for a different active session');
+        throw new Error("QR code is for a different active session");
       }
       if (decoded.expiresAt < Date.now()) {
-        throw new Error('QR code has expired. Please scan the refreshed code.');
+        throw new Error("QR code has expired. Please scan the refreshed code.");
       }
     }
 
-    let status: AttendanceStatus = 'PRESENT';
+    let status: AttendanceStatus = "PRESENT";
     const record: AttendanceRecord = {
       id: `att-${Date.now()}`,
       sessionId: session.id,
@@ -55,16 +64,19 @@ export class AttendanceService {
       studentId: student.id,
       studentName: student.name,
       studentEmail: student.email,
-      studentNumber: student.studentId || 'ST-2026-99',
+      studentNumber: student.studentId || "ST-2026-99",
       checkInTime: new Date().toISOString(),
       status,
-      method: req.qrToken ? 'QR_SCAN' : 'GEO_CHECKIN',
-      verifiedLocation: req.latitude && req.longitude ? {
-        latitude: req.latitude,
-        longitude: req.longitude,
-        distanceMeters: 12,
-      } : undefined,
-      notes: 'Verified live class check-in',
+      method: req.qrToken ? "QR_SCAN" : "GEO_CHECKIN",
+      verifiedLocation:
+        req.latitude && req.longitude
+          ? {
+              latitude: req.latitude,
+              longitude: req.longitude,
+              distanceMeters: 12,
+            }
+          : undefined,
+      notes: "Verified live class check-in",
       // Backward compatibility aliases
       courseId: session.classId,
       courseCode: session.classCode,
@@ -81,15 +93,19 @@ export class AttendanceService {
     notes?: string;
   }): Promise<AttendanceRecord> {
     const session = await dbStore.getSessionById(data.sessionId);
-    if (!session) throw new Error('Session not found');
+    if (!session) throw new Error("Session not found");
 
     const student = await dbStore.getUserById(data.studentId);
-    if (!student) throw new Error('Student not found');
-    
+    if (!student) throw new Error("Student not found");
+
     // Check if there is an existing record to prevent duplicate email notifications
-    const existingRecords = await dbStore.getAttendanceBySessionId(data.sessionId);
-    const existingRecord = existingRecords.find(r => r.studentId === data.studentId);
-    const wasAlreadyAbsent = existingRecord?.status === 'ABSENT';
+    const existingRecords = await dbStore.getAttendanceBySessionId(
+      data.sessionId,
+    );
+    const existingRecord = existingRecords.find(
+      (r) => r.studentId === data.studentId,
+    );
+    const wasAlreadyAbsent = existingRecord?.status === "ABSENT";
 
     const record: AttendanceRecord = {
       id: `att-${Date.now()}`,
@@ -103,11 +119,11 @@ export class AttendanceService {
       studentId: student.id,
       studentName: student.name,
       studentEmail: student.email,
-      studentNumber: student.studentId || 'ST-2026-99',
+      studentNumber: student.studentId || "ST-2026-99",
       checkInTime: new Date().toISOString(),
       status: data.status,
-      method: 'MANUAL_ENTRY',
-      notes: data.notes || 'Manual override by Instructor/Admin',
+      method: "MANUAL_ENTRY",
+      notes: data.notes || "Manual override by Instructor/Admin",
       // Backward compatibility aliases
       courseId: session.classId,
       courseCode: session.classCode,
@@ -117,15 +133,26 @@ export class AttendanceService {
     const savedRecord = await dbStore.addAttendanceRecord(record);
 
     // Send email notification if marked ABSENT and wasn't already ABSENT
-    if (data.status === 'ABSENT' && !wasAlreadyAbsent && student.parentEmail) {
+    if (data.status === "ABSENT" && !wasAlreadyAbsent && student.parentEmail) {
       // We don't await this so it doesn't block the request or fail the attendance record if email fails
-      EmailService.sendParentNotification(student.parentEmail, student.name, savedRecord).catch(err => {
-        console.error('Non-fatal error sending email in background:', err);
+      EmailService.sendParentNotification(
+        student.parentEmail,
+        student.name,
+        savedRecord,
+      ).catch((err) => {
+        console.error("Non-fatal error sending email in background:", err);
       });
-      
+
       // Also send a Push Notification!
-      OneSignalService.sendAbsencePushNotification(student.parentEmail, student.name, savedRecord).catch(err => {
-        console.error('Non-fatal error sending push notification in background:', err);
+      OneSignalService.sendAbsencePushNotification(
+        student.parentEmail,
+        student.name,
+        savedRecord,
+      ).catch((err) => {
+        console.error(
+          "Non-fatal error sending push notification in background:",
+          err,
+        );
       });
     }
 

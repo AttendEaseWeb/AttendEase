@@ -1,0 +1,2 @@
+id,sectionName,gradeLevel,category,subjects,strand,instructorId,instructorName,description,enrolledStudentIds,totalStudents,color,createdAt
+00000000-0000-0000-0000-000000000002,9-Innovation,9,JUNIOR_HIGH,"[""Mathematics"",""Science""]",,00000000-0000-0000-0000-000000000001,John Doe,Grade 9 Innovation Section,"[]",0,#3b82f6,"2026-09-01T00:00:00Z"

@@ -1,13 +1,27 @@
-import { offlineCapableFetch } from '../../../utils/sync';
-import React, { useState, useEffect } from 'react';
-import { Modal } from '../../../components/common/Modal';
-import { Button } from '../../../components/common/Button';
-import { Input } from '../../../components/common/Input';
-import { useNotification } from '../../../context/NotificationContext';
-import { ClassSection, GradeLevel, SeniorHighStrand } from '../../../../shared/types/class';
-import { User } from '../../../../shared/types/auth';
-import { Check, Search, Users, GraduationCap, Trash2, Plus, X, BookOpen, UserPlus } from 'lucide-react';
-import { AddUserModal } from '../../users/components/AddUserModal';
+import { offlineCapableFetch } from "../../../utils/sync";
+import React, { useState, useEffect } from "react";
+import { Modal } from "../../../components/common/Modal";
+import { Button } from "../../../components/common/Button";
+import { Input } from "../../../components/common/Input";
+import { useNotification } from "../../../context/NotificationContext";
+import {
+  ClassSection,
+  GradeLevel,
+  SeniorHighStrand,
+} from "../../../../shared/types/class";
+import { User } from "../../../../shared/types/auth";
+import {
+  Check,
+  Search,
+  Users,
+  GraduationCap,
+  Trash2,
+  Plus,
+  X,
+  BookOpen,
+  UserPlus,
+} from "lucide-react";
+import { AddUserModal } from "../../users/components/AddUserModal";
 
 interface ClassFormModalProps {
   isOpen: boolean;
@@ -21,26 +35,26 @@ interface ClassFormModalProps {
 }
 
 const COMMON_JHS_SUBJECTS = [
-  'Mathematics',
-  'Science',
-  'English',
-  'Filipino',
-  'Araling Panlipunan',
-  'MAPEH',
-  'ESP',
-  'Computer / TLE',
+  "Mathematics",
+  "Science",
+  "English",
+  "Filipino",
+  "Araling Panlipunan",
+  "MAPEH",
+  "ESP",
+  "Computer / TLE",
 ];
 
 const COMMON_SHS_SUBJECTS = [
-  'General Mathematics',
-  'Oral Communication',
-  'Earth & Life Science',
-  'General Biology 1',
-  'Statistics & Probability',
-  'Empowerment Technologies',
-  'Physical Education',
-  'General Chemistry 1',
-  'Practical Research 1',
+  "General Mathematics",
+  "Oral Communication",
+  "Earth & Life Science",
+  "General Biology 1",
+  "Statistics & Probability",
+  "Empowerment Technologies",
+  "Physical Education",
+  "General Chemistry 1",
+  "Practical Research 1",
 ];
 
 export const ClassFormModal: React.FC<ClassFormModalProps> = ({
@@ -55,23 +69,25 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
 }) => {
   const { showToast } = useNotification();
 
-  const [sectionName, setSectionName] = useState('');
+  const [sectionName, setSectionName] = useState("");
   const [gradeLevel, setGradeLevel] = useState<GradeLevel>(defaultGradeLevel);
-  const [strand, setStrand] = useState<SeniorHighStrand>('STEM');
+  const [strand, setStrand] = useState<SeniorHighStrand>("STEM");
   const [subjects, setSubjects] = useState<string[]>([]);
-  const [newSubjectInput, setNewSubjectInput] = useState('');
-  const [instructorName, setInstructorName] = useState('');
-  const [description, setDescription] = useState('');
+  const [newSubjectInput, setNewSubjectInput] = useState("");
+  const [instructorName, setInstructorName] = useState("");
+  const [description, setDescription] = useState("");
 
   // Student Enrollment state
   const [availableStudents, setAvailableStudents] = useState<User[]>([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
-  const [studentSearchQuery, setStudentSearchQuery] = useState('');
+  const [studentSearchQuery, setStudentSearchQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
 
   // Auto-detection logic for Grade Level & Strand based on class/section name
-  const [autoDetectedMessage, setAutoDetectedMessage] = useState<string | null>(null);
+  const [autoDetectedMessage, setAutoDetectedMessage] = useState<string | null>(
+    null,
+  );
 
   const detectGradeLevelAndStrand = (text: string) => {
     if (!text || !text.trim()) return null;
@@ -90,7 +106,9 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
 
     // Pattern B: Dash/Ordinal/Space notation like "11-STEM", "7-A", "10-Einstein", "12-ABM", "7A"
     if (!detectedGrade) {
-      const dashMatch = text.match(/\b(1[0-2]|[7-9])(?:[\-\s]*([a-zA-Z]+|\b))/i);
+      const dashMatch = text.match(
+        /\b(1[0-2]|[7-9])(?:[\-\s]*([a-zA-Z]+|\b))/i,
+      );
       if (dashMatch) {
         const level = parseInt(dashMatch[1], 10);
         if (level >= 7 && level <= 12) {
@@ -101,11 +119,11 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
 
     // Strand detection
     const upperText = text.toUpperCase();
-    if (upperText.includes('STEM')) detectedStrand = 'STEM';
-    else if (upperText.includes('ABM')) detectedStrand = 'ABM';
-    else if (upperText.includes('HUMSS')) detectedStrand = 'HUMSS';
-    else if (upperText.includes('TVL')) detectedStrand = 'TVL';
-    else if (upperText.includes('GAS')) detectedStrand = 'GAS';
+    if (upperText.includes("STEM")) detectedStrand = "STEM";
+    else if (upperText.includes("ABM")) detectedStrand = "ABM";
+    else if (upperText.includes("HUMSS")) detectedStrand = "HUMSS";
+    else if (upperText.includes("TVL")) detectedStrand = "TVL";
+    else if (upperText.includes("GAS")) detectedStrand = "GAS";
 
     if (detectedGrade || detectedStrand) {
       return { gradeLevel: detectedGrade, strand: detectedStrand };
@@ -124,7 +142,9 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
         setStrand(result.strand);
       }
       if (result.gradeLevel && result.strand && result.gradeLevel >= 11) {
-        setAutoDetectedMessage(`Auto-detected Grade ${result.gradeLevel} (${result.strand})`);
+        setAutoDetectedMessage(
+          `Auto-detected Grade ${result.gradeLevel} (${result.strand})`,
+        );
       } else if (result.gradeLevel) {
         setAutoDetectedMessage(`Auto-detected Grade ${result.gradeLevel}`);
       }
@@ -137,15 +157,17 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
   };
 
   const handleAddSubject = (subjectName?: string) => {
-    const target = (subjectName !== undefined ? subjectName : newSubjectInput).trim();
+    const target = (
+      subjectName !== undefined ? subjectName : newSubjectInput
+    ).trim();
     if (!target) return;
     if (subjects.some((s) => s.toLowerCase() === target.toLowerCase())) {
-      showToast(`Subject "${target}" is already added to this section`, 'info');
-      setNewSubjectInput('');
+      showToast(`Subject "${target}" is already added to this section`, "info");
+      setNewSubjectInput("");
       return;
     }
     setSubjects((prev) => [...prev, target]);
-    setNewSubjectInput('');
+    setNewSubjectInput("");
   };
 
   const handleRemoveSubject = (indexToRemove: number) => {
@@ -153,13 +175,13 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
   };
 
   const loadStudents = () => {
-    offlineCapableFetch('/api/users')
+    offlineCapableFetch("/api/users")
       .then((res) => res.json())
       .then((users: User[]) => {
-        const students = users.filter((u) => u.role === 'STUDENT');
+        const students = users.filter((u) => u.role === "STUDENT");
         setAvailableStudents(students);
       })
-      .catch((err) => console.error('Failed to load students', err));
+      .catch((err) => console.error("Failed to load students", err));
   };
 
   // Fetch available students & initial data
@@ -171,31 +193,36 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
       if (initialClass) {
         setSectionName(initialClass.sectionName);
         setGradeLevel(initialClass.gradeLevel);
-        setStrand(initialClass.strand || 'STEM');
-        const initialSubjects = initialClass.subjects && initialClass.subjects.length > 0
-          ? initialClass.subjects
-          : (initialClass.subject ? [initialClass.subject] : []);
+        setStrand(initialClass.strand || "STEM");
+        const initialSubjects =
+          initialClass.subjects && initialClass.subjects.length > 0
+            ? initialClass.subjects
+            : initialClass.subject
+              ? [initialClass.subject]
+              : [];
         setSubjects(initialSubjects);
         setInstructorName(initialClass.instructorName);
-        setDescription(initialClass.description || '');
+        setDescription(initialClass.description || "");
         setSelectedStudentIds(initialClass.enrolledStudentIds || []);
       } else {
-        setSectionName('');
+        setSectionName("");
         setGradeLevel(defaultGradeLevel);
-        setStrand('STEM');
+        setStrand("STEM");
         setSubjects([]);
-        setInstructorName('');
-        setDescription('');
+        setInstructorName("");
+        setDescription("");
         setSelectedStudentIds([]);
       }
     }
   }, [isOpen, initialClass, defaultGradeLevel]);
 
-  const category = gradeLevel <= 10 ? 'JUNIOR_HIGH' : 'SENIOR_HIGH';
+  const category = gradeLevel <= 10 ? "JUNIOR_HIGH" : "SENIOR_HIGH";
 
   const handleToggleStudent = (studentId: string) => {
     if (selectedStudentIds.includes(studentId)) {
-      setSelectedStudentIds(selectedStudentIds.filter((id) => id !== studentId));
+      setSelectedStudentIds(
+        selectedStudentIds.filter((id) => id !== studentId),
+      );
     } else {
       setSelectedStudentIds([...selectedStudentIds, studentId]);
     }
@@ -212,12 +239,12 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!sectionName.trim()) {
-      showToast('Section name is required', 'error');
+      showToast("Section name is required", "error");
       return;
     }
 
     if (subjects.length === 0) {
-      showToast('Please add at least one subject to this section', 'error');
+      showToast("Please add at least one subject to this section", "error");
       return;
     }
 
@@ -227,32 +254,39 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
         sectionName: sectionName.trim(),
         gradeLevel: Number(gradeLevel) as GradeLevel,
         category,
-        strand: category === 'SENIOR_HIGH' ? strand : undefined,
+        strand: category === "SENIOR_HIGH" ? strand : undefined,
         subjects,
-        instructorId: currentUserId || 'u-test-instructor',
-        instructorName: instructorName || 'Prof. David Miller',
+        instructorId: currentUserId || "u-test-instructor",
+        instructorName: instructorName || "Prof. David Miller",
         description,
         enrolledStudentIds: selectedStudentIds,
       };
 
-      const url = initialClass ? `/api/classes/${initialClass.id}` : '/api/classes';
-      const method = initialClass ? 'PUT' : 'POST';
+      const url = initialClass
+        ? `/api/classes/${initialClass.id}`
+        : "/api/classes";
+      const method = initialClass ? "PUT" : "POST";
 
       const response = await offlineCapableFetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save class section');
+        throw new Error("Failed to save class section");
       }
 
-      showToast(initialClass ? 'Class section updated successfully!' : 'New class section created successfully!', 'success');
+      showToast(
+        initialClass
+          ? "Class section updated successfully!"
+          : "New class section created successfully!",
+        "success",
+      );
       onSuccess();
       onClose();
     } catch (err: any) {
-      showToast(err.message || 'An error occurred', 'error');
+      showToast(err.message || "An error occurred", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -260,38 +294,54 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
 
   const handleDelete = async () => {
     if (!initialClass) return;
-    if (!window.confirm(`Are you sure you want to delete class section "${initialClass.sectionName}"?`)) return;
+    if (
+      !window.confirm(
+        `Are you sure you want to delete class section "${initialClass.sectionName}"?`,
+      )
+    )
+      return;
 
     setIsSubmitting(true);
     try {
-      const response = await offlineCapableFetch(`/api/classes/${initialClass.id}`, { method: 'DELETE' });
+      const response = await offlineCapableFetch(
+        `/api/classes/${initialClass.id}`,
+        { method: "DELETE" },
+      );
       if (!response.ok) {
-        throw new Error('Failed to delete class section');
+        throw new Error("Failed to delete class section");
       }
-      showToast(`Class section "${initialClass.sectionName}" deleted successfully`, 'info');
+      showToast(
+        `Class section "${initialClass.sectionName}" deleted successfully`,
+        "info",
+      );
       onSuccess();
       onClose();
     } catch (err: any) {
-      showToast(err.message || 'Error deleting class section', 'error');
+      showToast(err.message || "Error deleting class section", "error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const filteredStudents = availableStudents.filter((s) =>
-    s.name.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
-    s.email.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
-    (s.studentId && s.studentId.toLowerCase().includes(studentSearchQuery.toLowerCase()))
+  const filteredStudents = availableStudents.filter(
+    (s) =>
+      s.name.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
+      s.email.toLowerCase().includes(studentSearchQuery.toLowerCase()) ||
+      (s.studentId &&
+        s.studentId.toLowerCase().includes(studentSearchQuery.toLowerCase())),
   );
 
-  const suggestedSubjectsList = (gradeLevel <= 10 ? COMMON_JHS_SUBJECTS : COMMON_SHS_SUBJECTS)
-    .filter((subj) => !subjects.some((s) => s.toLowerCase() === subj.toLowerCase()));
+  const suggestedSubjectsList = (
+    gradeLevel <= 10 ? COMMON_JHS_SUBJECTS : COMMON_SHS_SUBJECTS
+  ).filter(
+    (subj) => !subjects.some((s) => s.toLowerCase() === subj.toLowerCase()),
+  );
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={initialClass ? 'Edit Class Section' : 'Create New Class Section'}
+      title={initialClass ? "Edit Class Section" : "Create New Class Section"}
       maxWidth="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-5 pr-1">
@@ -311,7 +361,9 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
             </div>
             <select
               value={gradeLevel}
-              onChange={(e) => setGradeLevel(Number(e.target.value) as GradeLevel)}
+              onChange={(e) =>
+                setGradeLevel(Number(e.target.value) as GradeLevel)
+              }
               className="w-full rounded-2xl border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-3 text-body-medium font-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-sm"
             >
               <optgroup label="Junior High School (Grades 7-10)">
@@ -327,7 +379,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
             </select>
           </div>
 
-          {category === 'SENIOR_HIGH' ? (
+          {category === "SENIOR_HIGH" ? (
             <div className="flex flex-col gap-1.5">
               <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface font-semibold">
                 Senior High Track / Strand
@@ -337,10 +389,18 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
                 onChange={(e) => setStrand(e.target.value as SeniorHighStrand)}
                 className="w-full rounded-2xl border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-3 text-body-medium font-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-sm"
               >
-                <option value="STEM">STEM (Science, Tech, Engineering, Math)</option>
-                <option value="ABM">ABM (Accountancy, Business, Management)</option>
-                <option value="HUMSS">HUMSS (Humanities & Social Sciences)</option>
-                <option value="TVL">TVL (Technical-Vocational-Livelihood)</option>
+                <option value="STEM">
+                  STEM (Science, Tech, Engineering, Math)
+                </option>
+                <option value="ABM">
+                  ABM (Accountancy, Business, Management)
+                </option>
+                <option value="HUMSS">
+                  HUMSS (Humanities & Social Sciences)
+                </option>
+                <option value="TVL">
+                  TVL (Technical-Vocational-Livelihood)
+                </option>
                 <option value="GAS">GAS (General Academic Strand)</option>
               </select>
             </div>
@@ -378,7 +438,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
               Subjects under this Section ({subjects.length})
             </h4>
             <span className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-              Add individual subjects taught to {sectionName || 'this section'}
+              Add individual subjects taught to {sectionName || "this section"}
             </span>
           </div>
 
@@ -390,7 +450,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
               value={newSubjectInput}
               onChange={(e) => setNewSubjectInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   e.preventDefault();
                   handleAddSubject();
                 }
@@ -431,7 +491,8 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
           <div className="pt-2">
             {subjects.length === 0 ? (
               <p className="text-body-small text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 p-3 rounded-xl border border-amber-200 dark:border-amber-900/50">
-                ⚠️ No subjects added yet. Add at least one subject for this class section.
+                ⚠️ No subjects added yet. Add at least one subject for this
+                class section.
               </p>
             ) : (
               <div className="flex flex-wrap gap-2">
@@ -466,7 +527,8 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
                 Enroll Students ({selectedStudentIds.length} Selected)
               </h4>
               <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-                Select students to assign to this class section for QR attendance tracking.
+                Select students to assign to this class section for QR
+                attendance tracking.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -475,17 +537,17 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
                 onClick={() => setIsAddStudentOpen(true)}
                 className="px-2.5 py-1 rounded-full bg-m3-sys-light-primary/10 hover:bg-m3-sys-light-primary/20 text-m3-sys-light-primary text-label-small font-semibold flex items-center gap-1 transition-colors cursor-pointer"
               >
-                <UserPlus className="w-3.5 h-3.5" />
-                + New Student
+                <UserPlus className="w-3.5 h-3.5" />+ New Student
               </button>
               <button
                 type="button"
                 onClick={handleSelectAllStudents}
                 className="text-label-small font-medium text-m3-sys-light-primary dark:text-m3-sys-dark-primary hover:underline cursor-pointer"
               >
-                {selectedStudentIds.length === filteredStudents.length && filteredStudents.length > 0
-                  ? 'Deselect All'
-                  : 'Select All'}
+                {selectedStudentIds.length === filteredStudents.length &&
+                filteredStudents.length > 0
+                  ? "Deselect All"
+                  : "Select All"}
               </button>
             </div>
           </div>
@@ -515,8 +577,8 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
                     onClick={() => handleToggleStudent(student.id)}
                     className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-colors ${
                       isSelected
-                        ? 'bg-m3-sys-light-primary-container/50 dark:bg-m3-sys-dark-primary-container/50 border border-m3-sys-light-primary/30'
-                        : 'hover:bg-m3-sys-light-surface-variant/40 dark:hover:bg-m3-sys-dark-surface-variant/40'
+                        ? "bg-m3-sys-light-primary-container/50 dark:bg-m3-sys-dark-primary-container/50 border border-m3-sys-light-primary/30"
+                        : "hover:bg-m3-sys-light-surface-variant/40 dark:hover:bg-m3-sys-dark-surface-variant/40"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -528,18 +590,21 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
                           {student.name}
                         </div>
                         <div className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-                          {student.email} {student.studentId && `• ${student.studentId}`}
+                          {student.email}{" "}
+                          {student.studentId && `• ${student.studentId}`}
                         </div>
                       </div>
                     </div>
                     <div
                       className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
                         isSelected
-                          ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary border-m3-sys-light-primary text-white'
-                          : 'border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant'
+                          ? "bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary border-m3-sys-light-primary text-white"
+                          : "border-m3-sys-light-outline-variant dark:border-m3-sys-dark-outline-variant"
                       }`}
                     >
-                      {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                      {isSelected && (
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      )}
                     </div>
                   </div>
                 );
@@ -583,7 +648,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
               Cancel
             </Button>
             <Button type="submit" isLoading={isSubmitting} variant="primary">
-              {initialClass ? 'Save Changes' : 'Create Class Section'}
+              {initialClass ? "Save Changes" : "Create Class Section"}
             </Button>
           </div>
         </div>

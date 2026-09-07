@@ -1,20 +1,38 @@
-import { offlineCapableFetch } from '../../../utils/sync';
-import React, { useEffect, useState } from 'react';
-import { ClassSection, ClassSession, GradeCategory, GradeLevel } from '../../../../shared/types/class';
-import { ClassCard } from '../components/ClassCard';
-import { ClassFormModal } from '../components/ClassFormModal';
-import { SectionDetailModal } from '../components/SectionDetailModal';
-import { TakeAttendanceModal } from '../components/TakeAttendanceModal';
-import { AddUserModal } from '../../users/components/AddUserModal';
-import { QRCheckInModal } from '../../attendance/components/QRCheckInModal';
-import { ManualCheckInModal } from '../../attendance/components/ManualCheckInModal';
-import { Button } from '../../../components/common/Button';
-import { Card } from '../../../components/common/Card';
-import { Badge } from '../../../components/common/Badge';
-import { useAuth } from '../../../context/AuthContext';
-import { useNotification } from '../../../context/NotificationContext';
-import { useSchedule } from '../../../context/ScheduleContext';
-import { Plus, UserPlus, GraduationCap, QrCode, Search, School, BookOpen, ChevronDown, ChevronUp, ChevronsUpDown, Layers, Star } from 'lucide-react';
+import { offlineCapableFetch } from "../../../utils/sync";
+import React, { useEffect, useState } from "react";
+import {
+  ClassSection,
+  ClassSession,
+  GradeCategory,
+  GradeLevel,
+} from "../../../../shared/types/class";
+import { ClassCard } from "../components/ClassCard";
+import { ClassFormModal } from "../components/ClassFormModal";
+import { SectionDetailModal } from "../components/SectionDetailModal";
+import { TakeAttendanceModal } from "../components/TakeAttendanceModal";
+import { AddUserModal } from "../../users/components/AddUserModal";
+import { QRCheckInModal } from "../../attendance/components/QRCheckInModal";
+import { ManualCheckInModal } from "../../attendance/components/ManualCheckInModal";
+import { Button } from "../../../components/common/Button";
+import { Card } from "../../../components/common/Card";
+import { Badge } from "../../../components/common/Badge";
+import { useAuth } from "../../../context/AuthContext";
+import { useNotification } from "../../../context/NotificationContext";
+import { useSchedule } from "../../../context/ScheduleContext";
+import {
+  Plus,
+  UserPlus,
+  GraduationCap,
+  QrCode,
+  Search,
+  School,
+  BookOpen,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+  Layers,
+  Star,
+} from "lucide-react";
 
 interface ClassesPageProps {
   onOpenQRScanner: () => void;
@@ -31,82 +49,91 @@ interface GradeGroup {
 const GRADE_GROUPS: GradeGroup[] = [
   {
     level: 7,
-    title: 'Grade 7',
-    category: 'JUNIOR_HIGH',
-    description: 'Junior High School - Introductory Subjects & Foundations',
-    badgeColor: 'bg-emerald-600 text-white',
+    title: "Grade 7",
+    category: "JUNIOR_HIGH",
+    description: "Junior High School - Introductory Subjects & Foundations",
+    badgeColor: "bg-emerald-600 text-white",
   },
   {
     level: 8,
-    title: 'Grade 8',
-    category: 'JUNIOR_HIGH',
-    description: 'Junior High School - Intermediate Core Curriculum',
-    badgeColor: 'bg-emerald-600 text-white',
+    title: "Grade 8",
+    category: "JUNIOR_HIGH",
+    description: "Junior High School - Intermediate Core Curriculum",
+    badgeColor: "bg-emerald-600 text-white",
   },
   {
     level: 9,
-    title: 'Grade 9',
-    category: 'JUNIOR_HIGH',
-    description: 'Junior High School - Advanced Core & Science Track',
-    badgeColor: 'bg-emerald-600 text-white',
+    title: "Grade 9",
+    category: "JUNIOR_HIGH",
+    description: "Junior High School - Advanced Core & Science Track",
+    badgeColor: "bg-emerald-600 text-white",
   },
   {
     level: 10,
-    title: 'Grade 10',
-    category: 'JUNIOR_HIGH',
-    description: 'Junior High School - Moving Up & Senior High Prep',
-    badgeColor: 'bg-emerald-600 text-white',
+    title: "Grade 10",
+    category: "JUNIOR_HIGH",
+    description: "Junior High School - Moving Up & Senior High Prep",
+    badgeColor: "bg-emerald-600 text-white",
   },
   {
     level: 11,
-    title: 'Grade 11',
-    category: 'SENIOR_HIGH',
-    description: 'Senior High School - STEM, ABM, HUMSS, TVL, GAS Track',
-    badgeColor: 'bg-indigo-600 text-white',
+    title: "Grade 11",
+    category: "SENIOR_HIGH",
+    description: "Senior High School - STEM, ABM, HUMSS, TVL, GAS Track",
+    badgeColor: "bg-indigo-600 text-white",
   },
   {
     level: 12,
-    title: 'Grade 12',
-    category: 'SENIOR_HIGH',
-    description: 'Senior High School - Capstone Research & Graduation Track',
-    badgeColor: 'bg-indigo-600 text-white',
+    title: "Grade 12",
+    category: "SENIOR_HIGH",
+    description: "Senior High School - Capstone Research & Graduation Track",
+    badgeColor: "bg-indigo-600 text-white",
   },
 ];
 
-export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => {
+export const ClassesPage: React.FC<ClassesPageProps> = ({
+  onOpenQRScanner,
+}) => {
   const { user } = useAuth();
   const { showToast } = useNotification();
   const { currentActiveEntry } = useSchedule();
 
   const [classes, setClasses] = useState<ClassSection[]>([]);
   const [sessions, setSessions] = useState<ClassSession[]>([]);
-  const [selectedClassToEdit, setSelectedClassToEdit] = useState<ClassSection | null>(null);
+  const [selectedClassToEdit, setSelectedClassToEdit] =
+    useState<ClassSection | null>(null);
   const [defaultCreateGrade, setDefaultCreateGrade] = useState<GradeLevel>(7);
   const [isClassModalOpen, setIsClassModalOpen] = useState(false);
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
 
   // Section Detail View Modal State
-  const [selectedSectionForView, setSelectedSectionForView] = useState<ClassSection | null>(null);
+  const [selectedSectionForView, setSelectedSectionForView] =
+    useState<ClassSection | null>(null);
   const [isSectionDetailOpen, setIsSectionDetailOpen] = useState(false);
 
   // Attendance Session Modals
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
-  const [attendanceModalClass, setAttendanceModalClass] = useState<ClassSection | null>(null);
-  
+  const [attendanceModalClass, setAttendanceModalClass] =
+    useState<ClassSection | null>(null);
+
   // Collapsible Grade Cards State
-  const [expandedGrades, setExpandedGrades] = useState<Record<number, boolean>>({
-    7: true,
-    8: false,
-    9: false,
-    10: false,
-    11: false,
-    12: false,
-  });
+  const [expandedGrades, setExpandedGrades] = useState<Record<number, boolean>>(
+    {
+      7: true,
+      8: false,
+      9: false,
+      10: false,
+      11: false,
+      12: false,
+    },
+  );
 
   // Filter States
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<'ALL' | GradeCategory>('ALL');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<"ALL" | GradeCategory>(
+    "ALL",
+  );
   const [selectedGradeFilter, setSelectedGradeFilter] = useState<number>(0); // 0 = all grades
   const [isLoading, setIsLoading] = useState(true);
 
@@ -118,17 +145,26 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     setIsLoading(true);
     try {
       const [classesRes, sessionsRes] = await Promise.all([
-        offlineCapableFetch('/api/classes'),
-        offlineCapableFetch('/api/sessions'),
+        offlineCapableFetch("/api/classes"),
+        offlineCapableFetch("/api/sessions"),
       ]);
       if (classesRes.ok) {
         const loadedClasses: ClassSection[] = await classesRes.json();
         setClasses(loadedClasses);
-        
+
         // Auto-expand grade levels that have sections if desired, or keep current state
-        const initialExpanded: Record<number, boolean> = { 7: true, 8: true, 9: true, 10: true, 11: true, 12: true };
+        const initialExpanded: Record<number, boolean> = {
+          7: true,
+          8: true,
+          9: true,
+          10: true,
+          11: true,
+          12: true,
+        };
         GRADE_GROUPS.forEach((g) => {
-          const hasSections = loadedClasses.some((c) => Number(c.gradeLevel) === g.level);
+          const hasSections = loadedClasses.some(
+            (c) => Number(c.gradeLevel) === g.level,
+          );
           // Expand grade 7 or grades with existing sections
           initialExpanded[g.level] = g.level === 7 || hasSections;
         });
@@ -136,7 +172,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
       }
       if (sessionsRes.ok) setSessions(await sessionsRes.json());
     } catch {
-      showToast('Error loading class sections', 'error');
+      showToast("Error loading class sections", "error");
     } finally {
       setIsLoading(false);
     }
@@ -151,13 +187,17 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
 
   const expandAllGrades = () => {
     const allExpanded: Record<number, boolean> = {};
-    GRADE_GROUPS.forEach((g) => { allExpanded[g.level] = true; });
+    GRADE_GROUPS.forEach((g) => {
+      allExpanded[g.level] = true;
+    });
     setExpandedGrades(allExpanded);
   };
 
   const collapseAllGrades = () => {
     const allCollapsed: Record<number, boolean> = {};
-    GRADE_GROUPS.forEach((g) => { allCollapsed[g.level] = false; });
+    GRADE_GROUPS.forEach((g) => {
+      allCollapsed[g.level] = false;
+    });
     setExpandedGrades(allCollapsed);
   };
 
@@ -166,19 +206,26 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
   };
 
   const handleDeleteClass = async (cls: ClassSection) => {
-    if (!window.confirm(`Are you sure you want to delete class section "${cls.sectionName}"?`)) return;
+    if (
+      !window.confirm(
+        `Are you sure you want to delete class section "${cls.sectionName}"?`,
+      )
+    )
+      return;
 
     try {
-      const res = await offlineCapableFetch(`/api/classes/${cls.id}`, { method: 'DELETE' });
+      const res = await offlineCapableFetch(`/api/classes/${cls.id}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
-        showToast(`Deleted class section ${cls.sectionName}`, 'info');
+        showToast(`Deleted class section ${cls.sectionName}`, "info");
         fetchData();
       } else {
         const data = await res.json().catch(() => ({}));
-        showToast(data.error || 'Failed to delete class section', 'error');
+        showToast(data.error || "Failed to delete class section", "error");
       }
     } catch {
-      showToast('Error deleting class section', 'error');
+      showToast("Error deleting class section", "error");
     }
   };
 
@@ -209,20 +256,23 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     setIsClassModalOpen(true);
   };
 
-  const isAdmin = user?.role === 'ADMIN';
-  const isInstructor = user?.role === 'INSTRUCTOR';
+  const isAdmin = user?.role === "ADMIN";
+  const isInstructor = user?.role === "INSTRUCTOR";
   const canManage = isInstructor || isAdmin;
 
   // Determine active grade groups to render based on filters and user role
   const activeGradeGroups = GRADE_GROUPS.filter((g) => {
-    if (categoryFilter !== 'ALL' && g.category !== categoryFilter) return false;
-    if (selectedGradeFilter > 0 && g.level !== selectedGradeFilter) return false;
+    if (categoryFilter !== "ALL" && g.category !== categoryFilter) return false;
+    if (selectedGradeFilter > 0 && g.level !== selectedGradeFilter)
+      return false;
 
     // Administrators see ALL 6 grade level cards for complete system overview
     if (isAdmin) return true;
 
     // Instructors & Students: Collapsible grade level cards are HIDDEN until a class is created for that grade level
-    const totalClassesInGrade = classes.filter((cls) => Number(cls.gradeLevel) === Number(g.level)).length;
+    const totalClassesInGrade = classes.filter(
+      (cls) => Number(cls.gradeLevel) === Number(g.level),
+    ).length;
     return totalClassesInGrade > 0;
   });
 
@@ -232,7 +282,9 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
       if (Number(cls.gradeLevel) !== Number(gradeLevel)) return false;
       if (!searchQuery) return true;
       const query = searchQuery.toLowerCase();
-      const matchSubjects = cls.subjects?.some((s) => s.toLowerCase().includes(query)) || cls.subject?.toLowerCase().includes(query);
+      const matchSubjects =
+        cls.subjects?.some((s) => s.toLowerCase().includes(query)) ||
+        cls.subject?.toLowerCase().includes(query);
       return (
         cls.sectionName.toLowerCase().includes(query) ||
         matchSubjects ||
@@ -242,15 +294,15 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     });
   };
 
-  const activeSection = currentActiveEntry 
-    ? classes.find(c => c.id === currentActiveEntry.sectionId)
+  const activeSection = currentActiveEntry
+    ? classes.find((c) => c.id === currentActiveEntry.sectionId)
     : null;
 
   const formatTime12h = (time24: string) => {
-    if (!time24) return '';
-    const [hours, minutes] = time24.split(':');
+    if (!time24) return "";
+    const [hours, minutes] = time24.split(":");
     const h = parseInt(hours, 10);
-    const ampm = h >= 12 ? 'PM' : 'AM';
+    const ampm = h >= 12 ? "PM" : "AM";
     const h12 = h % 12 || 12;
     return `${h12}:${minutes} ${ampm}`;
   };
@@ -265,12 +317,19 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
               <School className="w-7 h-7 text-m3-sys-light-primary dark:text-m3-sys-dark-primary" />
               Class Sections
             </h2>
-            <Badge variant={isAdmin ? 'purple' : isInstructor ? 'indigo' : 'emerald'}>
-              {isAdmin ? 'Admin View' : isInstructor ? 'Instructor View' : 'Student View'}
+            <Badge
+              variant={isAdmin ? "purple" : isInstructor ? "indigo" : "emerald"}
+            >
+              {isAdmin
+                ? "Admin View"
+                : isInstructor
+                  ? "Instructor View"
+                  : "Student View"}
             </Badge>
           </div>
           <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1 max-w-2xl">
-            Manage academic sections, subjects, and student rosters across all grade levels.
+            Manage academic sections, subjects, and student rosters across all
+            grade levels.
           </p>
         </div>
 
@@ -305,7 +364,9 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
           </h3>
           <div className="ring-2 ring-amber-500/50 rounded-3xl relative overflow-hidden bg-amber-50/30 dark:bg-amber-950/20">
             <div className="absolute top-0 right-0 px-3 py-1 bg-amber-500 text-white font-bold text-label-small rounded-bl-xl shadow-sm z-10">
-              {currentActiveEntry.subject} ({formatTime12h(currentActiveEntry.startTime)} - {formatTime12h(currentActiveEntry.endTime)})
+              {currentActiveEntry.subject} (
+              {formatTime12h(currentActiveEntry.startTime)} -{" "}
+              {formatTime12h(currentActiveEntry.endTime)})
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
               <div className="md:col-span-1 lg:col-span-1 p-3">
@@ -326,8 +387,12 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
             <School className="w-5 h-5" />
           </div>
           <div>
-            <div className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">{classes.length}</div>
-            <div className="text-label-small text-m3-sys-light-on-surface-variant">Total Sections</div>
+            <div className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+              {classes.length}
+            </div>
+            <div className="text-label-small text-m3-sys-light-on-surface-variant">
+              Total Sections
+            </div>
           </div>
         </div>
 
@@ -337,9 +402,11 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
           </div>
           <div>
             <div className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-              {classes.filter((c) => c.category === 'JUNIOR_HIGH').length}
+              {classes.filter((c) => c.category === "JUNIOR_HIGH").length}
             </div>
-            <div className="text-label-small text-m3-sys-light-on-surface-variant">Junior High (7-10)</div>
+            <div className="text-label-small text-m3-sys-light-on-surface-variant">
+              Junior High (7-10)
+            </div>
           </div>
         </div>
 
@@ -349,9 +416,11 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
           </div>
           <div>
             <div className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-              {classes.filter((c) => c.category === 'SENIOR_HIGH').length}
+              {classes.filter((c) => c.category === "SENIOR_HIGH").length}
             </div>
-            <div className="text-label-small text-m3-sys-light-on-surface-variant">Senior High (11-12)</div>
+            <div className="text-label-small text-m3-sys-light-on-surface-variant">
+              Senior High (11-12)
+            </div>
           </div>
         </div>
 
@@ -361,9 +430,14 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
           </div>
           <div>
             <div className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-              {classes.reduce((acc, c) => acc + (c.enrolledStudentIds?.length || 0), 0)}
+              {classes.reduce(
+                (acc, c) => acc + (c.enrolledStudentIds?.length || 0),
+                0,
+              )}
             </div>
-            <div className="text-label-small text-m3-sys-light-on-surface-variant">Enrolled Students</div>
+            <div className="text-label-small text-m3-sys-light-on-surface-variant">
+              Enrolled Students
+            </div>
           </div>
         </div>
       </div>
@@ -374,22 +448,28 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
             <button
-              onClick={() => { setCategoryFilter('ALL'); setSelectedGradeFilter(0); }}
+              onClick={() => {
+                setCategoryFilter("ALL");
+                setSelectedGradeFilter(0);
+              }}
               className={`px-4 py-2 rounded-full text-label-large font-medium transition-all shrink-0 ${
-                categoryFilter === 'ALL' && selectedGradeFilter === 0
-                  ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-sm'
-                  : 'bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 text-m3-sys-light-on-surface-variant hover:bg-m3-sys-light-surface-variant/60'
+                categoryFilter === "ALL" && selectedGradeFilter === 0
+                  ? "bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-sm"
+                  : "bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 text-m3-sys-light-on-surface-variant hover:bg-m3-sys-light-surface-variant/60"
               }`}
             >
               All Grades ({classes.length} Sections)
             </button>
 
             <button
-              onClick={() => { setCategoryFilter('JUNIOR_HIGH'); setSelectedGradeFilter(0); }}
+              onClick={() => {
+                setCategoryFilter("JUNIOR_HIGH");
+                setSelectedGradeFilter(0);
+              }}
               className={`px-4 py-2 rounded-full text-label-large font-medium transition-all shrink-0 flex items-center gap-1.5 ${
-                categoryFilter === 'JUNIOR_HIGH' && selectedGradeFilter === 0
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 text-m3-sys-light-on-surface-variant hover:bg-m3-sys-light-surface-variant/60'
+                categoryFilter === "JUNIOR_HIGH" && selectedGradeFilter === 0
+                  ? "bg-emerald-600 text-white shadow-sm"
+                  : "bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 text-m3-sys-light-on-surface-variant hover:bg-m3-sys-light-surface-variant/60"
               }`}
             >
               <GraduationCap className="w-4 h-4" />
@@ -397,11 +477,14 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
             </button>
 
             <button
-              onClick={() => { setCategoryFilter('SENIOR_HIGH'); setSelectedGradeFilter(0); }}
+              onClick={() => {
+                setCategoryFilter("SENIOR_HIGH");
+                setSelectedGradeFilter(0);
+              }}
               className={`px-4 py-2 rounded-full text-label-large font-medium transition-all shrink-0 flex items-center gap-1.5 ${
-                categoryFilter === 'SENIOR_HIGH' && selectedGradeFilter === 0
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 text-m3-sys-light-on-surface-variant hover:bg-m3-sys-light-surface-variant/60'
+                categoryFilter === "SENIOR_HIGH" && selectedGradeFilter === 0
+                  ? "bg-indigo-600 text-white shadow-sm"
+                  : "bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 text-m3-sys-light-on-surface-variant hover:bg-m3-sys-light-surface-variant/60"
               }`}
             >
               <GraduationCap className="w-4 h-4" />
@@ -429,7 +512,9 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
               Grade Chips:
             </span>
             {GRADE_GROUPS.map((g) => {
-              const count = classes.filter((c) => Number(c.gradeLevel) === g.level).length;
+              const count = classes.filter(
+                (c) => Number(c.gradeLevel) === g.level,
+              ).length;
               const isSelected = selectedGradeFilter === g.level;
               return (
                 <button
@@ -439,18 +524,23 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                       setSelectedGradeFilter(0);
                     } else {
                       setSelectedGradeFilter(g.level);
-                      setCategoryFilter('ALL');
-                      setExpandedGrades((prev) => ({ ...prev, [g.level]: true }));
+                      setCategoryFilter("ALL");
+                      setExpandedGrades((prev) => ({
+                        ...prev,
+                        [g.level]: true,
+                      }));
                     }
                   }}
                   className={`px-3 py-1.5 rounded-full text-label-medium font-medium transition-all shrink-0 flex items-center gap-1.5 border ${
                     isSelected
-                      ? 'bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary border-transparent shadow-sm'
-                      : 'bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border-m3-sys-light-outline-variant/40 hover:bg-m3-sys-light-surface-variant/40 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface'
+                      ? "bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary border-transparent shadow-sm"
+                      : "bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border-m3-sys-light-outline-variant/40 hover:bg-m3-sys-light-surface-variant/40 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface"
                   }`}
                 >
                   <span>{g.title}</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${isSelected ? 'bg-white/30 text-white' : 'bg-m3-sys-light-surface-variant text-m3-sys-light-on-surface-variant'}`}>
+                  <span
+                    className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${isSelected ? "bg-white/30 text-white" : "bg-m3-sys-light-surface-variant text-m3-sys-light-on-surface-variant"}`}
+                  >
                     {count}
                   </span>
                 </button>
@@ -492,8 +582,8 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
             </h3>
             <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
               {canManage
-                ? 'Grade level cards appear automatically as class sections are added. Select a grade level below to create a section now.'
-                : 'There are currently no active class sections for the selected view.'}
+                ? "Grade level cards appear automatically as class sections are added. Select a grade level below to create a section now."
+                : "There are currently no active class sections for the selected view."}
             </p>
           </div>
 
@@ -521,7 +611,9 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
         <div className="space-y-4">
           {activeGradeGroups.map((group) => {
             const gradeClasses = getClassesForGrade(group.level);
-            const isExpanded = searchQuery ? true : !!expandedGrades[group.level];
+            const isExpanded = searchQuery
+              ? true
+              : !!expandedGrades[group.level];
             const hasClasses = gradeClasses.length > 0;
 
             return (
@@ -535,7 +627,9 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                   className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:bg-m3-sys-light-surface-variant/20 dark:hover:bg-m3-sys-dark-surface-variant/20 transition-colors select-none"
                 >
                   <div className="flex items-center gap-3.5">
-                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-title-medium ${group.badgeColor} shrink-0 shadow-sm`}>
+                    <div
+                      className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-title-medium ${group.badgeColor} shrink-0 shadow-sm`}
+                    >
                       G{group.level}
                     </div>
 
@@ -545,23 +639,34 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                           {group.title}
                         </h3>
 
-                        <Badge variant={group.category === 'JUNIOR_HIGH' ? 'success' : 'primary'}>
-                          {group.category === 'JUNIOR_HIGH' ? 'Junior High' : 'Senior High'}
+                        <Badge
+                          variant={
+                            group.category === "JUNIOR_HIGH"
+                              ? "success"
+                              : "primary"
+                          }
+                        >
+                          {group.category === "JUNIOR_HIGH"
+                            ? "Junior High"
+                            : "Senior High"}
                         </Badge>
 
-                        <span className={`text-label-small font-bold px-2.5 py-0.5 rounded-full border transition-all ${
-                          hasClasses
-                            ? 'bg-m3-sys-light-secondary-container text-m3-sys-light-on-secondary-container border-m3-sys-light-outline-variant/30'
-                            : 'bg-m3-sys-light-surface-variant/40 text-m3-sys-light-on-surface-variant border-transparent'
-                        }`}>
-                          {gradeClasses.length} {gradeClasses.length === 1 ? 'Section' : 'Sections'}
+                        <span
+                          className={`text-label-small font-bold px-2.5 py-0.5 rounded-full border transition-all ${
+                            hasClasses
+                              ? "bg-m3-sys-light-secondary-container text-m3-sys-light-on-secondary-container border-m3-sys-light-outline-variant/30"
+                              : "bg-m3-sys-light-surface-variant/40 text-m3-sys-light-on-surface-variant border-transparent"
+                          }`}
+                        >
+                          {gradeClasses.length}{" "}
+                          {gradeClasses.length === 1 ? "Section" : "Sections"}
                         </span>
                       </div>
 
                       {/* Collapsed Subtitle Preview */}
                       <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-0.5 line-clamp-1">
                         {!isExpanded && hasClasses
-                          ? `Sections: ${gradeClasses.map((c) => c.sectionName).join(', ')}`
+                          ? `Sections: ${gradeClasses.map((c) => c.sectionName).join(", ")}`
                           : group.description}
                       </p>
                     </div>
@@ -590,8 +695,12 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                         toggleGradeExpand(group.level);
                       }}
                       className="p-2 rounded-full hover:bg-m3-sys-light-surface-variant/50 text-m3-sys-light-on-surface-variant transition-colors"
-                      title={isExpanded ? 'Collapse section' : 'Expand section'}
-                      aria-label={isExpanded ? `Collapse ${group.title}` : `Expand ${group.title}`}
+                      title={isExpanded ? "Collapse section" : "Expand section"}
+                      aria-label={
+                        isExpanded
+                          ? `Collapse ${group.title}`
+                          : `Expand ${group.title}`
+                      }
                     >
                       {isExpanded ? (
                         <ChevronUp className="w-5 h-5 text-m3-sys-light-primary" />
@@ -613,14 +722,17 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                             No Sections Created in {group.title}
                           </p>
                           <p className="text-body-small text-m3-sys-light-on-surface-variant max-w-sm mx-auto mt-0.5">
-                            Click below to create the first section for {group.title}.
+                            Click below to create the first section for{" "}
+                            {group.title}.
                           </p>
                         </div>
                         {canManage && (
                           <Button
                             size="sm"
                             variant="primary"
-                            onClick={() => handleOpenCreateForGrade(group.level)}
+                            onClick={() =>
+                              handleOpenCreateForGrade(group.level)
+                            }
                             icon={<Plus className="w-3.5 h-3.5" />}
                             className="rounded-full shadow-expressive-sm text-xs mt-1"
                           >
@@ -637,7 +749,9 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                             onSelectClass={handleViewSection}
                             onCreateSession={handleCreateQuickSession}
                             onEditClass={canManage ? handleOpenEdit : undefined}
-                            onDeleteClass={canManage ? handleDeleteClass : undefined}
+                            onDeleteClass={
+                              canManage ? handleDeleteClass : undefined
+                            }
                           />
                         ))}
                       </div>
@@ -658,7 +772,8 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
         <div className="divide-y divide-m3-sys-light-outline-variant/30 dark:divide-m3-sys-dark-outline-variant/30">
           {sessions.length === 0 ? (
             <p className="text-body-medium text-m3-sys-light-on-surface-variant text-center py-6">
-              No sessions active currently. Click "Launch QR Attendance" on any class section above.
+              No sessions active currently. Click "Launch QR Attendance" on any
+              class section above.
             </p>
           ) : (
             sessions.map((s) => (
@@ -667,7 +782,9 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                 className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-2xl font-bold text-title-small shrink-0 text-white ${s.gradeLevel <= 10 ? 'bg-emerald-600' : 'bg-indigo-600'}`}>
+                  <div
+                    className={`p-3 rounded-2xl font-bold text-title-small shrink-0 text-white ${s.gradeLevel <= 10 ? "bg-emerald-600" : "bg-indigo-600"}`}
+                  >
                     {s.classCode}
                   </div>
                   <div>
@@ -675,23 +792,26 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                       <h4 className="text-title-medium font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
                         {s.title}
                       </h4>
-                      <Badge variant={s.gradeLevel <= 10 ? 'success' : 'primary'}>
+                      <Badge
+                        variant={s.gradeLevel <= 10 ? "success" : "primary"}
+                      >
                         Grade {s.gradeLevel}
                       </Badge>
                       <Badge
                         variant={
-                          s.status === 'ACTIVE'
-                            ? 'emerald'
-                            : s.status === 'UPCOMING'
-                            ? 'indigo'
-                            : 'slate'
+                          s.status === "ACTIVE"
+                            ? "emerald"
+                            : s.status === "UPCOMING"
+                              ? "indigo"
+                              : "slate"
                         }
                       >
                         {s.status}
                       </Badge>
                     </div>
                     <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-0.5">
-                      Section: <strong>{s.sectionName}</strong> • {s.room} • {s.date} ({s.startTime} - {s.endTime})
+                      Section: <strong>{s.sectionName}</strong> • {s.room} •{" "}
+                      {s.date} ({s.startTime} - {s.endTime})
                     </p>
                   </div>
                 </div>
@@ -702,12 +822,12 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
                   </span>
                   <Button
                     size="sm"
-                    variant={s.status === 'ACTIVE' ? 'primary' : 'outline'}
+                    variant={s.status === "ACTIVE" ? "primary" : "outline"}
                     onClick={onOpenQRScanner}
                     icon={<QrCode className="w-4 h-4" />}
                     className="rounded-full shadow-expressive-sm"
                   >
-                    {s.status === 'ACTIVE' ? 'Show Live QR Code' : 'View Token'}
+                    {s.status === "ACTIVE" ? "Show Live QR Code" : "View Token"}
                   </Button>
                 </div>
               </div>
@@ -787,4 +907,3 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({ onOpenQRScanner }) => 
     </div>
   );
 };
-

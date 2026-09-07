@@ -1,7 +1,7 @@
-import React from 'react';
-import { StatCard } from '../../../components/common/StatCard';
-import { AttendanceStats } from '../../../../shared/types/attendance';
-import { CheckCircle2, Award, School, GraduationCap } from 'lucide-react';
+import React from "react";
+import { StatCard } from "../../../components/common/StatCard";
+import { AttendanceStats } from "../../../../shared/types/attendance";
+import { CheckCircle2, Award, School, GraduationCap } from "lucide-react";
 
 interface DashboardStatsProps {
   stats: AttendanceStats | null;
@@ -28,7 +28,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats }) => {
         icon={<Award className="w-5 h-5" />}
         color="emerald"
         progress={stats.attendanceRate}
-        trend={{ value: '+3.5%', isPositive: true }}
+        trend={{ value: "+3.5%", isPositive: true }}
       />
       <StatCard
         id="stat-jhs-rate"

@@ -1,16 +1,16 @@
-import { offlineCapableFetch } from '../../../utils/sync';
-import React, { useState, useEffect } from 'react';
-import { Modal } from '../../../components/common/Modal';
-import { Button } from '../../../components/common/Button';
-import { ClassSection } from '../../../../shared/types/class';
-import { useNotification } from '../../../context/NotificationContext';
+import { offlineCapableFetch } from "../../../utils/sync";
+import React, { useState, useEffect } from "react";
+import { Modal } from "../../../components/common/Modal";
+import { Button } from "../../../components/common/Button";
+import { ClassSection } from "../../../../shared/types/class";
+import { useNotification } from "../../../context/NotificationContext";
 import {
   UserPlus,
   Phone,
   User as UserIcon,
   IdCard,
   GraduationCap,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -19,7 +19,8 @@ interface AddUserModalProps {
   defaultClassId?: string;
 }
 
-const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150';
+const DEFAULT_AVATAR =
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150";
 
 export const AddUserModal: React.FC<AddUserModalProps> = ({
   isOpen,
@@ -29,58 +30,58 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 }) => {
   const { showToast } = useNotification();
 
-  const [name, setName] = useState('');
-  const [parentPhone, setParentPhone] = useState('');
-  const [parentEmail, setParentEmail] = useState('');
-  const [studentId, setStudentId] = useState('');
-  const [selectedClassId, setSelectedClassId] = useState<string>(defaultClassId || '');
+  const [name, setName] = useState("");
+  const [parentPhone, setParentPhone] = useState("");
+  const [parentEmail, setParentEmail] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [selectedClassId, setSelectedClassId] = useState<string>(
+    defaultClassId || "",
+  );
 
   const [availableClasses, setAvailableClasses] = useState<ClassSection[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setName('');
-      setParentPhone('');
-      setParentEmail('');
-      setStudentId('');
-      setSelectedClassId(defaultClassId || '');
+      setName("");
+      setParentPhone("");
+      setParentEmail("");
+      setStudentId("");
+      setSelectedClassId(defaultClassId || "");
       fetchClasses();
     }
   }, [isOpen, defaultClassId]);
 
   const fetchClasses = async () => {
     try {
-      const res = await offlineCapableFetch('/api/classes');
+      const res = await offlineCapableFetch("/api/classes");
       if (res.ok) {
         setAvailableClasses(await res.json());
       }
     } catch {
-      console.error('Failed to load class sections');
+      console.error("Failed to load class sections");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      showToast('Please provide Full Name', 'error');
+      showToast("Please provide Full Name", "error");
       return;
     }
-
-
 
     setIsLoading(true);
 
     try {
       // 1. Create Student Account
-      const res = await offlineCapableFetch('/api/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await offlineCapableFetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
           parentPhone: parentPhone.trim() || undefined,
           parentEmail: parentEmail.trim() || undefined,
-          role: 'STUDENT',
+          role: "STUDENT",
           studentId: studentId.trim(),
           avatarUrl: DEFAULT_AVATAR,
         }),
@@ -88,22 +89,24 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
 
       if (!res.ok) {
         const errData = await res.json();
-        throw new Error(errData.error || 'Failed to create student account');
+        throw new Error(errData.error || "Failed to create student account");
       }
 
       const createdUser = await res.json();
 
       // 2. If a Class Section was selected for enrollment, add student to section
       if (selectedClassId) {
-        const clsRes = await offlineCapableFetch(`/api/classes/${selectedClassId}`);
+        const clsRes = await offlineCapableFetch(
+          `/api/classes/${selectedClassId}`,
+        );
         if (clsRes.ok) {
           const classData: ClassSection = await clsRes.json();
           const currentEnrolled = classData.enrolledStudentIds || [];
           if (!currentEnrolled.includes(createdUser.id)) {
             const updatedEnrolled = [...currentEnrolled, createdUser.id];
             await offlineCapableFetch(`/api/classes/${selectedClassId}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 enrolledStudentIds: updatedEnrolled,
               }),
@@ -112,11 +115,14 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
         }
       }
 
-      showToast(`Successfully created student account for "${name}"!`, 'success');
+      showToast(
+        `Successfully created student account for "${name}"!`,
+        "success",
+      );
       onUserAdded();
       onClose();
     } catch (err: any) {
-      showToast(err.message || 'Error creating user', 'error');
+      showToast(err.message || "Error creating user", "error");
     } finally {
       setIsLoading(false);
     }
@@ -130,7 +136,6 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
       maxWidth="md"
     >
       <form onSubmit={handleSubmit} className="space-y-5 pt-3 pb-1">
-        
         {/* Basic Information */}
         <div className="space-y-4">
           <div className="space-y-1.5">
@@ -206,7 +211,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               <option value="">-- No Initial Assignment --</option>
               {availableClasses.map((cls) => (
                 <option key={cls.id} value={cls.id}>
-                  Grade {cls.gradeLevel} - {cls.sectionName} ({cls.strand || cls.category})
+                  Grade {cls.gradeLevel} - {cls.sectionName} (
+                  {cls.strand || cls.category})
                 </option>
               ))}
             </select>
@@ -232,4 +238,3 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
     </Modal>
   );
 };
-

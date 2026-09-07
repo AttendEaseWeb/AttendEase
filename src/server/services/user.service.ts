@@ -1,5 +1,5 @@
-import { User } from '../../shared/types/auth';
-import { dbStore } from '../db/store';
+import { User } from "../../shared/types/auth";
+import { dbStore } from "../db/store";
 
 export class UserService {
   static async getAllUsers(): Promise<User[]> {

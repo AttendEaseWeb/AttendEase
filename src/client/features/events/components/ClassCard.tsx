@@ -1,9 +1,9 @@
-import { offlineCapableFetch } from '../../../utils/sync';
-import React, { useState } from 'react';
-import { ClassSection } from '../../../../shared/types/class';
-import { Card } from '../../../components/common/Card';
-import { Badge } from '../../../components/common/Badge';
-import { Button } from '../../../components/common/Button';
+import { offlineCapableFetch } from "../../../utils/sync";
+import React, { useState } from "react";
+import { ClassSection } from "../../../../shared/types/class";
+import { Card } from "../../../components/common/Card";
+import { Badge } from "../../../components/common/Badge";
+import { Button } from "../../../components/common/Button";
 import {
   GraduationCap,
   Users,
@@ -14,8 +14,8 @@ import {
   ChevronUp,
   UserCheck,
   BookOpen,
-} from 'lucide-react';
-import { useAuth } from '../../../context/AuthContext';
+} from "lucide-react";
+import { useAuth } from "../../../context/AuthContext";
 
 interface ClassCardProps {
   cls: ClassSection;
@@ -34,24 +34,35 @@ export const ClassCard: React.FC<ClassCardProps> = ({
 }) => {
   const { user } = useAuth();
   const [isRosterOpen, setIsRosterOpen] = useState(false);
-  const [enrolledStudentNames, setEnrolledStudentNames] = useState<{ id: string; name: string }[]>([]);
+  const [enrolledStudentNames, setEnrolledStudentNames] = useState<
+    { id: string; name: string }[]
+  >([]);
   const [isLoadingRoster, setIsLoadingRoster] = useState(false);
 
-  const isJuniorHigh = cls.category === 'JUNIOR_HIGH';
-  const canManage = user?.role === 'ADMIN' || user?.role === 'INSTRUCTOR';
+  const isJuniorHigh = cls.category === "JUNIOR_HIGH";
+  const canManage = user?.role === "ADMIN" || user?.role === "INSTRUCTOR";
 
-  const subjectList = cls.subjects && cls.subjects.length > 0
-    ? cls.subjects
-    : (cls.subject ? [cls.subject] : []);
+  const subjectList =
+    cls.subjects && cls.subjects.length > 0
+      ? cls.subjects
+      : cls.subject
+        ? [cls.subject]
+        : [];
 
   const loadRoster = async () => {
-    if (!isRosterOpen && enrolledStudentNames.length === 0 && cls.enrolledStudentIds?.length > 0) {
+    if (
+      !isRosterOpen &&
+      enrolledStudentNames.length === 0 &&
+      cls.enrolledStudentIds?.length > 0
+    ) {
       setIsLoadingRoster(true);
       try {
-        const res = await offlineCapableFetch('/api/users');
+        const res = await offlineCapableFetch("/api/users");
         if (res.ok) {
           const allUsers = await res.json();
-          const students = allUsers.filter((u: any) => cls.enrolledStudentIds.includes(u.id));
+          const students = allUsers.filter((u: any) =>
+            cls.enrolledStudentIds.includes(u.id),
+          );
           setEnrolledStudentNames(students);
         }
       } catch (err) {
@@ -64,17 +75,25 @@ export const ClassCard: React.FC<ClassCardProps> = ({
   };
 
   return (
-    <Card variant="filled" hoverable className="relative group overflow-hidden flex flex-col justify-between border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-expressive-sm">
+    <Card
+      variant="filled"
+      hoverable
+      className="relative group overflow-hidden flex flex-col justify-between border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-expressive-sm"
+    >
       {/* Top Banner Accent */}
-      <div className={`h-2.5 w-full ${isJuniorHigh ? 'bg-emerald-500' : 'bg-indigo-600'}`} />
+      <div
+        className={`h-2.5 w-full ${isJuniorHigh ? "bg-emerald-500" : "bg-indigo-600"}`}
+      />
 
       <div className="p-5 space-y-4 flex-1">
         {/* Header Badges & Actions */}
         <div className="flex items-start justify-between gap-2">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant={isJuniorHigh ? 'success' : 'primary'}>
-                {isJuniorHigh ? `Grade ${cls.gradeLevel} • Junior High` : `Grade ${cls.gradeLevel} • Senior High`}
+              <Badge variant={isJuniorHigh ? "success" : "primary"}>
+                {isJuniorHigh
+                  ? `Grade ${cls.gradeLevel} • Junior High`
+                  : `Grade ${cls.gradeLevel} • Senior High`}
               </Badge>
               {cls.strand && (
                 <span className="text-label-small font-bold px-2 py-0.5 rounded-md bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container text-m3-sys-light-on-secondary-container dark:text-m3-sys-dark-on-secondary-container">
@@ -136,7 +155,9 @@ export const ClassCard: React.FC<ClassCardProps> = ({
                 </span>
               ))
             ) : (
-              <span className="text-label-small italic text-m3-sys-light-on-surface-variant">No subjects assigned</span>
+              <span className="text-label-small italic text-m3-sys-light-on-surface-variant">
+                No subjects assigned
+              </span>
             )}
           </div>
         </div>
@@ -145,7 +166,9 @@ export const ClassCard: React.FC<ClassCardProps> = ({
         <div className="space-y-2 text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant pt-2 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20">
           <div className="flex items-center gap-2">
             <GraduationCap className="w-4 h-4 text-m3-sys-light-primary shrink-0" />
-            <span className="truncate">Adviser/Instructor: <strong>{cls.instructorName}</strong></span>
+            <span className="truncate">
+              Adviser/Instructor: <strong>{cls.instructorName}</strong>
+            </span>
           </div>
         </div>
 
@@ -167,27 +190,40 @@ export const ClassCard: React.FC<ClassCardProps> = ({
               <Users className="w-4 h-4 text-m3-sys-light-primary" />
               Enrolled Students ({cls.enrolledStudentIds?.length || 0})
             </span>
-            {isRosterOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            {isRosterOpen ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
           </button>
 
           <div
             className={`grid transition-all duration-300 ease-out transform-gpu ${
-              isRosterOpen ? 'grid-rows-[1fr] opacity-100 mt-2' : 'grid-rows-[0fr] opacity-0 mt-0'
+              isRosterOpen
+                ? "grid-rows-[1fr] opacity-100 mt-2"
+                : "grid-rows-[0fr] opacity-0 mt-0"
             }`}
           >
             <div className="overflow-hidden">
               <div className="p-3 bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30 rounded-xl space-y-1.5 text-label-small">
                 {isLoadingRoster ? (
-                  <p className="text-m3-sys-light-on-surface-variant text-center py-1">Loading roster...</p>
+                  <p className="text-m3-sys-light-on-surface-variant text-center py-1">
+                    Loading roster...
+                  </p>
                 ) : enrolledStudentNames.length > 0 ? (
                   enrolledStudentNames.map((s) => (
-                    <div key={s.id} className="flex items-center gap-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+                    <div
+                      key={s.id}
+                      className="flex items-center gap-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface"
+                    >
                       <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
                       <span>{s.name}</span>
                     </div>
                   ))
                 ) : (
-                  <p className="text-m3-sys-light-on-surface-variant italic">No students enrolled yet. Edit class to add students.</p>
+                  <p className="text-m3-sys-light-on-surface-variant italic">
+                    No students enrolled yet. Edit class to add students.
+                  </p>
                 )}
               </div>
             </div>
@@ -211,10 +247,12 @@ export const ClassCard: React.FC<ClassCardProps> = ({
         {canManage && (
           <Button
             variant="primary"
-            size={!onSelectClass ? 'lg' : 'sm'}
-            className={`rounded-full shadow-expressive-sm ${!onSelectClass ? 'w-full py-4 text-base font-bold' : 'text-xs'}`}
+            size={!onSelectClass ? "lg" : "sm"}
+            className={`rounded-full shadow-expressive-sm ${!onSelectClass ? "w-full py-4 text-base font-bold" : "text-xs"}`}
             onClick={() => onCreateSession(cls)}
-            icon={<QrCode className={!onSelectClass ? 'w-5 h-5' : 'w-3.5 h-3.5'} />}
+            icon={
+              <QrCode className={!onSelectClass ? "w-5 h-5" : "w-3.5 h-3.5"} />
+            }
           >
             Launch Attendance
           </Button>
