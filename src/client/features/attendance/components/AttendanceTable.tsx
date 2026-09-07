@@ -5,6 +5,7 @@ import {
 } from "../../../../shared/types/attendance";
 import { Badge } from "../../../components/common/Badge";
 import { JustificationModal } from "./JustificationModal";
+import { useAuth } from "../../../context/AuthContext";
 import { Button } from "../../../components/common/Button";
 import { formatDateTime } from "../../../../shared/utils/date";
 import { UserCheck, Search, WifiOff } from "lucide-react";

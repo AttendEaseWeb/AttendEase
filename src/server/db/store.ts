@@ -340,7 +340,7 @@ class DataStore {
 
   
   async getAttendanceRecordById(id: string): Promise<AttendanceRecord | null> {
-    const record = this.data.attendance.find((a) => a.id === id) || null;
+    const record = this.attendanceRecords.find((a) => a.id === id) || null;
     return record;
   }
 
