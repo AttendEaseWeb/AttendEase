@@ -150,7 +150,7 @@ export class AttendanceService {
     if (!record) throw new Error("Record not found");
     record.justification = data.justification;
     record.justificationStatus = "PENDING";
-    return await dbStore.updateAttendanceRecord(record);
+    return await dbStore.updateAttendanceRecord(record.id, record);
   }
 
   static async resolveJustification(data: { recordId: string; status: "APPROVED" | "REJECTED" }): Promise<AttendanceRecord> {
@@ -160,7 +160,7 @@ export class AttendanceService {
     if (data.status === "APPROVED") {
       record.status = "EXCUSED";
     }
-    return await dbStore.updateAttendanceRecord(record);
+    return await dbStore.updateAttendanceRecord(record.id, record);
   }
 
   static async getStats(studentId?: string): Promise<AttendanceStats> {

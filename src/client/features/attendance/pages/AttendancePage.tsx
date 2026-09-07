@@ -1,3 +1,12 @@
+import React, { useEffect, useState } from "react";
+import { offlineCapableFetch } from "../../../utils/sync";
+import { AttendanceRecord } from "../../../../shared/types/attendance";
+import { AttendanceTable } from "../components/AttendanceTable";
+import { ManualCheckInModal } from "../components/ManualCheckInModal";
+import { Button } from "../../../components/common/Button";
+import { Card } from "../../../components/common/Card";
+import { useAuth } from "../../../context/AuthContext";
+import { useNotification } from "../../../context/NotificationContext";
 import {
   Download,
   Plus,
