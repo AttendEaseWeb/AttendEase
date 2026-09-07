@@ -41,8 +41,6 @@ export interface ClassSession {
   endTime: string;
   room?: string;
   status: SessionStatus;
-  qrToken?: string;
-  qrExpiresAt?: string;
   allowGeofence?: boolean;
   latitude?: number;
   longitude?: number;
@@ -51,10 +49,3 @@ export interface ClassSession {
   totalExpectedCount: number;
 }
 
-export interface QRTokenData {
-  sessionId: string;
-  classCode: string;
-  timestamp: number;
-  expiresAt: number;
-  secret: string;
-}

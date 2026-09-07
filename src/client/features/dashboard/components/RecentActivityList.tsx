@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { AttendanceRecord } from "../../../../shared/types/attendance";
 import { Badge } from "../../../components/common/Badge";
 import { formatDateTime } from "../../../../shared/utils/date";
-import { QrCode, UserCheck } from "lucide-react";
+import { UserCheck } from "lucide-react";
 
 interface RecentActivityListProps {
   records: AttendanceRecord[];
@@ -34,11 +34,7 @@ export const RecentActivityList: React.FC<RecentActivityListProps> = ({
                 <div
                   className={`p-2.5 rounded-xl text-white shrink-0 shadow-sm ${isJHS ? "bg-emerald-600" : "bg-indigo-600"}`}
                 >
-                  {record.method === "QR_SCAN" ? (
-                    <QrCode className="w-4 h-4" />
-                  ) : (
-                    <UserCheck className="w-4 h-4" />
-                  )}
+                  <UserCheck className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">

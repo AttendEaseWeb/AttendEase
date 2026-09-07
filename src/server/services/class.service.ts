@@ -1,6 +1,5 @@
 import { ClassSection, ClassSession } from "../../shared/types/class";
 import { dbStore } from "../db/store";
-import { generateDynamicQRToken } from "../../shared/utils/qr";
 
 export class ClassService {
   static async getAllClasses(): Promise<ClassSection[]> {
@@ -131,8 +130,8 @@ export class ClassService {
         session.id,
         session.classCode || session.sectionName,
       );
-      session.qrToken = qrData.token;
-      session.qrExpiresAt = qrData.expiresAt;
+      
+      
     }
 
     return await dbStore.addSession(session);

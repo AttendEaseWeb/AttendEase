@@ -7,7 +7,6 @@ import {
   AttendanceStatus,
 } from "../../shared/types/attendance";
 import { dbStore } from "../db/store";
-import { parseQRToken } from "../../shared/utils/qr";
 
 export class AttendanceService {
   static async getAllAttendance(): Promise<AttendanceRecord[]> {
@@ -37,20 +36,6 @@ export class AttendanceService {
       throw new Error("Student user record not found");
     }
 
-    // Verify QR token if provided
-    if (req.qrToken) {
-      const decoded = parseQRToken(req.qrToken);
-      if (!decoded) {
-        throw new Error("Invalid QR Code format");
-      }
-      if (decoded.sessionId !== req.sessionId) {
-        throw new Error("QR code is for a different active session");
-      }
-      if (decoded.expiresAt < Date.now()) {
-        throw new Error("QR code has expired. Please scan the refreshed code.");
-      }
-    }
-
     let status: AttendanceStatus = "PRESENT";
     const record: AttendanceRecord = {
       id: `att-${Date.now()}`,
@@ -67,7 +52,7 @@ export class AttendanceService {
       studentNumber: student.studentId || "ST-2026-99",
       checkInTime: new Date().toISOString(),
       status,
-      method: req.qrToken ? "QR_SCAN" : "GEO_CHECKIN",
+      method: "GEO_CHECKIN",
       verifiedLocation:
         req.latitude && req.longitude
           ? {
@@ -157,6 +142,25 @@ export class AttendanceService {
     }
 
     return savedRecord;
+  }
+
+  
+  static async submitJustification(data: { recordId: string; justification: string }): Promise<AttendanceRecord> {
+    const record = await dbStore.getAttendanceRecordById(data.recordId);
+    if (!record) throw new Error("Record not found");
+    record.justification = data.justification;
+    record.justificationStatus = "PENDING";
+    return await dbStore.updateAttendanceRecord(record);
+  }
+
+  static async resolveJustification(data: { recordId: string; status: "APPROVED" | "REJECTED" }): Promise<AttendanceRecord> {
+    const record = await dbStore.getAttendanceRecordById(data.recordId);
+    if (!record) throw new Error("Record not found");
+    record.justificationStatus = data.status;
+    if (data.status === "APPROVED") {
+      record.status = "EXCUSED";
+    }
+    return await dbStore.updateAttendanceRecord(record);
   }
 
   static async getStats(studentId?: string): Promise<AttendanceStats> {

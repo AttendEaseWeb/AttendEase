@@ -1,29 +1,13 @@
-import { offlineCapableFetch } from "../../../utils/sync";
-import React, { useEffect, useState } from "react";
-import { AttendanceRecord } from "../../../../shared/types/attendance";
-import { AttendanceTable } from "../components/AttendanceTable";
-import { ManualCheckInModal } from "../components/ManualCheckInModal";
-import { Button } from "../../../components/common/Button";
-import { Card } from "../../../components/common/Card";
-import { useAuth } from "../../../context/AuthContext";
-import { useNotification } from "../../../context/NotificationContext";
 import {
   Download,
   Plus,
   RefreshCw,
-  QrCode,
   FileSpreadsheet,
   FileText,
 } from "lucide-react";
 import { exportToExcel, exportToPDF } from "../../../utils/exportUtils";
 
-interface AttendancePageProps {
-  onOpenQRScanner: () => void;
-}
-
-export const AttendancePage: React.FC<AttendancePageProps> = ({
-  onOpenQRScanner,
-}) => {
+export const AttendancePage: React.FC = () => {
   const { user } = useAuth();
   const { showToast } = useNotification();
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
@@ -32,6 +16,9 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({
 
   useEffect(() => {
     fetchRecords();
+    const handleUpdate = () => fetchRecords();
+    window.addEventListener('attendance-updated', handleUpdate);
+    return () => window.removeEventListener('attendance-updated', handleUpdate);
   }, [user]);
 
   const fetchRecords = async () => {
@@ -120,15 +107,7 @@ export const AttendancePage: React.FC<AttendancePageProps> = ({
             </Button>
           )}
 
-          {user?.role === "STUDENT" && (
-            <Button
-              size="sm"
-              onClick={onOpenQRScanner}
-              icon={<QrCode className="w-3.5 h-3.5" />}
-            >
-              Scan Check-in
-            </Button>
-          )}
+          
         </div>
       </div>
 

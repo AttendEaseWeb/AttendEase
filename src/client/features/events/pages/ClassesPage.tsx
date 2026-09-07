@@ -11,7 +11,6 @@ import { ClassFormModal } from "../components/ClassFormModal";
 import { SectionDetailModal } from "../components/SectionDetailModal";
 import { TakeAttendanceModal } from "../components/TakeAttendanceModal";
 import { AddUserModal } from "../../users/components/AddUserModal";
-import { QRCheckInModal } from "../../attendance/components/QRCheckInModal";
 import { ManualCheckInModal } from "../../attendance/components/ManualCheckInModal";
 import { Button } from "../../../components/common/Button";
 import { Card } from "../../../components/common/Card";
@@ -34,9 +33,7 @@ import {
   Star,
 } from "lucide-react";
 
-interface ClassesPageProps {
-  onOpenQRScanner: () => void;
-}
+interface ClassesPageProps {}
 
 interface GradeGroup {
   level: GradeLevel;
@@ -91,9 +88,7 @@ const GRADE_GROUPS: GradeGroup[] = [
   },
 ];
 
-export const ClassesPage: React.FC<ClassesPageProps> = ({
-  onOpenQRScanner,
-}) => {
+export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
   const { user } = useAuth();
   const { showToast } = useNotification();
   const { currentActiveEntry } = useSchedule();
@@ -112,8 +107,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({
   const [isSectionDetailOpen, setIsSectionDetailOpen] = useState(false);
 
   // Attendance Session Modals
-  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
-  const [isManualModalOpen, setIsManualModalOpen] = useState(false);
+    const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [attendanceModalClass, setAttendanceModalClass] =
     useState<ClassSection | null>(null);
 
@@ -240,10 +234,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({
     setIsSectionDetailOpen(true);
   };
 
-  const handleLaunchQRFromSection = (_session: ClassSession) => {
-    setIsQRModalOpen(true);
-  };
-
+  
   const handleOpenManualFromSection = (_session: ClassSession) => {
     setIsManualModalOpen(true);
   };
@@ -767,12 +758,12 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({
       {/* Scheduled Class Sessions History List */}
       <Card
         title="Active & Scheduled Class Sessions"
-        subtitle="Live dynamic QR attendance check-in checkpoints for registered class sections"
+        subtitle="Manage attendance for active sessions"
       >
         <div className="divide-y divide-m3-sys-light-outline-variant/30 dark:divide-m3-sys-dark-outline-variant/30">
           {sessions.length === 0 ? (
             <p className="text-body-medium text-m3-sys-light-on-surface-variant text-center py-6">
-              No sessions active currently. Click "Launch QR Attendance" on any
+              No sessions active currently. Start a session on any
               class section above.
             </p>
           ) : (
@@ -862,9 +853,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({
         onOpenEditSection={(clsToEdit) => {
           setIsSectionDetailOpen(false);
           handleOpenEdit(clsToEdit);
-        }}
-        onLaunchQRModal={handleLaunchQRFromSection}
-        onOpenManualCheckIn={handleOpenManualFromSection}
+        }}        onOpenManualCheckIn={handleOpenManualFromSection}
         onSectionUpdated={fetchData}
       />
 

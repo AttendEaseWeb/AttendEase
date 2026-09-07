@@ -27,7 +27,6 @@ import { DashboardPage } from "./client/features/dashboard/pages/DashboardPage";
 import { ClassesPage } from "./client/features/events/pages/ClassesPage";
 import { AttendancePage } from "./client/features/attendance/pages/AttendancePage";
 import { UsersPage } from "./client/features/users/pages/UsersPage";
-import { QRCheckInModal } from "./client/features/attendance/components/QRCheckInModal";
 import { AuthPage } from "./client/features/auth/pages/AuthPage";
 import { ScheduleNotice } from "./client/components/schedule/ScheduleNotice";
 import { ScheduleModal } from "./client/components/schedule/ScheduleModal";
@@ -35,8 +34,7 @@ function MainLayout() {
   const { isAuthenticated, user } = useAuth();
   const { isScheduleModalOpen, setIsScheduleModalOpen } = useSchedule();
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
-  const effectiveTab =
+    const effectiveTab =
     activeTab === "users" && user?.role !== "ADMIN" ? "dashboard" : activeTab;
   useEffect(() => {
     const el = document.getElementById("main-scroll-container");
@@ -91,7 +89,6 @@ function MainLayout() {
     <div className="flex h-[100dvh] font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary relative overflow-hidden">
       <Navbar
         activeTab={effectiveTab}
-        onOpenQRScanner={() => setIsQRModalOpen(true)}
       />
       {/* Main Content Area */}
       <div
@@ -117,16 +114,14 @@ function MainLayout() {
             >
               {effectiveTab === "dashboard" && (
                 <DashboardPage
-                  onOpenQRScanner={() => setIsQRModalOpen(true)}
                   onNavigateToTab={(tab) => setActiveTab(tab)}
                 />
               )}
               {effectiveTab === "events" && (
-                <ClassesPage onOpenQRScanner={() => setIsQRModalOpen(true)} />
+                <ClassesPage />
               )}
               {effectiveTab === "attendance" && (
                 <AttendancePage
-                  onOpenQRScanner={() => setIsQRModalOpen(true)}
                 />
               )}
               {effectiveTab === "users" && user?.role === "ADMIN" && (
@@ -136,12 +131,7 @@ function MainLayout() {
           </AnimatePresence>
         </main>
       </div>
-      {/* Global Live QR Code Check-In Modal */}
-      <QRCheckInModal
-        isOpen={isQRModalOpen}
-        onClose={() => setIsQRModalOpen(false)}
-      />
-      <ScheduleModal
+            <ScheduleModal
         isOpen={isScheduleModalOpen}
         onClose={() => setIsScheduleModalOpen(false)}
       />

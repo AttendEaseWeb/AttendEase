@@ -109,7 +109,7 @@ export const AuthPage: React.FC = () => {
               : "Create New Account"}
           </h1>
           <p className="text-body-large text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant max-w-xs mx-auto leading-relaxed">
-            Dynamic QR verification, session attendance management, and
+            Session attendance management and
             real-time student logs.
           </p>
         </div>

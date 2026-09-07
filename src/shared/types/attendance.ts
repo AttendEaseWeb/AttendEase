@@ -17,13 +17,15 @@ export interface AttendanceRecord {
   studentNumber?: string;
   checkInTime: string;
   status: AttendanceStatus;
-  method: "QR_SCAN" | "MANUAL_ENTRY" | "GEO_CHECKIN";
+  method: "MANUAL_ENTRY" | "GEO_CHECKIN";
   verifiedLocation?: {
     latitude: number;
     longitude: number;
     distanceMeters?: number;
   };
   notes?: string;
+  justification?: string;
+  justificationStatus?: "PENDING" | "APPROVED" | "REJECTED";
   // Backward compatibility aliases if needed
   courseId?: string;
   courseTitle?: string;
@@ -33,9 +35,18 @@ export interface AttendanceRecord {
 export interface CheckInRequest {
   sessionId: string;
   studentId: string;
-  qrToken?: string;
   latitude?: number;
   longitude?: number;
+}
+
+export interface JustificationRequest {
+  recordId: string;
+  justification: string;
+}
+
+export interface ResolveJustificationRequest {
+  recordId: string;
+  status: "APPROVED" | "REJECTED";
 }
 
 export interface AttendanceStats {

@@ -39,9 +39,7 @@ interface SectionDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   cls: ClassSection | null;
-  onOpenEditSection: (cls: ClassSection) => void;
-  onLaunchQRModal: (session: ClassSession) => void;
-  onOpenManualCheckIn?: (session: ClassSession) => void;
+  onOpenEditSection: (cls: ClassSection) => void;  onOpenManualCheckIn?: (session: ClassSession) => void;
   onSectionUpdated?: () => void;
 }
 
@@ -72,9 +70,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
   isOpen,
   onClose,
   cls,
-  onOpenEditSection,
-  onLaunchQRModal,
-  onOpenManualCheckIn,
+  onOpenEditSection,  onOpenManualCheckIn,
   onSectionUpdated,
 }) => {
   const { user } = useAuth();
@@ -259,9 +255,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
 
       const createdSession: ClassSession = await res.json();
       setSessions((prev) => [createdSession, ...prev]);
-      showToast(`Live QR Session launched for ${subjectName}!`, "success");
-      onLaunchQRModal(createdSession);
-    } catch (err: any) {
+      showToast(`Live Session launched for ${subjectName}!`, "success");    } catch (err: any) {
       showToast(err.message || "Error launching session", "error");
     }
   };
@@ -493,7 +487,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                 Select Subject to Manage Within ({subjects.length})
               </h3>
               <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-                Choose a subject to launch QR attendance, review roster
+                Choose a subject to manage attendance, review roster
                 presence, and generate reports.
               </p>
             </div>
@@ -613,7 +607,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                   {hasActive && (
                     <span
                       className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"
-                      title="Active QR Session Live!"
+                      title="Active Session Live!"
                     />
                   )}
                 </button>
@@ -635,7 +629,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                   {activeSessionForSubject && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-label-small font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      Live QR Session Active
+                      Live Session Active
                     </span>
                   )}
                 </div>
@@ -790,7 +784,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                         : selectedSubject}
                     </p>
                     <p className="text-body-small text-m3-sys-light-on-surface-variant max-w-sm mx-auto mt-1">
-                      Launch a live QR attendance session for students in this
+                      Launch a live attendance session for students in this
                       section to scan their dynamic check-in code.
                     </p>
                   </div>

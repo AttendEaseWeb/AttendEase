@@ -5,7 +5,6 @@ import {
   Shield,
   UserCheck,
   GraduationCap,
-  QrCode,
   CheckCircle2,
   Search,
   LogOut,
@@ -18,14 +17,10 @@ import {
 } from "lucide-react";
 import { useSchedule } from "../../context/ScheduleContext";
 
-interface NavbarProps {
-  onOpenQRScanner?: () => void;
-  activeTab: string;
+interface NavbarProps {  activeTab: string;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({
-  onOpenQRScanner,
-  activeTab,
+export const Navbar: React.FC<NavbarProps> = ({  activeTab,
 }) => {
   const { user, logout } = useAuth();
   const { setIsScheduleModalOpen } = useSchedule();

@@ -36,7 +36,7 @@ attendanceRouter.get("/stats", async (req, res, next) => {
 
 attendanceRouter.post("/checkin", async (req, res, next) => {
   try {
-    const { sessionId, studentId, qrToken, latitude, longitude } = req.body;
+    const { sessionId, studentId,  latitude, longitude } = req.body;
     if (!sessionId || !studentId) {
       return res
         .status(400)
@@ -45,7 +45,7 @@ attendanceRouter.post("/checkin", async (req, res, next) => {
     const record = await AttendanceService.checkIn({
       sessionId,
       studentId,
-      qrToken,
+      
       latitude,
       longitude,
     });
@@ -70,6 +70,32 @@ attendanceRouter.post("/manual", async (req, res, next) => {
       notes,
     });
     res.status(201).json(record);
+  } catch (err) {
+    next(err);
+  }
+});
+
+attendanceRouter.post("/justification", async (req, res, next) => {
+  try {
+    const { recordId, justification } = req.body;
+    if (!recordId || !justification) {
+      return res.status(400).json({ error: "Record ID and Justification are required" });
+    }
+    const record = await AttendanceService.submitJustification({ recordId, justification });
+    res.json(record);
+  } catch (err) {
+    next(err);
+  }
+});
+
+attendanceRouter.post("/justification/resolve", async (req, res, next) => {
+  try {
+    const { recordId, status } = req.body;
+    if (!recordId || !status) {
+      return res.status(400).json({ error: "Record ID and Status are required" });
+    }
+    const record = await AttendanceService.resolveJustification({ recordId, status });
+    res.json(record);
   } catch (err) {
     next(err);
   }

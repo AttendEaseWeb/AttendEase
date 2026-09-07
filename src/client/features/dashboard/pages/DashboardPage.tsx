@@ -15,14 +15,10 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-interface DashboardPageProps {
-  onOpenQRScanner: () => void;
-  onNavigateToTab: (tab: string) => void;
+interface DashboardPageProps {  onNavigateToTab: (tab: string) => void;
 }
 
-export const DashboardPage: React.FC<DashboardPageProps> = ({
-  onOpenQRScanner,
-  onNavigateToTab,
+export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
 }) => {
   const { user } = useAuth();
   const [stats, setStats] = useState<AttendanceStats | null>(null);
@@ -83,7 +79,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </h2>
             <p className="text-body-large text-m3-sys-light-on-primary-container/80 dark:text-m3-sys-dark-on-primary-container/80 max-w-xl leading-relaxed">
               Manage Junior High (Grades 7–10) and Senior High (Grades 11–12)
-              class sections, launch live QR check-ins, and monitor student
+              class sections, launch live sessions, and monitor student
               attendance.
             </p>
           </div>

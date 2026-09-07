@@ -4,8 +4,10 @@ import {
   AttendanceStatus,
 } from "../../../../shared/types/attendance";
 import { Badge } from "../../../components/common/Badge";
+import { JustificationModal } from "./JustificationModal";
+import { Button } from "../../../components/common/Button";
 import { formatDateTime } from "../../../../shared/utils/date";
-import { QrCode, UserCheck, Search, WifiOff } from "lucide-react";
+import { UserCheck, Search, WifiOff } from "lucide-react";
 
 interface AttendanceTableProps {
   records: AttendanceRecord[];
@@ -18,6 +20,7 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [justificationRecord, setJustificationRecord] = useState<AttendanceRecord | null>(null);
   const [gradeCategoryFilter, setGradeCategoryFilter] = useState<string>("ALL");
 
   const filtered = records.filter((record) => {
@@ -160,17 +163,7 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
                       </td>
                       <td className="p-4">
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-m3-sys-light-surface-variant/50 dark:bg-m3-sys-dark-surface-variant/50 text-label-small font-medium text-m3-sys-light-on-surface-variant border border-m3-sys-light-outline-variant/30">
-                          {record.method === "QR_SCAN" ? (
-                            <>
-                              <QrCode className="w-3.5 h-3.5 text-m3-sys-light-primary dark:text-m3-sys-dark-primary" />{" "}
-                              Dynamic QR
-                            </>
-                          ) : (
-                            <>
-                              <UserCheck className="w-3.5 h-3.5 text-m3-sys-light-tertiary dark:text-m3-sys-dark-tertiary" />{" "}
-                              Manual Override
-                            </>
-                          )}
+                          <><UserCheck className="w-3.5 h-3.5 text-m3-sys-light-tertiary dark:text-m3-sys-dark-tertiary" /> {record.method === "GEO_CHECKIN" ? "Live Check-in" : "Manual Override"}</>
                         </span>
                       </td>
                       <td className="p-4">
@@ -187,6 +180,18 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
                         >
                           {record.status}
                         </Badge>
+                      </td>
+                      <td className="p-4">
+                        {record.status === "ABSENT" && !record.justificationStatus && (
+                           <Button size="sm" variant="outline" onClick={() => setJustificationRecord(record)}>
+                             {user?.role === "STUDENT" ? "Justify Absence" : "Review"}
+                           </Button>
+                        )}
+                        {record.justificationStatus && (
+                           <Button size="sm" variant="outline" onClick={() => setJustificationRecord(record)}>
+                             {record.justificationStatus === "PENDING" ? "Pending Review" : record.justificationStatus}
+                           </Button>
+                        )}
                       </td>
                     </tr>
                   );
@@ -247,7 +252,13 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
                       {record.status}
                     </Badge>
                   </div>
-
+                  {(record.status === "ABSENT" || record.justificationStatus) && (
+                     <div className="pt-2 border-t border-m3-sys-light-outline-variant/30">
+                        <Button size="sm" variant="outline" className="w-full" onClick={() => setJustificationRecord(record)}>
+                           {!record.justificationStatus ? (user?.role === "STUDENT" ? "Justify Absence" : "Review") : record.justificationStatus === "PENDING" ? "Pending Review" : record.justificationStatus}
+                        </Button>
+                     </div>
+                  )}
                   <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-label-small">
                     <div>
                       <span className="text-m3-sys-light-on-surface-variant block mb-0.5">
@@ -281,17 +292,7 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
                         Method
                       </span>
                       <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-m3-sys-light-surface-variant/50 text-m3-sys-light-on-surface-variant border border-m3-sys-light-outline-variant/30 font-medium whitespace-nowrap">
-                        {record.method === "QR_SCAN" ? (
-                          <>
-                            <QrCode className="w-3 h-3 text-m3-sys-light-primary dark:text-m3-sys-dark-primary" />{" "}
-                            Dynamic QR
-                          </>
-                        ) : (
-                          <>
-                            <UserCheck className="w-3 h-3 text-m3-sys-light-tertiary dark:text-m3-sys-dark-tertiary" />{" "}
-                            Manual
-                          </>
-                        )}
+                        <><UserCheck className="w-3 h-3 text-m3-sys-light-tertiary dark:text-m3-sys-dark-tertiary" /> {record.method === "GEO_CHECKIN" ? "Live" : "Manual"}</>
                       </span>
                     </div>
                   </div>
@@ -299,7 +300,18 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
               );
             })
           )}
-        </div>
+        
+      <JustificationModal 
+        isOpen={!!justificationRecord} 
+        onClose={() => setJustificationRecord(null)} 
+        record={justificationRecord} 
+        onSuccess={() => {
+          setJustificationRecord(null);
+          // Assuming parent handles re-fetching or we wait for a refresh
+          if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('attendance-updated'));
+        }} 
+      />
+</div>
       </div>
     </div>
   );
