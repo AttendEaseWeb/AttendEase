@@ -33,7 +33,4 @@ export class EventService {
     return ClassService.createSession(data);
   }
 
-  static generateSessionQR(id: string) {
-    return ClassService.generateSessionQR(id);
-  }
 }

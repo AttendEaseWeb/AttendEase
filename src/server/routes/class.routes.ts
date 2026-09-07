@@ -113,11 +113,3 @@ classRouter.post("/sessions", async (req, res, next) => {
   }
 });
 
-classRouter.post("/sessions/:id/qr", async (req, res, next) => {
-  try {
-    const qrData = await ClassService.generateSessionQR(req.params.id);
-    res.json(qrData);
-  } catch (err) {
-    next(err);
-  }
-});

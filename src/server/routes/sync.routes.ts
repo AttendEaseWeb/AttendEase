@@ -59,7 +59,7 @@ syncRouter.post("/", (req, res, next) => {
           AttendanceService.checkIn({
             sessionId: payload.sessionId,
             studentId: payload.studentId,
-            qrToken: payload.qrToken,
+            
             latitude: payload.latitude,
             longitude: payload.longitude,
           });

@@ -79,11 +79,3 @@ eventRouter.post("/sessions", (req, res, next) => {
   }
 });
 
-eventRouter.post("/sessions/:id/qr", (req, res, next) => {
-  try {
-    const qrData = EventService.generateSessionQR(req.params.id);
-    res.json(qrData);
-  } catch (err) {
-    next(err);
-  }
-});

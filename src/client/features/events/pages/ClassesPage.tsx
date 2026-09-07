@@ -22,7 +22,7 @@ import {
   Plus,
   UserPlus,
   GraduationCap,
-  QrCode,
+  
   Search,
   School,
   BookOpen,
@@ -811,15 +811,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
                   <span className="text-label-large text-m3-sys-light-on-surface-variant font-medium">
                     {s.attendedCount} / {s.totalExpectedCount} Checked-In
                   </span>
-                  <Button
-                    size="sm"
-                    variant={s.status === "ACTIVE" ? "primary" : "outline"}
-                    onClick={onOpenQRScanner}
-                    icon={<QrCode className="w-4 h-4" />}
-                    className="rounded-full shadow-expressive-sm"
-                  >
-                    {s.status === "ACTIVE" ? "Show Live QR Code" : "View Token"}
-                  </Button>
+                  
                 </div>
               </div>
             ))
@@ -857,14 +849,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
         onSectionUpdated={fetchData}
       />
 
-      {/* Dynamic QR Check-in Modal */}
-      <QRCheckInModal
-        isOpen={isQRModalOpen}
-        onClose={() => {
-          setIsQRModalOpen(false);
-        }}
-        onCheckInSuccess={fetchData}
-      />
+        
 
       {/* Manual Check-in Modal */}
       <ManualCheckInModal

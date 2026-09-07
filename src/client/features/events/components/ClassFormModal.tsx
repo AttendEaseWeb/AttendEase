@@ -527,7 +527,7 @@ export const ClassFormModal: React.FC<ClassFormModalProps> = ({
                 Enroll Students ({selectedStudentIds.length} Selected)
               </h4>
               <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-                Select students to assign to this class section for QR
+                Select students to assign to this class section for tracking
                 attendance tracking.
               </p>
             </div>

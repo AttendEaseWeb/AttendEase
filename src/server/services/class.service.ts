@@ -126,10 +126,6 @@ export class ClassService {
     };
 
     if (session.status === "ACTIVE") {
-      const qrData = generateDynamicQRToken(
-        session.id,
-        session.classCode || session.sectionName,
-      );
       
       
     }
@@ -137,22 +133,4 @@ export class ClassService {
     return await dbStore.addSession(session);
   }
 
-  static async generateSessionQR(
-    sessionId: string,
-  ): Promise<{ qrToken: string; expiresAt: string }> {
-    const session = await dbStore.getSessionById(sessionId);
-    if (!session) throw new Error("Session not found");
-
-    const qrData = generateDynamicQRToken(
-      session.id,
-      session.classCode || session.sectionName,
-    );
-    await dbStore.updateSession(sessionId, {
-      qrToken: qrData.token,
-      qrExpiresAt: qrData.expiresAt,
-      status: "ACTIVE",
-    });
-
-    return { qrToken: qrData.token, expiresAt: qrData.expiresAt };
-  }
 }

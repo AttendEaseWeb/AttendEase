@@ -8,7 +8,7 @@ import { AttendanceStats } from "../../../../shared/types/attendance";
 import { ClassSession } from "../../../../shared/types/class";
 import { useAuth } from "../../../context/AuthContext";
 import {
-  QrCode,
+  
   ArrowRight,
   School,
   GraduationCap,
@@ -85,17 +85,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
           </div>
 
           <div className="shrink-0 flex items-center gap-3 mt-4 md:mt-0">
-            <Button
-              id="dashboard-quick-checkin-btn"
-              onClick={onOpenQRScanner}
-              icon={<QrCode className="w-5 h-5" />}
-              className="bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary hover:bg-m3-sys-light-primary/90 font-medium rounded-full px-8 py-3 shadow-expressive-sm hover:scale-105 transition-transform"
-            >
-              {user?.role === "STUDENT"
-                ? "Scan Class QR Code"
-                : "Display Live QR"}
-            </Button>
-          </div>
+            </div>
         </div>
       </div>
 
@@ -225,13 +215,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
                           variant={
                             session.status === "ACTIVE" ? "primary" : "outline"
                           }
-                          onClick={onOpenQRScanner}
                           className="rounded-full shadow-expressive-sm"
                         >
-                          {session.status === "ACTIVE"
-                            ? "Active QR"
-                            : "Schedule"}
-                        </Button>
+                          {session.status === "ACTIVE" ? "Manage" : "Schedule"}</Button>
                       </div>
                     </div>
                   );

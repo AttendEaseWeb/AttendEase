@@ -7,7 +7,7 @@ import { Button } from "../../../components/common/Button";
 import {
   GraduationCap,
   Users,
-  QrCode,
+  
   Edit,
   Trash2,
   ChevronDown,
@@ -250,9 +250,7 @@ export const ClassCard: React.FC<ClassCardProps> = ({
             size={!onSelectClass ? "lg" : "sm"}
             className={`rounded-full shadow-expressive-sm ${!onSelectClass ? "w-full py-4 text-base font-bold" : "text-xs"}`}
             onClick={() => onCreateSession(cls)}
-            icon={
-              <QrCode className={!onSelectClass ? "w-5 h-5" : "w-3.5 h-3.5"} />
-            }
+            
           >
             Launch Attendance
           </Button>

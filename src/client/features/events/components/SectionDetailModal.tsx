@@ -12,7 +12,7 @@ import {
   BookOpen,
   GraduationCap,
   Users,
-  QrCode,
+  
   Plus,
   X,
   Check,
@@ -653,7 +653,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                           : selectedSubject;
                       handleCreateSubjectSession(targetSubj);
                     }}
-                    icon={<QrCode className="w-4 h-4" />}
+                    
                     className="rounded-full shadow-expressive-sm"
                   >
                     Launch{" "}
@@ -775,7 +775,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
             <div className="space-y-3">
               {filteredSessions.length === 0 ? (
                 <div className="text-center py-10 bg-m3-sys-light-surface-variant/20 rounded-3xl border border-dashed border-m3-sys-light-outline-variant/40 space-y-3">
-                  <QrCode className="w-10 h-10 mx-auto text-m3-sys-light-on-surface-variant/50" />
+                  
                   <div>
                     <p className="text-title-medium font-semibold text-m3-sys-light-on-surface">
                       No Attendance Sessions Yet for{" "}
@@ -863,11 +863,9 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                             <Button
                               size="sm"
                               variant="primary"
-                              onClick={() => onLaunchQRModal(sess)}
-                              icon={<QrCode className="w-3.5 h-3.5" />}
+                              
                               className="rounded-full text-xs"
                             >
-                              Display Live QR Code
                             </Button>
                           )}
 
