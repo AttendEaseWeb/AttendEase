@@ -1,5 +1,5 @@
 importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
-const CACHE_NAME = 'attendease-cache-v10';
+const CACHE_NAME = 'attendease-cache-v11';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -72,7 +72,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache First, falling back to Network strategy
+
+  // For HTML navigation requests, use Network First, falling back to cache if offline.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      }).catch(() => {
+        return caches.match(event.request).then((cachedResponse) => {
+          return cachedResponse || caches.match('/index.html');
+        });
+      })
+    );
+    return;
+  }
+
+  // Cache First, falling back to Network strategy for static assets (JS/CSS/images)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -87,9 +108,7 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
+        return undefined;
       });
     })
   );
