@@ -48,31 +48,24 @@ export const AppLoading: React.FC<AppLoadingProps> = ({
       {showSplash && (
         <motion.div
           key="splash"
-          initial={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          initial={{ opacity: 1, scale: 1 }}
           exit={{ 
             opacity: 0, 
             scale: 1.05, 
-            filter: "blur(8px)", 
-            transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } 
+            transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } 
           }}
-          className="fixed inset-0 z-[9999] bg-m3-sys-light-surface/95 dark:bg-m3-sys-dark-surface/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6"
+          className="fixed inset-0 z-[9999] bg-m3-sys-light-surface/95 dark:bg-m3-sys-dark-surface/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 transform-gpu"
         >
           {/* Ambient Glowing Orbs */}
           <motion.div 
-            animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
+            animate={{ opacity: [0.3, 0.5, 0.3] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px] pointer-events-none"
+            className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px] pointer-events-none transform-gpu"
           />
           <motion.div 
-            animate={{ 
-              scale: [1, 1.5, 1],
-              opacity: [0.2, 0.4, 0.2],
-            }}
+            animate={{ opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none"
+            className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-emerald-500/20 rounded-full blur-[100px] pointer-events-none transform-gpu"
           />
 
           <div className="relative flex flex-col items-center max-w-sm w-full text-center z-10">
