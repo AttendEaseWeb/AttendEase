@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { offlineCapableFetch } from "../../../utils/sync";
 import { AttendanceRecord } from "../../../../shared/types/attendance";

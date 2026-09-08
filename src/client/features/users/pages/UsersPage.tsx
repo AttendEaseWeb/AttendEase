@@ -1,4 +1,5 @@
 import { offlineCapableFetch } from "../../../utils/sync";
+import { motion } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { User } from "../../../../shared/types/auth";
 import { UserTable } from "../components/UserTable";

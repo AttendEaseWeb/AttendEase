@@ -1,4 +1,5 @@
 import { offlineCapableFetch } from "../../../utils/sync";
+import { motion } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { DashboardStats } from "../components/DashboardStats";
 import { RecentActivityList } from "../components/RecentActivityList";
