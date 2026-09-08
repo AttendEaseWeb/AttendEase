@@ -210,14 +210,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
                           </p>
                         </div>
 
-                        <Button
-                          size="sm"
-                          variant={
-                            session.status === "ACTIVE" ? "primary" : "outline"
-                          }
-                          className="rounded-full shadow-expressive-sm"
-                        >
-                          {session.status === "ACTIVE" ? "Manage" : "Schedule"}</Button>
+                        {user?.role !== "STUDENT" && (
+                          <Button
+                            size="sm"
+                            variant={
+                              session.status === "ACTIVE" ? "primary" : "outline"
+                            }
+                            className="rounded-full shadow-expressive-sm"
+                          >
+                            {session.status === "ACTIVE" ? "Manage" : "Schedule"}
+                          </Button>
+                        )}
                       </div>
                     </div>
                   );

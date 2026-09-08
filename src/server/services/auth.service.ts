@@ -8,9 +8,15 @@ import { dbStore } from "../db/store";
 
 export class AuthService {
   static async login(req: LoginRequest): Promise<AuthResponse> {
-    let user = await dbStore.getUserByEmail(req.email);
+    let user;
+    if (req.lrn) {
+      user = await dbStore.getUserByStudentId(req.lrn);
+      if (!user) throw new Error("Invalid LRN or student not found");
+    } else if (req.email) {
+      user = await dbStore.getUserByEmail(req.email);
+    }
 
-    if (!user) {
+    if (!user && req.email) {
       // Auto register for seamless testing if role provided
       const role: UserRole = req.role || "STUDENT";
       const name = req.email.split("@")[0].replace(".", " ");

@@ -52,15 +52,26 @@ export const AuthPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      showToast("Please provide both email and password", "error");
-      return;
+    if (role === "STUDENT" && mode === "LOGIN") {
+      if (!studentId) {
+        showToast("Please provide your LRN", "error");
+        return;
+      }
+    } else {
+      if (!email || !password) {
+        showToast("Please provide both email and password", "error");
+        return;
+      }
     }
 
     setIsLoading(true);
     try {
       if (mode === "LOGIN") {
-        await login({ email, password, role });
+        if (role === "STUDENT") {
+          await login({ lrn: studentId, role });
+        } else {
+          await login({ email, password, role });
+        }
         showToast("Welcome back to AttendEase!", "success");
       } else {
         if (!name) {
@@ -260,7 +271,7 @@ export const AuthPage: React.FC = () => {
                 />
                 {role === "STUDENT" && (
                   <Input
-                    label="Student ID (Optional)"
+                    label="Learner Reference Number (LRN)"
                     placeholder="ST-2026-1234"
                     value={studentId}
                     onChange={(e) => setStudentId(e.target.value)}
@@ -270,8 +281,10 @@ export const AuthPage: React.FC = () => {
             </>
           )}
 
-          <Input
-            label="Email Address"
+          {!(role === "STUDENT" && mode === "LOGIN") && (
+            <>
+              <Input
+                label="Email Address"
             type="email"
             placeholder="you@attendease.edu"
             value={email}
@@ -289,6 +302,20 @@ export const AuthPage: React.FC = () => {
             icon={<Lock className="w-4 h-4 text-slate-400" />}
             required
           />
+            </>
+          )}
+
+          {role === "STUDENT" && mode === "LOGIN" && (
+            <Input
+              label="Learner Reference Number (LRN)"
+              type="text"
+              placeholder="e.g. 123456789012"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+              icon={<UserIcon className="w-4 h-4 text-slate-400" />}
+              required
+            />
+          )}
 
           <Button
             type="submit"

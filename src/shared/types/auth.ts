@@ -14,9 +14,10 @@ export interface User {
 }
 
 export interface LoginRequest {
-  email: string;
+  email?: string;
   password?: string;
   role?: UserRole;
+  lrn?: string;
 }
 
 export interface RegisterRequest {

@@ -5,11 +5,11 @@ export const authRouter = Router();
 
 authRouter.post("/login", async (req, res, next) => {
   try {
-    const { email, password, role } = req.body;
-    if (!email) {
-      return res.status(400).json({ error: "Email address is required" });
+    const { email, password, role, lrn } = req.body;
+    if (!email && !lrn) {
+      return res.status(400).json({ error: "Email or LRN is required" });
     }
-    const result = await AuthService.login({ email, password, role });
+    const result = await AuthService.login({ email, password, role, lrn });
     res.json(result);
   } catch (err) {
     next(err);

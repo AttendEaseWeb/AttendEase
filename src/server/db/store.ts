@@ -44,6 +44,19 @@ class DataStore {
     return this.users.find((u) => u.id === id);
   }
 
+  async getUserByStudentId(studentId: string): Promise<User | undefined> {
+    if (supabase) {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("studentId", studentId)
+        .single();
+      if (!error && data) return data as User;
+      return undefined;
+    }
+    return this.users.find((u) => u.studentId === studentId);
+  }
+
   async getUserByEmail(email: string): Promise<User | undefined> {
     if (supabase) {
       const { data, error } = await supabase
