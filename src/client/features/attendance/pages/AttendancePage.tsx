@@ -65,7 +65,7 @@ export const AttendancePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <motion.div className="space-y-6" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -174,6 +174,6 @@ export const AttendancePage: React.FC = () => {
         onClose={() => setIsManualModalOpen(false)}
         onSuccess={fetchRecords}
       />
-    </div>
+    </motion.div>
   );
 };

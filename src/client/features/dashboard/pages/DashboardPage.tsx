@@ -60,7 +60,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
   };
 
   return (
-    <div className="space-y-6">
+    <motion.div className="space-y-6" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       {/* Welcome Banner */}
       <div className="relative overflow-hidden rounded-[36px] bg-expressive-gradient-primary p-6 sm:p-10 text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container shadow-expressive">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 dark:bg-black/20 rounded-full blur-[80px] pointer-events-none" />
@@ -251,6 +251,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
           </Card>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

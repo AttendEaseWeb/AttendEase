@@ -107,7 +107,7 @@ export const AuthPage: React.FC = () => {
       <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container rounded-full blur-[120px] pointer-events-none opacity-30 dark:opacity-20" />
 
-      <div className="w-full max-w-md mx-auto space-y-6 relative z-10">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, ease: "easeOut" }} className="w-full max-w-md mx-auto space-y-6 relative z-10">
         {/* Brand Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container text-label-small shadow-sm">
@@ -335,7 +335,7 @@ export const AuthPage: React.FC = () => {
         <p className="text-body-small text-center text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
           AttendEase &copy; 2026. Secure attendance management system.
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 };

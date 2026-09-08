@@ -31,7 +31,7 @@ export const UsersPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <motion.div className="space-y-6" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-headline-small text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface font-semibold">
@@ -132,6 +132,6 @@ export const UsersPage: React.FC = () => {
         onClose={() => setIsAddUserOpen(false)}
         onUserAdded={fetchUsers}
       />
-    </div>
+    </motion.div>
   );
 };

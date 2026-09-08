@@ -1,5 +1,6 @@
 import { offlineCapableFetch } from "../../../utils/sync";
 import React, { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import {
   ClassSection,
   ClassSession,
@@ -299,7 +300,7 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
   };
 
   return (
-    <div className="space-y-8">
+    <motion.div className="space-y-8" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       {/* Page Title & Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
@@ -878,6 +879,6 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
         }}
         cls={attendanceModalClass}
       />
-    </div>
+    </motion.div>
   );
 };

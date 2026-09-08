@@ -9,11 +9,25 @@ interface RecentActivityListProps {
   records: AttendanceRecord[];
 }
 
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05 }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, x: -10 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.2 } }
+};
+
 export const RecentActivityList: React.FC<RecentActivityListProps> = ({
   records,
 }) => {
   return (
-    <div className="space-y-3">
+    <motion.div variants={container} initial="hidden" animate="show" className="space-y-3">
       {records.length === 0 ? (
         <div className="p-8 text-center text-m3-sys-light-on-surface-variant text-body-small">
           No recent attendance activity recorded yet.
@@ -26,7 +40,8 @@ export const RecentActivityList: React.FC<RecentActivityListProps> = ({
             record.category === "JUNIOR_HIGH" || record.gradeLevel <= 10;
 
           return (
-            <div
+            <motion.div
+              variants={item}
               key={record.id}
               className="flex items-center justify-between p-4 rounded-2xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface-variant/20 dark:bg-m3-sys-dark-surface-variant/20 hover:bg-m3-sys-light-surface-variant/40 hover:scale-[1.008] transition-all duration-200 transform-gpu"
             >
@@ -65,10 +80,10 @@ export const RecentActivityList: React.FC<RecentActivityListProps> = ({
               >
                 {record.status}
               </Badge>
-            </div>
+            </motion.div>
           );
         })
       )}
-    </div>
+    </motion.div>
   );
 };
