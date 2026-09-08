@@ -1,0 +1,320 @@
+import React, { useState } from "react";
+import {
+  AttendanceRecord,
+  AttendanceStatus,
+} from "../../../../shared/types/attendance";
+import { Badge } from "../../../components/common/Badge";
+import { JustificationModal } from "./JustificationModal";
+import { useAuth } from "../../../context/AuthContext";
+import { Button } from "../../../components/common/Button";
+import { formatDateTime } from "../../../../shared/utils/date";
+import { UserCheck, Search, WifiOff } from "lucide-react";
+
+interface AttendanceTableProps {
+  records: AttendanceRecord[];
+  onStatusChange?: (id: string, newStatus: AttendanceStatus) => void;
+}
+
+export const AttendanceTable: React.FC<AttendanceTableProps> = ({
+  records,
+  onStatusChange,
+}) => {
+  const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [justificationRecord, setJustificationRecord] = useState<AttendanceRecord | null>(null);
+  const [gradeCategoryFilter, setGradeCategoryFilter] = useState<string>("ALL");
+
+  const filtered = records.filter((record) => {
+    const code = record.classCode || record.courseCode || "";
+    const section = record.sectionName || record.courseTitle || "";
+    const matchesSearch =
+      record.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      record.studentEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      section.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "ALL" || record.status === statusFilter;
+    const isJHS =
+      record.category === "JUNIOR_HIGH" ||
+      (record.gradeLevel && record.gradeLevel <= 10);
+    const matchesCategory =
+      gradeCategoryFilter === "ALL" ||
+      (gradeCategoryFilter === "JUNIOR_HIGH" && isJHS) ||
+      (gradeCategoryFilter === "SENIOR_HIGH" && !isJHS);
+
+    return matchesSearch && matchesStatus && matchesCategory;
+  });
+
+  return (
+    <div className="space-y-4">
+      {/* Table Filters */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant" />
+          <input
+            type="text"
+            placeholder="Search student name, class section..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-9 pr-3 py-2 text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm transition-shadow"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <select
+            value={gradeCategoryFilter}
+            onChange={(e) => setGradeCategoryFilter(e.target.value)}
+            className="text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full px-4 py-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm"
+          >
+            <option value="ALL">All Grade Categories</option>
+            <option value="JUNIOR_HIGH">Junior High (7-10)</option>
+            <option value="SENIOR_HIGH">Senior High (11-12)</option>
+          </select>
+
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full px-4 py-2 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm"
+          >
+            <option value="ALL">All Statuses</option>
+            <option value="PRESENT">Present</option>
+            <option value="LATE">Late</option>
+            <option value="ABSENT">Absent</option>
+            <option value="EXCUSED">Excused</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Table Component */}
+      <div>
+        <div className="hidden lg:block w-full overflow-x-auto rounded-3xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface shadow-expressive-sm">
+          <table className="w-full text-left text-body-medium border-collapse whitespace-nowrap">
+            <thead>
+              <tr className="bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface-variant/40 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant border-b border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 font-semibold">
+                <th className="p-4">Student Details</th>
+                <th className="p-4">Class Section / Level</th>
+                <th className="p-4">Subject</th>
+                <th className="p-4">Check-in Time</th>
+                <th className="p-4">Method</th>
+                <th className="p-4">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-m3-sys-light-outline-variant/20 dark:divide-m3-sys-dark-outline-variant/20 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+              {filtered.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="p-8 text-center text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant text-body-medium"
+                  >
+                    No attendance records found matching filters.
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((record) => {
+                  const isJHS =
+                    record.category === "JUNIOR_HIGH" ||
+                    (record.gradeLevel && record.gradeLevel <= 10);
+                  const section =
+                    record.sectionName || record.courseTitle || "Class Section";
+                  const code = record.classCode || record.courseCode || "CLS";
+
+                  return (
+                    <tr
+                      key={record.id}
+                      className="hover:bg-m3-sys-light-surface-variant/20 dark:hover:bg-m3-sys-dark-surface-variant/20 transition-colors"
+                    >
+                      <td className="p-4">
+                        <div>
+                          <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-2 text-label-large">
+                            {record.studentName}
+                            {(record as any)._isOfflineSync && (
+                              <span
+                                title="Pending Offline Sync"
+                                className="inline-flex items-center justify-center p-1 bg-amber-100 text-amber-700 rounded-full dark:bg-amber-900/30 dark:text-amber-400"
+                              >
+                                <WifiOff className="w-3 h-3" />
+                              </span>
+                            )}
+                          </span>
+                          <span className="text-label-small text-m3-sys-light-on-surface-variant font-mono">
+                            {record.studentEmail}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-label-large">
+                              {section}
+                            </span>
+                          </div>
+                          <Badge variant={isJHS ? "success" : "primary"}>
+                            {record.gradeLevel
+                              ? `Grade ${record.gradeLevel}`
+                              : code}
+                          </Badge>
+                        </div>
+                      </td>
+                      <td className="p-4 text-m3-sys-light-on-surface-variant font-medium">
+                        {record.subject || code}
+                      </td>
+                      <td className="p-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant whitespace-nowrap">
+                        {formatDateTime(record.checkInTime)}
+                      </td>
+                      <td className="p-4">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-m3-sys-light-surface-variant/50 dark:bg-m3-sys-dark-surface-variant/50 text-label-small font-medium text-m3-sys-light-on-surface-variant border border-m3-sys-light-outline-variant/30">
+                          <><UserCheck className="w-3.5 h-3.5 text-m3-sys-light-tertiary dark:text-m3-sys-dark-tertiary" /> {record.method === "GEO_CHECKIN" ? "Live Check-in" : "Manual Override"}</>
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <Badge
+                          variant={
+                            record.status === "PRESENT"
+                              ? "emerald"
+                              : record.status === "LATE"
+                                ? "amber"
+                                : record.status === "EXCUSED"
+                                  ? "purple"
+                                  : "rose"
+                          }
+                        >
+                          {record.status}
+                        </Badge>
+                      </td>
+                      <td className="p-4">
+                        {record.status === "ABSENT" && !record.justificationStatus && (
+                           <Button size="sm" variant="outline" onClick={() => setJustificationRecord(record)}>
+                             {user?.role === "STUDENT" ? "Justify Absence" : "Review"}
+                           </Button>
+                        )}
+                        {record.justificationStatus && (
+                           <Button size="sm" variant="outline" onClick={() => setJustificationRecord(record)}>
+                             {record.justificationStatus === "PENDING" ? "Pending Review" : record.justificationStatus}
+                           </Button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile/Tablet Card Layout */}
+        <div className="lg:hidden space-y-3">
+          {filtered.length === 0 ? (
+            <div className="p-8 text-center text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant text-body-medium bg-m3-sys-light-surface-variant/20 rounded-xl">
+              No attendance records found matching filters.
+            </div>
+          ) : (
+            filtered.map((record) => {
+              const isJHS =
+                record.category === "JUNIOR_HIGH" ||
+                (record.gradeLevel && record.gradeLevel <= 10);
+              const section =
+                record.sectionName || record.courseTitle || "Class Section";
+              const code = record.classCode || record.courseCode || "CLS";
+
+              return (
+                <div
+                  key={record.id}
+                  className="p-4 rounded-xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface space-y-3 shadow-sm relative overflow-hidden"
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="space-y-0.5">
+                      <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-2 text-label-large">
+                        {record.studentName}
+                        {(record as any)._isOfflineSync && (
+                          <span
+                            title="Pending Offline Sync"
+                            className="inline-flex items-center justify-center p-0.5 bg-amber-100 text-amber-700 rounded-full dark:bg-amber-900/30 dark:text-amber-400"
+                          >
+                            <WifiOff className="w-3 h-3" />
+                          </span>
+                        )}
+                      </span>
+                      <span className="text-label-small text-m3-sys-light-on-surface-variant truncate block w-[200px] sm:w-[300px]">
+                        {record.studentEmail}
+                      </span>
+                    </div>
+                    <Badge
+                      variant={
+                        record.status === "PRESENT"
+                          ? "emerald"
+                          : record.status === "LATE"
+                            ? "amber"
+                            : record.status === "EXCUSED"
+                              ? "purple"
+                              : "rose"
+                      }
+                    >
+                      {record.status}
+                    </Badge>
+                  </div>
+                  {(record.status === "ABSENT" || record.justificationStatus) && (
+                     <div className="pt-2 border-t border-m3-sys-light-outline-variant/30">
+                        <Button size="sm" variant="outline" className="w-full" onClick={() => setJustificationRecord(record)}>
+                           {!record.justificationStatus ? (user?.role === "STUDENT" ? "Justify Absence" : "Review") : record.justificationStatus === "PENDING" ? "Pending Review" : record.justificationStatus}
+                        </Button>
+                     </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-label-small">
+                    <div>
+                      <span className="text-m3-sys-light-on-surface-variant block mb-0.5">
+                        Class / Level
+                      </span>
+                      <div className="font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-1.5 flex-wrap">
+                        {section}
+                        <Badge variant={isJHS ? "success" : "primary"}>
+                          {record.gradeLevel ? `Gr ${record.gradeLevel}` : code}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-m3-sys-light-on-surface-variant block mb-0.5">
+                        Subject
+                      </span>
+                      <span className="font-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface truncate block">
+                        {record.subject || code}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-m3-sys-light-on-surface-variant block mb-0.5">
+                        Time
+                      </span>
+                      <span className="font-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface truncate block">
+                        {formatDateTime(record.checkInTime).replace(", ", "\n")}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-m3-sys-light-on-surface-variant block mb-0.5">
+                        Method
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-m3-sys-light-surface-variant/50 text-m3-sys-light-on-surface-variant border border-m3-sys-light-outline-variant/30 font-medium whitespace-nowrap">
+                        <><UserCheck className="w-3 h-3 text-m3-sys-light-tertiary dark:text-m3-sys-dark-tertiary" /> {record.method === "GEO_CHECKIN" ? "Live" : "Manual"}</>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        
+      <JustificationModal 
+        isOpen={!!justificationRecord} 
+        onClose={() => setJustificationRecord(null)} 
+        record={justificationRecord} 
+        onSuccess={() => {
+          setJustificationRecord(null);
+          // Assuming parent handles re-fetching or we wait for a refresh
+          if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('attendance-updated'));
+        }} 
+      />
+</div>
+      </div>
+    </div>
+  );
+};
