@@ -1,6 +1,6 @@
 import { offlineCapableFetch } from "../../../utils/sync";
 import React, { useEffect, useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   ClassSection,
   ClassSession,
@@ -704,8 +704,16 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
                 </div>
 
                 {/* Expanded Card Content Area */}
-                {isExpanded && (
-                  <div className="p-5 pt-2 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20 bg-m3-sys-light-surface-variant/10 dark:bg-m3-sys-dark-surface-variant/10">
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-5 pt-2 border-t border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20 bg-m3-sys-light-surface-variant/10 dark:bg-m3-sys-dark-surface-variant/10">
                     {gradeClasses.length === 0 ? (
                       <div className="p-6 rounded-2xl border border-dashed border-m3-sys-light-outline-variant/40 dark:border-m3-sys-dark-outline-variant/40 bg-m3-sys-light-surface/60 dark:bg-m3-sys-dark-surface/60 text-center space-y-2.5">
                         <BookOpen className="w-7 h-7 text-m3-sys-light-on-surface-variant/40 mx-auto" />
@@ -748,8 +756,10 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
                         ))}
                       </div>
                     )}
-                  </div>
-                )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
