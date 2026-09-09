@@ -106,10 +106,10 @@ function MainLayout() {
           <AnimatePresence mode="wait">
             <motion.div
               key={effectiveTab}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.08, ease: "easeOut" }}
               className="space-y-6"
             >
               {effectiveTab === "dashboard" && (
