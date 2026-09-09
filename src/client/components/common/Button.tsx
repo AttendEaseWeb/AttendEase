@@ -1,4 +1,5 @@
 import React from "react";
+import { triggerHaptic } from "../../utils/haptics";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "danger" | "ghost";
@@ -15,6 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
   icon,
   className = "",
   disabled,
+  onClick,
   ...props
 }) => {
   const baseStyles =
@@ -39,10 +41,17 @@ export const Button: React.FC<ButtonProps> = ({
       "hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50 text-m3-sys-light-primary dark:text-m3-sys-dark-primary focus:ring-m3-sys-light-primary",
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (disabled || isLoading) return;
+    triggerHaptic(40);
+    if (onClick) onClick(e);
+  };
+
   return (
     <button
       className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
       disabled={disabled || isLoading}
+      onClick={handleClick}
       {...props}
     >
       {isLoading ? (

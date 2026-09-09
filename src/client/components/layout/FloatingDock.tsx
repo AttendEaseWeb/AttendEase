@@ -12,6 +12,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useAuth } from "../../context/AuthContext";
 import { LayoutDashboard, School, ClipboardCheck, Users } from "lucide-react";
+import { triggerHaptic } from "../../utils/haptics";
 
 interface FloatingDockProps {
   activeTab: string;
@@ -87,6 +88,7 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
             <button
               key={item.id}
               onClick={() => {
+                triggerHaptic(30);
                 setActiveTab(item.id);
               }}
               className={`relative flex items-center justify-center py-3 sm:py-3.5 rounded-full transition-all duration-200 ease-out transform-gpu hover:scale-[1.04] active:scale-[0.96] cursor-pointer shrink-0 ${
