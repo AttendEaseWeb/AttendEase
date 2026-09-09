@@ -1,12 +1,12 @@
-import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import { AttendanceRecord } from "../../shared/types/attendance";
 
-export const exportToExcel = (
+export const exportToExcel = async (
   records: AttendanceRecord[],
   filename: string = "Attendance_Report",
 ) => {
+  // Dynamically import xlsx to heavily reduce initial bundle size
+  const XLSX = await import("xlsx");
+  
   const worksheetData = records.map((r) => ({
     "Student Name": r.studentName,
     Email: r.studentEmail,
@@ -25,6 +25,7 @@ export const exportToExcel = (
     (w, r) => Math.max(w, r["Student Name"].length),
     15,
   );
+
   worksheet["!cols"] = [
     { wch: max_width },
     { wch: 25 },
@@ -40,16 +41,19 @@ export const exportToExcel = (
   );
 };
 
-export const exportToPDF = (
+export const exportToPDF = async (
   records: AttendanceRecord[],
   filename: string = "Attendance_Report",
 ) => {
+  // Dynamically import jspdf and jspdf-autotable
+  const { default: jsPDF } = await import("jspdf");
+  const { default: autoTable } = await import("jspdf-autotable");
+
   const doc = new jsPDF();
 
   // Add title
   doc.setFontSize(18);
   doc.text("AttendEase - Attendance Report", 14, 22);
-
   doc.setFontSize(11);
   doc.setTextColor(100);
   doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
@@ -62,6 +66,7 @@ export const exportToPDF = (
     "Status",
     "Method",
   ];
+
   const tableRows = records.map((r) => [
     r.studentName,
     r.studentEmail,

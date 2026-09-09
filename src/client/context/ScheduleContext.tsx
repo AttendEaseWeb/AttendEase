@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "./AuthContext";
 
 export interface ScheduleEntry {
@@ -55,7 +55,6 @@ export const ScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [schedule, user?.id]);
 
   useEffect(() => {
-    // Check current time against schedule every minute
     const checkSchedule = () => {
       const now = new Date();
       const currentDay = now.getDay();
@@ -78,40 +77,49 @@ export const ScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => clearInterval(interval);
   }, [schedule]);
 
-  const addEntry = (entry: Omit<ScheduleEntry, "id">) => {
+  const addEntry = useCallback((entry: Omit<ScheduleEntry, "id">) => {
     setSchedule((prev) => [
       ...prev,
       { ...entry, id: Math.random().toString(36).substr(2, 9) },
     ]);
-  };
+  }, []);
 
-  const removeEntry = (id: string) => {
+  const removeEntry = useCallback((id: string) => {
     setSchedule((prev) => prev.filter((e) => e.id !== id));
-  };
+  }, []);
 
-  const updateEntry = (id: string, entry: Omit<ScheduleEntry, "id">) => {
+  const updateEntry = useCallback((id: string, entry: Omit<ScheduleEntry, "id">) => {
     setSchedule((prev) =>
       prev.map((e) => (e.id === id ? { ...entry, id } : e)),
     );
-  };
+  }, []);
 
   const isConfigured = schedule.length > 0;
 
+  const contextValue = useMemo(() => ({
+    schedule,
+    addEntry,
+    removeEntry,
+    updateEntry,
+    isConfigured,
+    hideNotice,
+    setHideNotice,
+    isScheduleModalOpen,
+    setIsScheduleModalOpen,
+    currentActiveEntry,
+  }), [
+    schedule, 
+    addEntry, 
+    removeEntry, 
+    updateEntry, 
+    isConfigured, 
+    hideNotice, 
+    isScheduleModalOpen, 
+    currentActiveEntry
+  ]);
+
   return (
-    <ScheduleContext.Provider
-      value={{
-        schedule,
-        addEntry,
-        removeEntry,
-        updateEntry,
-        isConfigured,
-        hideNotice,
-        setHideNotice,
-        isScheduleModalOpen,
-        setIsScheduleModalOpen,
-        currentActiveEntry,
-      }}
-    >
+    <ScheduleContext.Provider value={contextValue}>
       {children}
     </ScheduleContext.Provider>
   );

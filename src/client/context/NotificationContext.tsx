@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle2, AlertCircle, Info, X } from "lucide-react";
 
@@ -23,23 +23,25 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const showToast = (message: string, type: ToastType = "info") => {
+  const removeToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const showToast = useCallback((message: string, type: ToastType = "info") => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, type, message }]);
 
     setTimeout(() => {
-      removeToast(id);
+      setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
-  };
+  }, []);
 
-  const removeToast = (id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
+  const contextValue = useMemo(() => ({ showToast }), [showToast]);
 
   return (
-    <NotificationContext.Provider value={{ showToast }}>
+    <NotificationContext.Provider value={contextValue}>
       {children}
-      <div className="fixed bottom-5 right-5 z-[70] flex flex-col gap-2 max-w-md w-full px-4">
+      <div className="fixed bottom-5 right-5 z-[70] flex flex-col gap-2 max-w-md w-full px-4 transform-gpu">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div
@@ -47,6 +49,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
               className={`flex items-center justify-between p-4 rounded-xl shadow-lg border text-sm font-medium ${
                 toast.type === "success"
                   ? "bg-emerald-900/90 text-emerald-100 border-emerald-700/50 backdrop-blur-md"

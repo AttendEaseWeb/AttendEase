@@ -12,7 +12,7 @@ import { AppLoading } from "./client/components/common/AppLoading";
  * notifications across all screens.
  * ------------------------------------------------------------------
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { motion, AnimatePresence } from "motion/react";
 // import OneSignal from 'react-onesignal';
 import { AuthProvider, useAuth } from "./client/context/AuthContext";
@@ -23,13 +23,20 @@ import {
 } from "./client/context/ScheduleContext";
 import { Navbar } from "./client/components/layout/Navbar";
 import { FloatingDock } from "./client/components/layout/FloatingDock";
-import { DashboardPage } from "./client/features/dashboard/pages/DashboardPage";
-import { ClassesPage } from "./client/features/events/pages/ClassesPage";
-import { AttendancePage } from "./client/features/attendance/pages/AttendancePage";
-import { UsersPage } from "./client/features/users/pages/UsersPage";
-import { AuthPage } from "./client/features/auth/pages/AuthPage";
+const DashboardPage = lazy(() => import("./client/features/dashboard/pages/DashboardPage").then(m => ({ default: m.DashboardPage })));
+const ClassesPage = lazy(() => import("./client/features/events/pages/ClassesPage").then(m => ({ default: m.ClassesPage })));
+const AttendancePage = lazy(() => import("./client/features/attendance/pages/AttendancePage").then(m => ({ default: m.AttendancePage })));
+const UsersPage = lazy(() => import("./client/features/users/pages/UsersPage").then(m => ({ default: m.UsersPage })));
+const AuthPage = lazy(() => import("./client/features/auth/pages/AuthPage").then(m => ({ default: m.AuthPage })));
 import { ScheduleNotice } from "./client/components/schedule/ScheduleNotice";
 import { ScheduleModal } from "./client/components/schedule/ScheduleModal";
+
+const PageLoader = () => (
+  <div className="flex justify-center items-center h-64 w-full">
+    <div className="w-8 h-8 rounded-full border-4 border-m3-sys-light-surface-variant dark:border-m3-sys-dark-surface-variant border-t-m3-sys-light-primary dark:border-t-m3-sys-dark-primary animate-spin" />
+  </div>
+);
+
 function MainLayout() {
   const { isAuthenticated, user } = useAuth();
   const { isScheduleModalOpen, setIsScheduleModalOpen } = useSchedule();
@@ -83,7 +90,11 @@ function MainLayout() {
     */
   }, [user?.email]);
   if (!isAuthenticated) {
-    return <AuthPage />;
+    return (
+      <Suspense fallback={<PageLoader />}>
+        <AuthPage />
+      </Suspense>
+    );
   }
   return (
     <div className="flex h-[100dvh] font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary relative overflow-hidden">
@@ -112,6 +123,7 @@ function MainLayout() {
               transition={{ duration: 0.08, ease: "easeOut" }}
               className="space-y-6"
             >
+              <Suspense fallback={<PageLoader />}>
               {effectiveTab === "dashboard" && (
                 <DashboardPage
                   onNavigateToTab={(tab) => setActiveTab(tab)}
@@ -127,6 +139,7 @@ function MainLayout() {
               {effectiveTab === "users" && user?.role === "ADMIN" && (
                 <UsersPage />
               )}
+              </Suspense>
             </motion.div>
           </AnimatePresence>
         </main>

@@ -9,7 +9,7 @@
  * ------------------------------------------------------------------
  */
 import { offlineCapableFetch } from "../utils/sync";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import {
   User,
   UserRole,
@@ -64,22 +64,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [token]);
 
-  const login = async (req: LoginRequest) => {
+  const login = useCallback(async (req: LoginRequest) => {
     try {
       const res = await offlineCapableFetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(req),
       });
+
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.error || "Login failed");
       }
+
       const data = await res.json();
       setUser(data.user);
       setToken(data.token);
     } catch (err: any) {
-      // Client fallback for demo test accounts if server fails
       const role: UserRole = req.role || "STUDENT";
       const fallbackUser: User = {
         id: `u-${Date.now()}`,
@@ -93,9 +94,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setUser(fallbackUser);
       setToken(btoa(JSON.stringify(fallbackUser)));
     }
-  };
+  }, []);
 
-  const register = async (req: RegisterRequest) => {
+  const register = useCallback(async (req: RegisterRequest) => {
     const res = await offlineCapableFetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -110,36 +111,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const data = await res.json();
     setUser(data.user);
     setToken(data.token);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("attendease_user");
     localStorage.removeItem("attendease_token");
-  };
+  }, []);
 
-  const switchRole = (newRole: UserRole) => {
-    if (!user) return;
-    const updatedUser: User = {
-      ...user,
-      role: newRole,
-    };
-    setUser(updatedUser);
-  };
+  const switchRole = useCallback((newRole: UserRole) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      return { ...prev, role: newRole };
+    });
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    user,
+    token,
+    isAuthenticated: !!user,
+    login,
+    register,
+    logout,
+    switchRole,
+  }), [user, token, login, register, logout, switchRole]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        isAuthenticated: !!user,
-        login,
-        register,
-        logout,
-        switchRole,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

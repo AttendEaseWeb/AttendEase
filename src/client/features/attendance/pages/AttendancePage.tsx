@@ -47,21 +47,21 @@ export const AttendancePage: React.FC = () => {
     }
   };
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     if (records.length === 0) {
       showToast("No attendance records available to export", "error");
       return;
     }
-    exportToExcel(records);
+    await exportToExcel(records);
     showToast("Exported Excel Report!", "success");
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     if (records.length === 0) {
       showToast("No attendance records available to export", "error");
       return;
     }
-    exportToPDF(records);
+    await exportToPDF(records);
     showToast("Exported PDF Report!", "success");
   };
 
