@@ -97,7 +97,7 @@ function MainLayout() {
     );
   }
   return (
-    <div className="flex h-[100dvh] font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary relative overflow-hidden">
+    <div className="flex fixed inset-0 font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary overflow-hidden">
       <Navbar
         activeTab={effectiveTab}
       />
@@ -112,7 +112,7 @@ function MainLayout() {
             "linear-gradient(to bottom, transparent 0px, black 80px, black calc(100% - 120px), transparent 100%)",
         }}
       >
-        <main className="flex-1 p-3.5 sm:p-6 pt-24 sm:pt-28 pb-32 sm:pb-40 max-w-7xl w-full mx-auto min-w-0">
+        <main className="flex-1 p-3.5 sm:p-6 pt-24 sm:pt-28 pb-[calc(8rem+env(safe-area-inset-bottom))] sm:pb-[calc(10rem+env(safe-area-inset-bottom))] max-w-7xl w-full mx-auto min-w-0">
           <ScheduleNotice />
           <AnimatePresence mode="wait">
             <motion.div

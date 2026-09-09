@@ -72,7 +72,7 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
   ];
 
   return (
-    <div className="fixed bottom-7 left-1/2 -translate-x-1/2 z-30 max-w-[calc(100vw-1.5rem)] pointer-events-none flex justify-center">
+    <div className="fixed bottom-[calc(1.75rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-30 max-w-[calc(100vw-1.5rem)] pointer-events-none flex justify-center">
       <div
         className={`bg-white dark:bg-zinc-900 backdrop-blur-2xl border border-zinc-200/90 dark:border-zinc-700/90 ring-1 ring-black/10 dark:ring-white/15 shadow-[0_25px_60px_-10px_rgba(0,0,0,0.22),0_10px_24px_-6px_rgba(0,0,0,0.12)] dark:shadow-[0_28px_70px_-10px_rgba(0,0,0,0.85),0_12px_28px_-6px_rgba(0,0,0,0.6)] rounded-full p-2.5 sm:p-3 flex items-center transition-all duration-300 transform-gpu pointer-events-auto max-w-full overflow-x-auto no-scrollbar ${
           isCollapsed ? "gap-2.5 sm:gap-3.5" : "gap-2 sm:gap-3"
