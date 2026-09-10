@@ -5,6 +5,7 @@ import {
   Shield,
   UserCheck,
   GraduationCap,
+  CloudOff,
   CheckCircle2,
   Search,
   LogOut,
@@ -16,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { useSchedule } from "../../context/ScheduleContext";
+import { useOnlineStatus } from "../../hooks/useOnlineStatus";
 
 interface NavbarProps {  activeTab: string;
 }
@@ -187,7 +189,19 @@ export const Navbar: React.FC<NavbarProps> = ({  activeTab,
               </span>
             </div>
 
+            
+            {/* Offline Sync Badge */}
+            {!isOnline && (
+              <div 
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 shrink-0"
+                title="Offline Mode. Data will sync automatically when reconnected."
+              >
+                <CloudOff className="w-3.5 h-3.5 shrink-0" />
+                <span className="text-label-small font-bold hidden sm:inline-block tracking-wide uppercase">Offline</span>
+              </div>
+            )}
             {/* Role Badge Indicator */}
+
             {user && (
               <div
                 className={`flex items-center justify-center w-8 h-8 rounded-full border shrink-0 ${
