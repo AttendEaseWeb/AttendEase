@@ -108,21 +108,31 @@ const StudentSwipeCard = ({
       <div className="w-32 h-32 rounded-full bg-m3-sys-light-primary/10 dark:bg-m3-sys-dark-primary/20 flex items-center justify-center text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-bold text-5xl mb-6 shadow-sm">
         {student.name.charAt(0).toUpperCase()}
       </div>
-      <h3 className="text-3xl font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center mb-16">
+      <h3 className="text-3xl font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center mb-24">
         {student.name}
       </h3>
 
       {/* Swipe Hints */}
-      <div className="grid grid-cols-3 grid-rows-3 opacity-40 absolute inset-x-8 bottom-6 pointer-events-none h-24 items-center justify-items-center">
-         <div />
-         <div className="flex flex-col items-center justify-center text-blue-500 -mt-6"><ArrowUp className="w-5 h-5"/><span className="text-[10px] font-bold mt-1">EXCUSED</span></div>
-         <div />
-         <div className="flex flex-col items-center justify-center text-red-500"><ArrowLeft className="w-5 h-5"/><span className="text-[10px] font-bold mt-1">ABSENT</span></div>
-         <div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"/>
-         <div className="flex flex-col items-center justify-center text-emerald-500"><ArrowRight className="w-5 h-5"/><span className="text-[10px] font-bold mt-1">PRESENT</span></div>
-         <div />
-         <div className="flex flex-col items-center justify-center text-amber-500 mb-6"><span className="text-[10px] font-bold mb-1">LATE</span><ArrowDown className="w-5 h-5"/></div>
-         <div />
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-30 pointer-events-none flex flex-col items-center gap-1.5">
+         <div className="flex flex-col items-center text-blue-500">
+            <ArrowUp className="w-4 h-4"/>
+            <span className="text-[9px] font-bold mt-0.5">EXCUSED</span>
+         </div>
+         <div className="flex items-center gap-6 w-full justify-center">
+            <div className="flex flex-col items-center text-red-500">
+               <ArrowLeft className="w-4 h-4"/>
+               <span className="text-[9px] font-bold mt-0.5">ABSENT</span>
+            </div>
+            <div className="w-1.5 h-1.5 rounded-full bg-zinc-300 dark:bg-zinc-600 shrink-0"/>
+            <div className="flex flex-col items-center text-emerald-500">
+               <ArrowRight className="w-4 h-4"/>
+               <span className="text-[9px] font-bold mt-0.5">PRESENT</span>
+            </div>
+         </div>
+         <div className="flex flex-col items-center text-amber-500">
+            <span className="text-[9px] font-bold mt-0.5">LATE</span>
+            <ArrowDown className="w-4 h-4"/>
+         </div>
       </div>
     </motion.div>
   );
