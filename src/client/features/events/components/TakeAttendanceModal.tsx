@@ -307,7 +307,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={`Take Attendance: ${cls.sectionName}`}
-      size="2xl"
+      maxWidth="2xl"
     >
       <div className="flex flex-col h-[70vh] max-h-[600px] gap-4">
         {/* Top Controls */}
@@ -435,12 +435,11 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                         Attendance Summary
                     </h3>
                 </div>
-                <div className="flex-1 min-h-0 min-w-0 grid grid-cols-2 grid-rows-2 gap-3">
+                <div className="flex-1 min-h-0 min-w-0 grid grid-cols-2 grid-rows-2 gap-2 sm:gap-3">
                     {/* Present */}
-                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-3 sm:p-4 bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
                         <div className="flex items-center gap-2 mb-3 shrink-0">
-                            <CheckCircle2 className="w-5 h-5" />
-                            <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Present</span>
+                            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />\n                            <span className="font-bold text-xs sm:text-base uppercase tracking-wider truncate">Present</span>
                             <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'PRESENT').length}</span>
                         </div>
                         <div className="flex-1 min-h-0 min-w-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
@@ -452,10 +451,9 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                         </div>
                     </div>
                     {/* Absent */}
-                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400">
+                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-3 sm:p-4 bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400">
                         <div className="flex items-center gap-2 mb-3 shrink-0">
-                            <XCircle className="w-5 h-5" />
-                            <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Absent</span>
+                            <XCircle className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />\n                            <span className="font-bold text-xs sm:text-base uppercase tracking-wider truncate">Absent</span>
                             <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'ABSENT').length}</span>
                         </div>
                         <div className="flex-1 min-h-0 min-w-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
@@ -467,10 +465,9 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                         </div>
                     </div>
                     {/* Excused */}
-                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400">
+                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-3 sm:p-4 bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400">
                         <div className="flex items-center gap-2 mb-3 shrink-0">
-                            <AlertTriangle className="w-5 h-5" />
-                            <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Excused</span>
+                            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />\n                            <span className="font-bold text-xs sm:text-base uppercase tracking-wider truncate">Excused</span>
                             <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'EXCUSED').length}</span>
                         </div>
                         <div className="flex-1 min-h-0 min-w-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
@@ -482,10 +479,9 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                         </div>
                     </div>
                     {/* Late */}
-                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400">
+                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-3 sm:p-4 bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400">
                         <div className="flex items-center gap-2 mb-3 shrink-0">
-                            <Clock className="w-5 h-5" />
-                            <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Late</span>
+                            <Clock className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />\n                            <span className="font-bold text-xs sm:text-base uppercase tracking-wider truncate">Late</span>
                             <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'LATE').length}</span>
                         </div>
                         <div className="flex-1 min-h-0 min-w-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
@@ -502,7 +498,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 pt-3 border-t border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 flex justify-between items-center gap-3">
+        <div className="shrink-0 pt-3 border-t border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 flex flex-wrap justify-between items-center gap-2">
           <div className="flex gap-2">
             {viewMode === "SWIPE" && currentIndex > 0 && (
                 <Button variant="ghost" onClick={handleUndo} icon={<Undo2 className="w-5 h-5" />} title="Undo Last Swipe" />
@@ -528,8 +524,10 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                 onClick={handleSave}
                 disabled={isSaving || students.length === 0 || (viewMode === "SWIPE" && currentIndex < students.length)}
                 icon={<Save className="w-4 h-4" />}
+                className="whitespace-nowrap"
               >
-                {isSaving ? "Saving..." : "Save Attendance"}
+                <span className="hidden sm:inline">{isSaving ? "Saving..." : "Save Attendance"}</span>
+                <span className="sm:hidden">{isSaving ? "Saving..." : "Save"}</span>
               </Button>
           </div>
         </div>
