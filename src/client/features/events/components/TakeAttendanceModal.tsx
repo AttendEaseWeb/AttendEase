@@ -113,25 +113,24 @@ const StudentSwipeCard = ({
       </h3>
 
       {/* Swipe Hints */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-30 pointer-events-none flex flex-col items-center gap-1.5">
-         <div className="flex flex-col items-center text-blue-500">
-            <ArrowUp className="w-4 h-4"/>
-            <span className="text-[9px] font-bold mt-0.5">EXCUSED</span>
+      <div className="absolute bottom-8 inset-x-6 opacity-60 pointer-events-none flex items-center justify-between">
+         <div className="flex items-center text-red-500 gap-1.5">
+            <ArrowLeft className="w-4 h-4"/>
+            <span className="text-sm font-bold">Absent</span>
          </div>
-         <div className="flex items-center gap-6 w-full justify-center">
-            <div className="flex flex-col items-center text-red-500">
-               <ArrowLeft className="w-4 h-4"/>
-               <span className="text-[9px] font-bold mt-0.5">ABSENT</span>
+         <div className="flex flex-col items-start gap-2">
+            <div className="flex items-center text-blue-400 gap-1.5">
+               <ArrowUp className="w-4 h-4"/>
+               <span className="text-sm font-bold">Excused</span>
             </div>
-            <div className="w-1.5 h-1.5 rounded-full bg-zinc-300 dark:bg-zinc-600 shrink-0"/>
-            <div className="flex flex-col items-center text-emerald-500">
-               <ArrowRight className="w-4 h-4"/>
-               <span className="text-[9px] font-bold mt-0.5">PRESENT</span>
+            <div className="flex items-center text-amber-500 gap-1.5">
+               <ArrowDown className="w-4 h-4"/>
+               <span className="text-sm font-bold">Late</span>
             </div>
          </div>
-         <div className="flex flex-col items-center text-amber-500">
-            <span className="text-[9px] font-bold mt-0.5">LATE</span>
-            <ArrowDown className="w-4 h-4"/>
+         <div className="flex items-center text-emerald-500 gap-1.5">
+            <span className="text-sm font-bold">Present</span>
+            <ArrowRight className="w-4 h-4"/>
          </div>
       </div>
     </motion.div>
