@@ -148,7 +148,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
   // Swipe UI State
   const [currentIndex, setCurrentIndex] = useState(0);
   const [attendanceState, setAttendanceState] = useState<Record<string, AttendanceStatus>>({});
-  const [isSummaryView, setIsSummaryView] = useState(false);
+  const [viewMode, setViewMode] = useState<"SWIPE" | "SUMMARY" | "ADJUST">("SWIPE");
 
   const [subject, setSubject] = useState<string>("");
 
@@ -158,7 +158,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
       fetchStudents();
       setCurrentIndex(0);
       setAttendanceState({});
-      setIsSummaryView(false);
+      setViewMode("SWIPE");
     }
   }, [isOpen, cls]);
 
@@ -196,7 +196,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
     setAttendanceState(prev => ({ ...prev, [student.id]: status }));
     
     if (currentIndex + 1 >= students.length) {
-      setTimeout(() => setIsSummaryView(true), 200);
+      setTimeout(() => setViewMode("SUMMARY"), 200);
     } else {
       setCurrentIndex(prev => prev + 1);
     }
@@ -205,14 +205,14 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
   const handleUndo = () => {
     if (currentIndex > 0) {
       triggerHaptic(30);
-      setIsSummaryView(false);
+      setViewMode("SWIPE");
       setCurrentIndex(prev => prev - 1);
     }
   };
   
   const handleJumpToSummary = () => {
       triggerHaptic(30);
-      setIsSummaryView(true);
+      setViewMode("SUMMARY");
   };
 
   const handleSave = async () => {
@@ -335,7 +335,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             )}
           </div>
           <div className="flex items-center gap-2">
-            {!isSummaryView && (
+            {viewMode === "SWIPE" && (
                 <Button variant="outline" size="sm" onClick={handleJumpToSummary} icon={<List className="w-4 h-4"/>}>
                     Skip to Summary
                 </Button>
@@ -353,7 +353,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             <div className="text-center py-8 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
               No students enrolled in this section.
             </div>
-          ) : !isSummaryView ? (
+          ) : viewMode === "SWIPE" ? (
             // Swipe View
             <div className="w-full h-full max-w-sm mx-auto relative perspective-1000">
                <AnimatePresence mode="popLayout">
@@ -367,6 +367,66 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                   )}
                </AnimatePresence>
             </div>
+          ) : viewMode === "ADJUST" ? (
+            // Adjust View
+            <div className="w-full h-full space-y-4 overflow-y-auto pr-2 custom-scrollbar fade-in absolute inset-0">
+                <div className="sticky top-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md z-10 py-3 border-b border-m3-sys-light-outline-variant/30 mb-2">
+                    <h3 className="font-bold text-lg text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center">
+                        Adjust Attendance
+                    </h3>
+                    <div className="flex justify-center gap-6 mt-2 text-sm">
+                        <span className="text-emerald-600 font-bold">Present: {Object.values(attendanceState).filter(s => s === 'PRESENT').length}</span>
+                        <span className="text-red-600 font-bold">Absent: {Object.values(attendanceState).filter(s => s === 'ABSENT').length}</span>
+                    </div>
+                </div>
+                {students.map((student) => (
+                  <div
+                    key={student.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border border-m3-sys-light-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface gap-3 shadow-sm"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-m3-sys-light-primary/10 dark:bg-m3-sys-dark-primary/20 flex items-center justify-center text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-bold text-lg shrink-0">
+                        {student.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+                          {student.name}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 sm:w-[240px] shrink-0">
+                      <StatusButton
+                        studentId={student.id}
+                        status="PRESENT"
+                        label="Present"
+                        icon={CheckCircle2}
+                        colorClass="bg-emerald-500 text-white"
+                      />
+                      <StatusButton
+                        studentId={student.id}
+                        status="LATE"
+                        label="Late"
+                        icon={Clock}
+                        colorClass="bg-amber-500 text-white"
+                      />
+                      <StatusButton
+                        studentId={student.id}
+                        status="ABSENT"
+                        label="Absent"
+                        icon={XCircle}
+                        colorClass="bg-red-500 text-white"
+                      />
+                      <StatusButton
+                        studentId={student.id}
+                        status="EXCUSED"
+                        label="Excused"
+                        icon={AlertTriangle}
+                        colorClass="bg-blue-500 text-white"
+                      />
+                    </div>
+                  </div>
+                ))}
+            </div>
           ) : (
             // Summary View
             <div className="w-full h-full absolute inset-0 flex flex-col fade-in overflow-hidden pb-1">
@@ -375,7 +435,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                         Attendance Summary
                     </h3>
                 </div>
-                <div className="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-3">
+                <div className="flex-1 min-h-0 min-w-0 grid grid-cols-2 grid-rows-2 gap-3">
                     {/* Present */}
                     <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
                         <div className="flex items-center gap-2 mb-3 shrink-0">
@@ -383,7 +443,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                             <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Present</span>
                             <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'PRESENT').length}</span>
                         </div>
-                        <div className="flex-1 min-h-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
+                        <div className="flex-1 min-h-0 min-w-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
                             {students.filter(s => attendanceState[s.id] === 'PRESENT').map(s => (
                                 <div key={s.id} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/60 dark:bg-black/20 truncate max-w-full">
                                     {s.name}
@@ -398,7 +458,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                             <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Absent</span>
                             <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'ABSENT').length}</span>
                         </div>
-                        <div className="flex-1 min-h-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
+                        <div className="flex-1 min-h-0 min-w-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
                             {students.filter(s => attendanceState[s.id] === 'ABSENT').map(s => (
                                 <div key={s.id} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/60 dark:bg-black/20 truncate max-w-full">
                                     {s.name}
@@ -413,7 +473,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                             <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Excused</span>
                             <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'EXCUSED').length}</span>
                         </div>
-                        <div className="flex-1 min-h-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
+                        <div className="flex-1 min-h-0 min-w-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
                             {students.filter(s => attendanceState[s.id] === 'EXCUSED').map(s => (
                                 <div key={s.id} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/60 dark:bg-black/20 truncate max-w-full">
                                     {s.name}
@@ -428,7 +488,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                             <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Late</span>
                             <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'LATE').length}</span>
                         </div>
-                        <div className="flex-1 min-h-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
+                        <div className="flex-1 min-h-0 min-w-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
                             {students.filter(s => attendanceState[s.id] === 'LATE').map(s => (
                                 <div key={s.id} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/60 dark:bg-black/20 truncate max-w-full">
                                     {s.name}
@@ -444,12 +504,17 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
         {/* Footer */}
         <div className="shrink-0 pt-3 border-t border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 flex justify-between items-center gap-3">
           <div className="flex gap-2">
-            {!isSummaryView && currentIndex > 0 && (
+            {viewMode === "SWIPE" && currentIndex > 0 && (
                 <Button variant="ghost" onClick={handleUndo} icon={<Undo2 className="w-5 h-5" />} title="Undo Last Swipe" />
             )}
-            {isSummaryView && students.length > 0 && (
-                 <Button variant="ghost" onClick={handleUndo} icon={<Undo2 className="w-5 h-5" />}>
-                     Back to Swiping
+            {viewMode === "SUMMARY" && students.length > 0 && (
+                 <Button variant="ghost" onClick={() => setViewMode("ADJUST")} icon={<List className="w-5 h-5" />}>
+                     Adjust
+                 </Button>
+            )}
+            {viewMode === "ADJUST" && (
+                 <Button variant="ghost" onClick={() => setViewMode("SUMMARY")} icon={<Check className="w-5 h-5" />}>
+                     Done
                  </Button>
             )}
           </div>
@@ -461,7 +526,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
               <Button
                 variant="primary"
                 onClick={handleSave}
-                disabled={isSaving || students.length === 0 || (!isSummaryView && currentIndex < students.length)}
+                disabled={isSaving || students.length === 0 || (viewMode === "SWIPE" && currentIndex < students.length)}
                 icon={<Save className="w-4 h-4" />}
               >
                 {isSaving ? "Saving..." : "Save Attendance"}
