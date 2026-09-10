@@ -41,25 +41,18 @@ const StudentSwipeCard = ({
   isTop: boolean;
 }) => {
   const x = useMotionValue(0);
-  const y = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-10, 10]);
 
   const presentOpacity = useTransform(x, [20, 100], [0, 1]);
   const absentOpacity = useTransform(x, [-20, -100], [0, 1]);
-  const excusedOpacity = useTransform(y, [-20, -100], [0, 1]);
-  const lateOpacity = useTransform(y, [20, 100], [0, 1]);
 
   const handleDragEnd = (e: any, info: PanInfo) => {
     const threshold = 70; // pixels to trigger swipe
     const absX = Math.abs(info.offset.x);
-    const absY = Math.abs(info.offset.y);
 
-    if (absX > absY && absX > threshold) {
+    if (absX > threshold) {
       if (info.offset.x > 0) onSwipe("PRESENT");
       else onSwipe("ABSENT");
-    } else if (absY > absX && absY > threshold) {
-      if (info.offset.y < 0) onSwipe("EXCUSED");
-      else onSwipe("LATE");
     }
   };
 
@@ -70,11 +63,11 @@ const StudentSwipeCard = ({
       animate={{ scale: 1, opacity: 1, y: 0 }}
       exit={{ scale: 0.95, opacity: 0 }}
       transition={{ duration: 0.2 }}
-      drag={isTop ? true : false}
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+      drag={isTop ? "x" : false}
+      dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.7}
       onDragEnd={handleDragEnd}
-      style={{ x, y, rotate, touchAction: "none" }}
+      style={{ x, rotate, touchAction: "none" }}
       className={`absolute inset-0 bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 rounded-3xl shadow-xl flex flex-col items-center justify-center p-6 cursor-grab active:cursor-grabbing`}
     >
       {/* Overlays for visual feedback */}
@@ -90,41 +83,20 @@ const StudentSwipeCard = ({
            <span className="font-bold text-xl uppercase tracking-wider mt-2">Absent</span>
         </div>
       </motion.div>
-      <motion.div style={{ opacity: excusedOpacity }} className="absolute inset-0 bg-blue-500/20 rounded-3xl pointer-events-none flex items-start justify-center p-6 border-4 border-blue-500">
-         <div className="flex flex-col items-center opacity-70 text-blue-600 dark:text-blue-400">
-           <AlertTriangle className="w-16 h-16" />
-           <span className="font-bold text-xl uppercase tracking-wider mt-2">Excused</span>
-        </div>
-      </motion.div>
-      <motion.div style={{ opacity: lateOpacity }} className="absolute inset-0 bg-amber-500/20 rounded-3xl pointer-events-none flex items-end justify-center p-6 border-4 border-amber-500">
-         <div className="flex flex-col items-center opacity-70 text-amber-600 dark:text-amber-400">
-           <Clock className="w-16 h-16" />
-           <span className="font-bold text-xl uppercase tracking-wider mt-2">Late</span>
-        </div>
-      </motion.div>
 
       {/* Student Content */}
-      <div className="w-24 h-24 rounded-full bg-m3-sys-light-primary/10 dark:bg-m3-sys-dark-primary/20 flex items-center justify-center text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-bold text-4xl mb-6 shadow-sm">
+      <div className="w-32 h-32 rounded-full bg-m3-sys-light-primary/10 dark:bg-m3-sys-dark-primary/20 flex items-center justify-center text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-bold text-5xl mb-6 shadow-sm">
         {student.name.charAt(0).toUpperCase()}
       </div>
-      <h3 className="text-2xl font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center mb-2">
+      <h3 className="text-3xl font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center mb-8">
         {student.name}
       </h3>
-      <p className="text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant text-center mb-8">
-        {student.email}
-      </p>
 
       {/* Swipe Hints */}
-      <div className="grid grid-cols-3 grid-rows-3 gap-2 opacity-40 absolute bottom-6 pointer-events-none w-full max-w-[200px]">
-         <div />
-         <div className="flex flex-col items-center justify-center text-blue-500"><ArrowUp className="w-4 h-4"/><span className="text-[10px] font-bold">EXCUSED</span></div>
-         <div />
-         <div className="flex flex-col items-center justify-center text-red-500"><ArrowLeft className="w-4 h-4"/><span className="text-[10px] font-bold">ABSENT</span></div>
-         <div className="flex items-center justify-center"><div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"/></div>
-         <div className="flex flex-col items-center justify-center text-emerald-500"><ArrowRight className="w-4 h-4"/><span className="text-[10px] font-bold">PRESENT</span></div>
-         <div />
-         <div className="flex flex-col items-center justify-center text-amber-500"><ArrowDown className="w-4 h-4"/><span className="text-[10px] font-bold">LATE</span></div>
-         <div />
+      <div className="flex items-center justify-between opacity-40 absolute bottom-8 px-8 pointer-events-none w-full">
+         <div className="flex flex-col items-center justify-center text-red-500"><ArrowLeft className="w-5 h-5"/><span className="text-[10px] font-bold mt-1">ABSENT</span></div>
+         <div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-zinc-700"/>
+         <div className="flex flex-col items-center justify-center text-emerald-500"><ArrowRight className="w-5 h-5"/><span className="text-[10px] font-bold mt-1">PRESENT</span></div>
       </div>
     </motion.div>
   );
