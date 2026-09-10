@@ -306,9 +306,9 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
       title={`Take Attendance: ${cls.sectionName}`}
       size="2xl"
     >
-      <div className="space-y-6">
+      <div className="flex flex-col h-[70vh] max-h-[600px] gap-4">
         {/* Top Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30">
+        <div className="shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-m3-sys-light-surface-variant/30 dark:bg-m3-sys-dark-surface-variant/30">
           <div className="flex-1 space-y-1">
             <label className="text-label-small font-bold text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
               Subject Filter
@@ -341,7 +341,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
         </div>
 
         {/* Content Area */}
-        <div className="min-h-[400px] relative flex flex-col items-center justify-center">
+        <div className="flex-1 min-h-0 relative w-full">
           {isLoading ? (
             <div className="text-center py-8 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
               Loading roster...
@@ -352,7 +352,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             </div>
           ) : !isSummaryView ? (
             // Swipe View
-            <div className="w-full max-w-sm aspect-[3/4] relative perspective-1000">
+            <div className="w-full h-full max-w-sm mx-auto relative perspective-1000">
                <AnimatePresence mode="popLayout">
                   {students[currentIndex] && (
                      <StudentSwipeCard 
@@ -366,7 +366,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             </div>
           ) : (
             // Summary View
-            <div className="w-full space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar fade-in">
+            <div className="w-full h-full space-y-4 overflow-y-auto pr-2 custom-scrollbar fade-in absolute inset-0">
                 <div className="sticky top-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md z-10 py-3 border-b border-m3-sys-light-outline-variant/30 mb-2">
                     <h3 className="font-bold text-lg text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center">
                         Attendance Summary
@@ -428,7 +428,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="pt-4 border-t border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 flex justify-between items-center gap-3">
+        <div className="shrink-0 pt-3 border-t border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 flex justify-between items-center gap-3">
           <div className="flex gap-2">
             {!isSummaryView && currentIndex > 0 && (
                 <Button variant="ghost" onClick={handleUndo} icon={<Undo2 className="w-5 h-5" />} title="Undo Last Swipe" />
