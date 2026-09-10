@@ -373,63 +373,74 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             </div>
           ) : (
             // Summary View
-            <div className="w-full h-full space-y-4 overflow-y-auto pr-2 custom-scrollbar fade-in absolute inset-0">
-                <div className="sticky top-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md z-10 py-3 border-b border-m3-sys-light-outline-variant/30 mb-2">
-                    <h3 className="font-bold text-lg text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center">
+            <div className="w-full h-full absolute inset-0 flex flex-col fade-in overflow-hidden pb-1">
+                <div className="shrink-0 py-3 border-b border-m3-sys-light-outline-variant/30 mb-4">
+                    <h3 className="font-bold text-xl text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center">
                         Attendance Summary
                     </h3>
-                    <div className="flex justify-center gap-6 mt-2 text-sm">
-                        <span className="text-emerald-600 font-bold">Present: {Object.values(attendanceState).filter(s => s === 'PRESENT').length}</span>
-                        <span className="text-red-600 font-bold">Absent: {Object.values(attendanceState).filter(s => s === 'ABSENT').length}</span>
+                </div>
+                <div className="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-3">
+                    {/* Present */}
+                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+                        <div className="flex items-center gap-2 mb-3 shrink-0">
+                            <CheckCircle2 className="w-5 h-5" />
+                            <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Present</span>
+                            <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'PRESENT').length}</span>
+                        </div>
+                        <div className="flex-1 min-h-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
+                            {students.filter(s => attendanceState[s.id] === 'PRESENT').map(s => (
+                                <div key={s.id} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/60 dark:bg-black/20 truncate max-w-full">
+                                    {s.name}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    {/* Absent */}
+                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400">
+                        <div className="flex items-center gap-2 mb-3 shrink-0">
+                            <XCircle className="w-5 h-5" />
+                            <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Absent</span>
+                            <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'ABSENT').length}</span>
+                        </div>
+                        <div className="flex-1 min-h-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
+                            {students.filter(s => attendanceState[s.id] === 'ABSENT').map(s => (
+                                <div key={s.id} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/60 dark:bg-black/20 truncate max-w-full">
+                                    {s.name}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    {/* Excused */}
+                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400">
+                        <div className="flex items-center gap-2 mb-3 shrink-0">
+                            <AlertTriangle className="w-5 h-5" />
+                            <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Excused</span>
+                            <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'EXCUSED').length}</span>
+                        </div>
+                        <div className="flex-1 min-h-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
+                            {students.filter(s => attendanceState[s.id] === 'EXCUSED').map(s => (
+                                <div key={s.id} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/60 dark:bg-black/20 truncate max-w-full">
+                                    {s.name}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    {/* Late */}
+                    <div className="rounded-3xl border-2 flex flex-col overflow-hidden p-4 bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400">
+                        <div className="flex items-center gap-2 mb-3 shrink-0">
+                            <Clock className="w-5 h-5" />
+                            <span className="font-bold text-sm sm:text-base uppercase tracking-wider">Late</span>
+                            <span className="ml-auto text-2xl font-black">{Object.values(attendanceState).filter(s => s === 'LATE').length}</span>
+                        </div>
+                        <div className="flex-1 min-h-0 flex flex-wrap content-start gap-1.5 overflow-hidden">
+                            {students.filter(s => attendanceState[s.id] === 'LATE').map(s => (
+                                <div key={s.id} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/60 dark:bg-black/20 truncate max-w-full">
+                                    {s.name}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-                {students.map((student) => (
-                  <div
-                    key={student.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border border-m3-sys-light-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface gap-3 shadow-sm"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-m3-sys-light-primary/10 dark:bg-m3-sys-dark-primary/20 flex items-center justify-center text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-bold text-lg shrink-0">
-                        {student.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <div className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-                          {student.name}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2 sm:w-[240px] shrink-0">
-                      <StatusButton
-                        studentId={student.id}
-                        status="PRESENT"
-                        label="Present"
-                        icon={CheckCircle2}
-                        colorClass="bg-emerald-500 text-white"
-                      />
-                      <StatusButton
-                        studentId={student.id}
-                        status="LATE"
-                        label="Late"
-                        icon={Clock}
-                        colorClass="bg-amber-500 text-white"
-                      />
-                      <StatusButton
-                        studentId={student.id}
-                        status="ABSENT"
-                        label="Absent"
-                        icon={XCircle}
-                        colorClass="bg-red-500 text-white"
-                      />
-                      <StatusButton
-                        studentId={student.id}
-                        status="EXCUSED"
-                        label="Excused"
-                        icon={AlertTriangle}
-                        colorClass="bg-blue-500 text-white"
-                      />
-                    </div>
-                  </div>
-                ))}
             </div>
           )}
         </div>
