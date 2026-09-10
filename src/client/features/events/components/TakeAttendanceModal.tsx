@@ -31,14 +31,10 @@ interface TakeAttendanceModalProps {
   cls: ClassSection | null;
 }
 
-const StudentSwipeCard = ({ 
+const StudentSwipeCard: React.FC<{ student: User; onSwipe: (status: AttendanceStatus) => void; isTop: boolean; }> = ({ 
   student, 
   onSwipe,
   isTop
-}: { 
-  student: User; 
-  onSwipe: (status: AttendanceStatus) => void;
-  isTop: boolean;
 }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
