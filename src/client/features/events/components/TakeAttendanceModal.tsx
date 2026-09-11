@@ -393,8 +393,8 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             </div>
           ) : viewMode === "ADJUST" ? (
             // Adjust View
-            <div className="w-full h-full space-y-4 overflow-y-auto custom-scrollbar fade-in absolute inset-0">
-                <div className="sticky top-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md z-10 py-3 border-b border-m3-sys-light-outline-variant/30 mb-2 flex flex-col gap-3">
+            <div className="w-full h-full space-y-4 overflow-y-auto px-1 pb-1 custom-scrollbar fade-in absolute inset-0">
+                <div className="sticky top-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md z-10 py-3 border-b border-m3-sys-light-outline-variant/30 mb-2 flex flex-col gap-3 -mx-1 px-1">
                     <div className="flex items-center justify-between">
                         <h3 className="font-bold text-lg text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
                             Attendance List
