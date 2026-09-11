@@ -156,6 +156,9 @@
 }
 
 /* Hide scrollbars globally to remove the scroll progress indicator on the right */
+html {
+  @apply bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface;
+}
 html,
 body {
   -ms-overflow-style: none;
