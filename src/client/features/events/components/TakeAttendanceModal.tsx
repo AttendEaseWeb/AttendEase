@@ -334,12 +334,33 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            {viewMode === "SWIPE" && (
-                <Button variant="outline" size="sm" onClick={handleJumpToSummary} icon={<List className="w-4 h-4"/>}>
-                    Skip to Summary
-                </Button>
-            )}
+          <div className="flex items-center bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-1 rounded-xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-sm shrink-0">
+            <button
+              onClick={() => {
+                triggerHaptic(30);
+                setViewMode("SWIPE");
+              }}
+              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                viewMode === "SWIPE" 
+                  ? "bg-m3-sys-light-primary text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary shadow-sm"
+                  : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50"
+              }`}
+            >
+              Swipe
+            </button>
+            <button
+              onClick={() => {
+                triggerHaptic(30);
+                setViewMode("ADJUST");
+              }}
+              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                viewMode === "ADJUST" 
+                  ? "bg-m3-sys-light-primary text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary shadow-sm"
+                  : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50"
+              }`}
+            >
+              List
+            </button>
           </div>
         </div>
 
@@ -372,7 +393,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             <div className="w-full h-full space-y-4 overflow-y-auto pr-2 custom-scrollbar fade-in absolute inset-0">
                 <div className="sticky top-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md z-10 py-3 border-b border-m3-sys-light-outline-variant/30 mb-2">
                     <h3 className="font-bold text-lg text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center">
-                        Adjust Attendance
+                        Attendance List
                     </h3>
                     <div className="flex justify-center gap-6 mt-2 text-sm">
                         <span className="text-emerald-600 font-bold">Present: {Object.values(attendanceState).filter(s => s === 'PRESENT').length}</span>
