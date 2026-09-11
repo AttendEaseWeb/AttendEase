@@ -796,9 +796,6 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                                 {sess.subject}
                               </span>
                             </div>
-                            <h4 className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface mt-1">
-                              {sess.title}
-                            </h4>
                           </div>
                         </div>
 
