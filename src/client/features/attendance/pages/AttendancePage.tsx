@@ -68,56 +68,61 @@ export const AttendancePage: React.FC = () => {
   return (
     <motion.div className="space-y-6" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-headline-small text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-            Attendance Log Records
-          </h2>
-          <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1">
-            Real-time verified student presence, location logs, and session
-            activity audits.
-          </p>
-        </div>
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-cyan-500/10 border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 p-6 sm:p-8">
+        <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-full blur-3xl opacity-50 pointer-events-none" />
+        
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="flex items-start gap-5">
+            <div className="p-3.5 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface rounded-2xl shadow-sm border border-m3-sys-light-outline-variant/20 flex-shrink-0">
+               <ClipboardCheck className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-headline-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface tracking-tight">
+                Attendance Log Records
+              </h2>
+              <p className="text-body-large text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-2 max-w-2xl leading-relaxed">
+                Real-time verified student presence, location logs, and session activity audits.
+              </p>
+            </div>
+          </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchRecords}
-            icon={<RefreshCw className="w-3.5 h-3.5" />}
-          >
-            Refresh
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExportExcel}
-            icon={<FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />}
-          >
-            Excel
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExportPDF}
-            icon={<FileText className="w-3.5 h-3.5 text-red-500" />}
-          >
-            PDF
-          </Button>
-
-          {(user?.role === "INSTRUCTOR" || user?.role === "ADMIN") && (
+          <div className="flex flex-wrap items-center gap-3 lg:shrink-0">
             <Button
-              id="manual-override-btn"
+              variant="outline"
               size="sm"
-              onClick={() => setIsManualModalOpen(true)}
-              icon={<Plus className="w-3.5 h-3.5" />}
+              onClick={fetchRecords}
+              icon={<RefreshCw className="w-3.5 h-3.5" />}
             >
-              Manual Override
+              Refresh
             </Button>
-          )}
-
-          
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportExcel}
+              icon={<FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />}
+            >
+              Excel
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportPDF}
+              icon={<FileText className="w-3.5 h-3.5 text-rose-600" />}
+            >
+              PDF
+            </Button>
+            {(user?.role === "INSTRUCTOR" || user?.role === "ADMIN") && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setIsManualModalOpen(true)}
+                icon={<Plus className="w-4 h-4" />}
+                className="rounded-full shadow-expressive-sm"
+              >
+                Manual Override
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 

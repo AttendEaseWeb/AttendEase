@@ -302,50 +302,59 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
   return (
     <motion.div className="space-y-8" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       {/* Page Title & Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="text-headline-small font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-2.5">
-              <School className="w-7 h-7 text-m3-sys-light-primary dark:text-m3-sys-dark-primary" />
-              Class Sections
-            </h2>
-            <Badge
-              variant={isAdmin ? "purple" : isInstructor ? "indigo" : "emerald"}
-            >
-              {isAdmin
-                ? "Admin View"
-                : isInstructor
-                  ? "Instructor View"
-                  : "Student View"}
-            </Badge>
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-emerald-500/10 border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 p-6 sm:p-8">
+        <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-3xl opacity-50 pointer-events-none" />
+        
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="flex items-start gap-5">
+            <div className="p-3.5 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface rounded-2xl shadow-sm border border-m3-sys-light-outline-variant/20 flex-shrink-0">
+               <School className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+            </div>
+            <div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h2 className="text-headline-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface tracking-tight">
+                  Class Sections
+                </h2>
+                <Badge
+                  variant={isAdmin ? "purple" : isInstructor ? "indigo" : "emerald"}
+                >
+                  {isAdmin
+                    ? "Admin View"
+                    : isInstructor
+                      ? "Instructor View"
+                      : "Student View"}
+                </Badge>
+              </div>
+              <p className="text-body-large text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-2 max-w-2xl leading-relaxed">
+                Manage academic sections, subjects, and student rosters across all
+                grade levels.
+              </p>
+            </div>
           </div>
-          <p className="text-body-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant mt-1 max-w-2xl">
-            Manage academic sections, subjects, and student rosters across all
-            grade levels.
-          </p>
+
+          <div className="flex flex-wrap items-center gap-3 lg:shrink-0">
+            {canManage && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddStudentOpen(true)}
+                  icon={<UserPlus className="w-4 h-4" />}
+                  className="rounded-full shadow-expressive-sm bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface"
+                >
+                  Add Student
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => handleOpenCreateForGrade(defaultCreateGrade)}
+                  icon={<Plus className="w-4 h-4" />}
+                  className="rounded-full shadow-expressive-sm"
+                >
+                  Add Class Section
+                </Button>
+              </>
+            )}
+          </div>
         </div>
-
-        {canManage && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <Button
-              onClick={() => setIsAddStudentOpen(true)}
-              icon={<UserPlus className="w-4 h-4" />}
-              variant="outline"
-              className="shadow-expressive-sm shrink-0 self-start lg:self-auto bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface"
-            >
-              Add Student
-            </Button>
-
-            <Button
-              onClick={() => handleOpenCreateForGrade(defaultCreateGrade)}
-              icon={<Plus className="w-4 h-4" />}
-              variant="primary"
-              className="shadow-expressive-sm shrink-0 self-start lg:self-auto"
-            >
-              Add Class Section
-            </Button>
-          </div>
-        )}
       </div>
 
       {activeSection && currentActiveEntry && (
