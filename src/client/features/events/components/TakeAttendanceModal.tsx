@@ -148,7 +148,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
   // Swipe UI State
   const [currentIndex, setCurrentIndex] = useState(0);
   const [attendanceState, setAttendanceState] = useState<Record<string, AttendanceStatus>>({});
-  const [viewMode, setViewMode] = useState<"SWIPE" | "SUMMARY" | "ADJUST">("SWIPE");
+  const [viewMode, setViewMode] = useState<"SWIPE" | "SUMMARY" | "ADJUST">("ADJUST");
 
   const [subject, setSubject] = useState<string>("");
 
@@ -158,7 +158,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
       fetchStudents();
       setCurrentIndex(0);
       setAttendanceState({});
-      setViewMode("SWIPE");
+      setViewMode("ADJUST");
     }
   }, [isOpen, cls]);
 
@@ -334,13 +334,13 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
               </div>
             )}
           </div>
-          <div className="flex items-center bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-1 rounded-xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-sm shrink-0">
+          <div className="flex w-full md:w-64 items-center bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface p-1 rounded-xl border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-sm shrink-0">
             <button
               onClick={() => {
                 triggerHaptic(30);
                 setViewMode("SWIPE");
               }}
-              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`flex-1 px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
                 viewMode === "SWIPE" 
                   ? "bg-m3-sys-light-primary text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary shadow-sm"
                   : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50"
@@ -353,7 +353,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                 triggerHaptic(30);
                 setViewMode("ADJUST");
               }}
-              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+              className={`flex-1 px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
                 viewMode === "ADJUST" 
                   ? "bg-m3-sys-light-primary text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary shadow-sm"
                   : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50"
@@ -524,16 +524,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             {viewMode === "SWIPE" && currentIndex > 0 && (
                 <Button variant="ghost" onClick={handleUndo} icon={<Undo2 className="w-5 h-5" />} title="Undo Last Swipe" />
             )}
-            {viewMode === "SUMMARY" && students.length > 0 && (
-                 <Button variant="ghost" onClick={() => setViewMode("ADJUST")} icon={<List className="w-5 h-5" />}>
-                     Adjust
-                 </Button>
-            )}
-            {viewMode === "ADJUST" && (
-                 <Button variant="ghost" onClick={() => setViewMode("SUMMARY")} icon={<Check className="w-5 h-5" />}>
-                     Done
-                 </Button>
-            )}
+
           </div>
           
           <div className="flex gap-3">
