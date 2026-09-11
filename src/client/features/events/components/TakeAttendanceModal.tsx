@@ -19,7 +19,8 @@ import {
   ArrowLeft,
   ArrowUp,
   ArrowDown,
-  List
+  List,
+  Search
 } from "lucide-react";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "motion/react";
 import { triggerHaptic } from "../../../utils/haptics";
@@ -149,6 +150,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [attendanceState, setAttendanceState] = useState<Record<string, AttendanceStatus>>({});
   const [viewMode, setViewMode] = useState<"SWIPE" | "SUMMARY" | "ADJUST">("ADJUST");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [subject, setSubject] = useState<string>("");
 
@@ -159,6 +161,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
       setCurrentIndex(0);
       setAttendanceState({});
       setViewMode("ADJUST");
+      setSearchQuery("");
     }
   }, [isOpen, cls]);
 
@@ -391,16 +394,34 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
           ) : viewMode === "ADJUST" ? (
             // Adjust View
             <div className="w-full h-full space-y-4 overflow-y-auto pr-2 custom-scrollbar fade-in absolute inset-0">
-                <div className="sticky top-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md z-10 py-3 border-b border-m3-sys-light-outline-variant/30 mb-2">
-                    <h3 className="font-bold text-lg text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center">
-                        Attendance List
-                    </h3>
-                    <div className="flex justify-center gap-6 mt-2 text-sm">
-                        <span className="text-emerald-600 font-bold">Present: {Object.values(attendanceState).filter(s => s === 'PRESENT').length}</span>
-                        <span className="text-red-600 font-bold">Absent: {Object.values(attendanceState).filter(s => s === 'ABSENT').length}</span>
+                <div className="sticky top-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md z-10 py-3 border-b border-m3-sys-light-outline-variant/30 mb-2 flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                        <h3 className="font-bold text-lg text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+                            Attendance List
+                        </h3>
+                        <div className="flex justify-end gap-4 text-xs sm:text-sm">
+                            <span className="text-emerald-600 font-bold">Present: {Object.values(attendanceState).filter(s => s === 'PRESENT').length}</span>
+                            <span className="text-red-600 font-bold">Absent: {Object.values(attendanceState).filter(s => s === 'ABSENT').length}</span>
+                        </div>
+                    </div>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search className="h-4 w-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Search students..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="block w-full pl-10 pr-3 py-2 border border-m3-sys-light-outline-variant/40 dark:border-m3-sys-dark-outline-variant/40 rounded-xl leading-5 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary text-sm sm:text-base"
+                        />
                     </div>
                 </div>
-                {students.map((student) => (
+                {students.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
+                  <div className="text-center py-8 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
+                    No students found matching "{searchQuery}".
+                  </div>
+                ) : students.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase())).map((student) => (
                   <div
                     key={student.id}
                     className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-2xl border border-m3-sys-light-outline-variant/30 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface gap-3 shadow-sm"
