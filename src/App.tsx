@@ -90,7 +90,7 @@ function MainLayout() {
     );
   }
   return (
-    <div className="flex fixed inset-0 font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary overflow-hidden bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface bg-[radial-gradient(circle_at_15%_50%,rgba(103,80,164,0.05),transparent_40%),radial-gradient(circle_at_85%_30%,rgba(103,80,164,0.08),transparent_40%)] dark:bg-[radial-gradient(circle_at_15%_50%,rgba(208,188,255,0.08),transparent_40%),radial-gradient(circle_at_85%_30%,rgba(208,188,255,0.12),transparent_40%)]">
+    <div className="w-full h-full flex flex-col relative font-sans text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background antialiased selection:bg-m3-sys-light-primary selection:text-m3-sys-light-on-primary overflow-hidden bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface bg-[radial-gradient(circle_at_15%_50%,rgba(103,80,164,0.05),transparent_40%),radial-gradient(circle_at_85%_30%,rgba(103,80,164,0.08),transparent_40%)] dark:bg-[radial-gradient(circle_at_15%_50%,rgba(208,188,255,0.08),transparent_40%),radial-gradient(circle_at_85%_30%,rgba(208,188,255,0.12),transparent_40%)]">
       <Navbar
         activeTab={effectiveTab}
       />
