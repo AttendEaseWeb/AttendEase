@@ -13,7 +13,7 @@ import {
   Plus,
   RefreshCw,
   FileSpreadsheet,
-  FileText,
+  FileText, ClipboardCheck,
 } from "lucide-react";
 import { exportToExcel, exportToPDF } from "../../../utils/exportUtils";
 
