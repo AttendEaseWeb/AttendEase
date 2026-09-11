@@ -158,11 +158,21 @@
 /* Hide scrollbars globally to remove the scroll progress indicator on the right */
 html {
   @apply bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface;
+  height: 100dvh;
+  width: 100vw;
 }
 html,
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  height: 100dvh;
+  width: 100vw;
+  background-color: var(--color-m3-sys-light-surface);
+}
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: var(--color-m3-sys-dark-surface);
+  }
 }
 
 ::-webkit-scrollbar {
@@ -173,30 +183,10 @@ body {
 
 body {
   @apply bg-m3-sys-light-surface text-m3-sys-light-on-background dark:bg-m3-sys-dark-surface dark:text-m3-sys-dark-on-background font-sans antialiased;
-  background-image:
-    radial-gradient(
-      circle at 15% 50%,
-      rgba(103, 80, 164, 0.05),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 85% 30%,
-      rgba(103, 80, 164, 0.08),
-      transparent 40%
-    );
+  
 }
 @media (prefers-color-scheme: dark) {
   body {
-    background-image:
-      radial-gradient(
-        circle at 15% 50%,
-        rgba(208, 188, 255, 0.08),
-        transparent 40%
-      ),
-      radial-gradient(
-        circle at 85% 30%,
-        rgba(208, 188, 255, 0.12),
-        transparent 40%
-      );
+    
   }
 }
