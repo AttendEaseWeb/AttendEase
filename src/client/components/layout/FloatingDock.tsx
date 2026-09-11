@@ -108,16 +108,16 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
                 />
               )}
 
-              <div
-                className={`relative z-10 flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                  isActive ? "scale-105" : "scale-100"
-                }`}
+              <motion.div
+                className="relative z-10 flex items-center justify-center shrink-0"
+                animate={{ scale: isActive ? 1.15 : 1, y: isActive ? -2 : 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 <Icon
                   className="w-6 h-6 sm:w-6.5 sm:h-6.5 relative z-10 shrink-0"
                   strokeWidth={isActive ? 2.5 : 2}
                 />
-              </div>
+              </motion.div>
 
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out relative z-10 flex items-center ${

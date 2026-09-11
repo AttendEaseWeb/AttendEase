@@ -83,7 +83,9 @@ export const Navbar: React.FC<NavbarProps> = ({  activeTab,
             {/* Desktop & Mobile Brand Title */}
             <div className="flex items-center gap-1.5 sm:gap-2 sm:mr-4 shrink-0">
               <div className="p-1.5 bg-m3-sys-light-primary rounded-xl text-m3-sys-light-on-primary shadow-sm">
-                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.5, delay: 0.2 }}>
+                  <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                </motion.div>
               </div>
               <span className="font-bold text-title-medium sm:text-title-large tracking-tight text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
                 AttendEase
@@ -123,7 +125,12 @@ export const Navbar: React.FC<NavbarProps> = ({  activeTab,
                 className="relative p-2 rounded-full text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface hover:bg-m3-sys-light-surface-variant/60 dark:hover:bg-m3-sys-dark-surface-variant/60 transition-all duration-150 ease-out hover:scale-110 active:scale-90 transform-gpu shrink-0 cursor-pointer"
                 title="Notifications"
               >
-                <Bell className="w-4 h-4 shrink-0" />
+                <motion.div
+                  animate={hasNotifications ? { rotate: [0, -15, 15, -15, 15, 0] } : {}}
+                  transition={{ duration: 0.6, delay: 1, repeat: hasNotifications ? Infinity : 0, repeatDelay: 5 }}
+                >
+                  <Bell className="w-4 h-4 shrink-0" />
+                </motion.div>
                 {hasNotifications && (
                   <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-m3-sys-light-error dark:bg-m3-sys-dark-error animate-pulse" />
                 )}
