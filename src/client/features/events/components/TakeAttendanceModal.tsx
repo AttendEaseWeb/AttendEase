@@ -338,19 +338,6 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
             <button
               onClick={() => {
                 triggerHaptic(30);
-                setViewMode("SWIPE");
-              }}
-              className={`flex-1 px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
-                viewMode === "SWIPE" 
-                  ? "bg-m3-sys-light-primary text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary shadow-sm"
-                  : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50"
-              }`}
-            >
-              Swipe
-            </button>
-            <button
-              onClick={() => {
-                triggerHaptic(30);
                 setViewMode("ADJUST");
               }}
               className={`flex-1 px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
@@ -360,6 +347,19 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
               }`}
             >
               List
+            </button>
+            <button
+              onClick={() => {
+                triggerHaptic(30);
+                setViewMode("SWIPE");
+              }}
+              className={`flex-1 px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                viewMode === "SWIPE" 
+                  ? "bg-m3-sys-light-primary text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary shadow-sm"
+                  : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/50 dark:hover:bg-m3-sys-dark-surface-variant/50"
+              }`}
+            >
+              Swipe
             </button>
           </div>
         </div>
