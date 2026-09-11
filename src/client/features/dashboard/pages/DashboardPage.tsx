@@ -2,7 +2,6 @@ import { offlineCapableFetch } from "../../../utils/sync";
 import { motion } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { DashboardStats } from "../components/DashboardStats";
-import { RecentActivityList } from "../components/RecentActivityList";
 import { Card } from "../../../components/common/Card";
 import { Button } from "../../../components/common/Button";
 import { AttendanceStats } from "../../../../shared/types/attendance";
@@ -144,29 +143,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
       {/* Overview Stats Cards */}
       <DashboardStats stats={stats} />
 
-      {/* Main Grid Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Live Attendance Activity Stream */}
-        <div>
-          <Card
-            title="Recent Live Check-ins"
-            subtitle="Real-time attendance logs stream"
-            action={
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onNavigateToTab("attendance")}
-                icon={<ArrowRight className="w-4 h-4" />}
-                className="text-m3-sys-light-primary dark:text-m3-sys-dark-primary"
-              >
-                Full Logs
-              </Button>
-            }
-          >
-            <RecentActivityList records={stats?.recentActivity || []} />
-          </Card>
-        </div>
-      </div>
     </motion.div>
   );
 };
