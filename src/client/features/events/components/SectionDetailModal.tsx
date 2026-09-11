@@ -571,8 +571,8 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
               onClick={() => setSelectedSubject("ALL")}
               className={`px-4 py-2 rounded-2xl text-label-medium font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
                 selectedSubject === "ALL"
-                  ? "bg-m3-sys-light-primary text-m3-sys-light-on-primary shadow-expressive-sm"
-                  : "bg-m3-sys-light-surface-variant/50 text-m3-sys-light-on-surface-variant hover:bg-m3-sys-light-surface-variant"
+                  ? "bg-m3-sys-light-primary text-m3-sys-light-on-primary dark:bg-m3-sys-dark-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm"
+                  : "bg-m3-sys-light-surface-variant/50 text-m3-sys-light-on-surface-variant dark:bg-m3-sys-dark-surface-variant/50 dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant dark:hover:bg-m3-sys-dark-surface-variant"
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -596,8 +596,8 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                   onClick={() => setSelectedSubject(subj)}
                   className={`px-4 py-2 rounded-2xl text-label-medium font-semibold flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer border ${
                     isSelected
-                      ? "bg-m3-sys-light-primary-container text-m3-sys-light-on-primary-container border-m3-sys-light-primary/40 shadow-xs"
-                      : "bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border-m3-sys-light-outline-variant/40 text-m3-sys-light-on-surface hover:border-m3-sys-light-primary/50"
+                      ? "bg-m3-sys-light-primary-container text-m3-sys-light-on-primary-container dark:bg-m3-sys-dark-primary-container dark:text-m3-sys-dark-on-primary-container border-m3-sys-light-primary/40 dark:border-m3-sys-dark-primary/40 shadow-xs"
+                      : "bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border-m3-sys-light-outline-variant/40 dark:border-m3-sys-dark-outline-variant/40 text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface hover:border-m3-sys-light-primary/50 dark:hover:border-m3-sys-dark-primary/50"
                   }`}
                 >
                   <BookOpen
@@ -728,50 +728,7 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
             </div>
           </div>
 
-          {/* Sub-Tabs: Sessions / Roster / Analytics */}
-          <div className="flex border-b border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 gap-6">
-            <button
-              type="button"
-              onClick={() => setActiveTab("sessions")}
-              className={`pb-3 text-title-small font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
-                activeTab === "sessions"
-                  ? "border-m3-sys-light-primary text-m3-sys-light-primary"
-                  : "border-transparent text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface"
-              }`}
-            >
-              <Calendar className="w-4 h-4" />
-              Attendance Sessions ({filteredSessions.length})
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab("roster")}
-              className={`pb-3 text-title-small font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
-                activeTab === "roster"
-                  ? "border-m3-sys-light-primary text-m3-sys-light-primary"
-                  : "border-transparent text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface"
-              }`}
-            >
-              <Users className="w-4 h-4" />
-              Student Roster & Presence ({enrolledStudents.length})
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab("analytics")}
-              className={`pb-3 text-title-small font-semibold flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
-                activeTab === "analytics"
-                  ? "border-m3-sys-light-primary text-m3-sys-light-primary"
-                  : "border-transparent text-m3-sys-light-on-surface-variant hover:text-m3-sys-light-on-surface"
-              }`}
-            >
-              <Award className="w-4 h-4" />
-              Subject Logs & Audit
-            </button>
-          </div>
-
           {/* TAB 1: Attendance Sessions for Subject */}
-          {activeTab === "sessions" && (
             <div className="space-y-3">
               {filteredSessions.length === 0 ? (
                 <div className="text-center py-10 bg-m3-sys-light-surface-variant/20 rounded-3xl border border-dashed border-m3-sys-light-outline-variant/40 space-y-3">
@@ -885,177 +842,6 @@ export const SectionDetailModal: React.FC<SectionDetailModalProps> = ({
                 </div>
               )}
             </div>
-          )}
-
-          {/* TAB 2: Student Roster & Quick Attendance Status for Subject */}
-          {activeTab === "roster" && (
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="relative flex-1">
-                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-m3-sys-light-on-surface-variant" />
-                  <input
-                    type="text"
-                    placeholder="Search enrolled students..."
-                    value={studentSearch}
-                    onChange={(e) => setStudentSearch(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-2xl border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface text-body-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary dark:focus:ring-m3-sys-dark-primary"
-                  />
-                </div>
-
-                <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-body-small text-m3-sys-light-on-surface-variant">
-                    Total Students: <strong>{filteredStudents.length}</strong>
-                  </span>
-                </div>
-              </div>
-
-              {filteredStudents.length === 0 ? (
-                <p className="text-center py-8 text-body-small text-m3-sys-light-on-surface-variant italic">
-                  No students found enrolled in this section. Click "Edit
-                  Section / Roster" to add students.
-                </p>
-              ) : (
-                <div className="border border-m3-sys-light-outline-variant/30 rounded-2xl overflow-hidden bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface">
-                  <div className="divide-y divide-m3-sys-light-outline-variant/20">
-                    {filteredStudents.map((student) => {
-                      // Student logs in this subject
-                      const studentSubjLogs = filteredAttendance.filter(
-                        (r) => r.studentId === student.id,
-                      );
-                      const latestLog = studentSubjLogs[0];
-
-                      return (
-                        <div
-                          key={student.id}
-                          className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-m3-sys-light-surface-variant/20 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-full bg-m3-sys-light-primary-container text-m3-sys-light-on-primary-container font-bold flex items-center justify-center text-label-large">
-                              {student.name.charAt(0)}
-                            </div>
-                            <div>
-                              <div className="text-body-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-                                {student.name}
-                              </div>
-                              <div className="text-body-small text-m3-sys-light-on-surface-variant">
-                                {student.email}{" "}
-                                {student.studentId &&
-                                  `• ID: ${student.studentId}`}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-3 self-end sm:self-center">
-                            {/* Latest Log Status Badge */}
-                            {latestLog ? (
-                              <span
-                                className={`px-2.5 py-0.5 rounded-full text-label-small font-bold ${
-                                  latestLog.status === "PRESENT"
-                                    ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-300"
-                                    : latestLog.status === "LATE"
-                                      ? "bg-amber-500/20 text-amber-800 dark:text-amber-300"
-                                      : "bg-red-500/20 text-red-800 dark:text-red-300"
-                                }`}
-                              >
-                                {latestLog.status}
-                              </span>
-                            ) : (
-                              <span className="text-label-small text-m3-sys-light-on-surface-variant/60 italic">
-                                No check-in yet
-                              </span>
-                            )}
-
-                            {/* Quick Attendance Override Buttons */}
-                            {canManage && (
-                              <div className="flex items-center gap-1 bg-m3-sys-light-surface-variant/40 p-1 rounded-xl">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleQuickManualCheckIn(student, "PRESENT")
-                                  }
-                                  className="px-2 py-0.5 rounded-lg text-label-small font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors cursor-pointer"
-                                  title="Mark Present"
-                                >
-                                  Present
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleQuickManualCheckIn(student, "LATE")
-                                  }
-                                  className="px-2 py-0.5 rounded-lg text-label-small font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors cursor-pointer"
-                                  title="Mark Late"
-                                >
-                                  Late
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleQuickManualCheckIn(student, "ABSENT")
-                                  }
-                                  className="px-2 py-0.5 rounded-lg text-label-small font-semibold bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer"
-                                  title="Mark Absent"
-                                >
-                                  Absent
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* TAB 3: Analytics & Subject Audit */}
-          {activeTab === "analytics" && (
-            <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 space-y-3">
-                <h4 className="text-title-medium font-bold text-m3-sys-light-on-surface">
-                  Recent Check-in Audit Logs ({filteredAttendance.length})
-                </h4>
-
-                {filteredAttendance.length === 0 ? (
-                  <p className="text-body-small text-m3-sys-light-on-surface-variant italic py-4 text-center">
-                    No verified check-in records logged for{" "}
-                    {selectedSubject === "ALL"
-                      ? cls.sectionName
-                      : selectedSubject}
-                    .
-                  </p>
-                ) : (
-                  <div className="divide-y divide-m3-sys-light-outline-variant/20 max-h-60 overflow-y-auto">
-                    {filteredAttendance.map((rec) => (
-                      <div
-                        key={rec.id}
-                        className="py-2.5 flex items-center justify-between text-body-small"
-                      >
-                        <div>
-                          <span className="font-bold text-m3-sys-light-on-surface">
-                            {rec.studentName}
-                          </span>
-                          <span className="text-m3-sys-light-on-surface-variant ml-2">
-                            ({rec.subject})
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-m3-sys-light-on-surface-variant text-xs">
-                            {rec.checkInTime}
-                          </span>
-                          <span className="font-semibold text-emerald-600">
-                            {rec.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Modal Footer */}
