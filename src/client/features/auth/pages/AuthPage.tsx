@@ -19,6 +19,24 @@ import {
 } from "lucide-react";
 
 export const AuthPage: React.FC = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 300, damping: 24 },
+    },
+  };
   const { login, register } = useAuth();
   const { showToast } = useNotification();
 
@@ -152,7 +170,7 @@ export const AuthPage: React.FC = () => {
         </div>
 
         {/* Quick Test Accounts Banner */}
-        <div className="p-4 rounded-[28px] bg-expressive-surface border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 space-y-3 shadow-sm">
+        <motion.div variants={itemVariants} className="p-4 rounded-[28px] bg-expressive-surface border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 space-y-3 shadow-sm">
           <div className="flex items-center gap-1.5 text-label-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant uppercase tracking-wider">
             <Key className="w-3.5 h-3.5" />
             <span>1-Click Test Login</span>
@@ -198,10 +216,10 @@ export const AuthPage: React.FC = () => {
               <span className="truncate">Admin</span>
             </motion.button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Main Auth Form */}
-        <form
+        <motion.form layout variants={itemVariants}
           onSubmit={handleSubmit}
           className="p-6 sm:p-8 rounded-[36px] bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-expressive space-y-6"
         >
@@ -250,10 +268,18 @@ export const AuthPage: React.FC = () => {
             </div>
           </div>
 
-          {mode === "REGISTER" && (
-            <>
-              <Input
-                label="Full Name"
+          <AnimatePresence mode="popLayout">
+            {mode === "REGISTER" && (
+            <motion.div
+                layout
+                initial={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                transition={{ duration: 0.2 }}
+                className="space-y-6"
+              >
+                <Input
+                  label="Full Name"
                 placeholder="e.g. Alex Morgan"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -278,11 +304,20 @@ export const AuthPage: React.FC = () => {
                   />
                 )}
               </div>
-            </>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          {!(role === "STUDENT" && mode === "LOGIN") && (
-            <>
+          <AnimatePresence mode="popLayout">
+            {!(role === "STUDENT" && mode === "LOGIN") && (
+              <motion.div
+                layout
+                initial={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                transition={{ duration: 0.2 }}
+                className="space-y-6"
+              >
               <Input
                 label="Email Address"
             type="email"
@@ -301,12 +336,22 @@ export const AuthPage: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             icon={<Lock className="w-4 h-4 text-slate-400" />}
             required
-          />
-            </>
-          )}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          {role === "STUDENT" && mode === "LOGIN" && (
-            <Input
+          <AnimatePresence mode="popLayout">
+            {role === "STUDENT" && mode === "LOGIN" && (
+              <motion.div
+                layout
+                initial={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                transition={{ duration: 0.2 }}
+                className="space-y-6"
+              >
+                <Input
               label="Learner Reference Number (LRN)"
               type="text"
               placeholder="e.g. 123456789012"
@@ -314,8 +359,10 @@ export const AuthPage: React.FC = () => {
               onChange={(e) => setStudentId(e.target.value)}
               icon={<UserIcon className="w-4 h-4 text-slate-400" />}
               required
-            />
-          )}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <Button
             type="submit"
@@ -329,12 +376,12 @@ export const AuthPage: React.FC = () => {
             </span>
             <ArrowRight className="w-5 h-5" />
           </Button>
-        </form>
+        </motion.form>
 
         {/* Footer info */}
-        <p className="text-body-small text-center text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
+        <motion.p variants={itemVariants} className="text-body-small text-center text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
           AttendEase &copy; 2026. Secure attendance management system.
-        </p>
+        </motion.p>
       </motion.div>
     </div>
   );
