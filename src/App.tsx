@@ -12,7 +12,7 @@ import { AppLoading } from "./client/components/common/AppLoading";
  * notifications across all screens.
  * ------------------------------------------------------------------
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { motion, AnimatePresence } from "motion/react";
 // import OneSignal from 'react-onesignal';
 import { AuthProvider, useAuth } from "./client/context/AuthContext";
@@ -23,10 +23,10 @@ import {
 } from "./client/context/ScheduleContext";
 import { Navbar } from "./client/components/layout/Navbar";
 import { FloatingDock } from "./client/components/layout/FloatingDock";
-import { DashboardPage } from "./client/features/dashboard/pages/DashboardPage";
-import { ClassesPage } from "./client/features/events/pages/ClassesPage";
-import { AttendancePage } from "./client/features/attendance/pages/AttendancePage";
-import { UsersPage } from "./client/features/users/pages/UsersPage";
+const DashboardPage = lazy(() => import("./client/features/dashboard/pages/DashboardPage").then(module => ({ default: module.DashboardPage })));
+const ClassesPage = lazy(() => import("./client/features/events/pages/ClassesPage").then(module => ({ default: module.ClassesPage })));
+const AttendancePage = lazy(() => import("./client/features/attendance/pages/AttendancePage").then(module => ({ default: module.AttendancePage })));
+const UsersPage = lazy(() => import("./client/features/users/pages/UsersPage").then(module => ({ default: module.UsersPage })));
 import { AuthPage } from "./client/features/auth/pages/AuthPage";
 import { ScheduleNotice } from "./client/components/schedule/ScheduleNotice";
 import { ScheduleModal } from "./client/components/schedule/ScheduleModal";
@@ -116,6 +116,7 @@ function MainLayout() {
               transition={{ duration: 0.08, ease: "easeOut" }}
               className="space-y-6"
             >
+              <Suspense fallback={<div className="flex w-full h-48 items-center justify-center"><div className="w-8 h-8 border-4 border-m3-sys-light-primary/30 border-t-m3-sys-light-primary rounded-full animate-spin"></div></div>}>
               {effectiveTab === "dashboard" && (
                 <DashboardPage
                   onNavigateToTab={(tab) => setActiveTab(tab)}
@@ -131,6 +132,7 @@ function MainLayout() {
               {effectiveTab === "users" && user?.role === "ADMIN" && (
                 <UsersPage />
               )}
+                          </Suspense>
             </motion.div>
           </AnimatePresence>
         </main>
@@ -170,25 +172,27 @@ export default function App() {
 
     let isMounted = true;
 
+    let retryDelay = 3000;
     const checkServer = async () => {
       try {
         const res = await fetch(`/api/health?t=${Date.now()}`);
         if (res.ok && isMounted) {
           setIsServerAwake(true);
         } else if (isMounted) {
-          setTimeout(checkServer, 3000);
+          retryDelay = Math.min(retryDelay * 1.5, 30000);
+          setTimeout(checkServer, retryDelay);
         }
       } catch (err) {
         if (isMounted) {
           if (!navigator.onLine) {
             setIsOffline(true);
           } else {
-            setTimeout(checkServer, 3000);
+            retryDelay = Math.min(retryDelay * 1.5, 30000);
+            setTimeout(checkServer, retryDelay);
           }
         }
       }
     };
-
     checkServer();
 
     return () => {
