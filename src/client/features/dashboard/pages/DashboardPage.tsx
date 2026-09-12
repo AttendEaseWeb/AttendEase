@@ -89,57 +89,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
         </div>
       </div>
 
-      {/* Grade Level Breakdown Highlights */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-5 rounded-3xl bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-500/20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-emerald-600 text-white shadow-sm">
-              <GraduationCap className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-                Junior High School
-              </h4>
-              <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-                Grades 7, 8, 9, 10 Sections
-              </p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onNavigateToTab("events")}
-            className="text-emerald-600 dark:text-emerald-400 font-semibold"
-          >
-            Manage JHS →
-          </Button>
-        </div>
-
-        <div className="p-5 rounded-3xl bg-indigo-500/10 dark:bg-indigo-950/20 border border-indigo-500/20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-indigo-600 text-white shadow-sm">
-              <School className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-title-medium font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-                Senior High School
-              </h4>
-              <p className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
-                Grades 11, 12 (STEM, ABM, HUMSS)
-              </p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onNavigateToTab("events")}
-            className="text-indigo-600 dark:text-indigo-400 font-semibold"
-          >
-            Manage SHS →
-          </Button>
-        </div>
-      </div>
-
       {/* Overview Stats Cards */}
       <DashboardStats stats={stats} />
 
