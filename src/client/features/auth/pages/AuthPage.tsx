@@ -144,30 +144,32 @@ export const AuthPage: React.FC = () => {
         </div>
 
         {/* Auth Mode Tabs */}
-        <div className="flex bg-expressive-surface p-1.5 rounded-full shadow-sm">
-          <button
-            type="button"
-            onClick={() => setMode("LOGIN")}
-            className={`flex-1 py-2.5 rounded-full text-label-large transition-all cursor-pointer ${
-              mode === "LOGIN"
-                ? "bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm scale-[1.02]"
-                : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface"
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("REGISTER")}
-            className={`flex-1 py-2.5 rounded-full text-label-large transition-all cursor-pointer ${
-              mode === "REGISTER"
-                ? "bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary shadow-expressive-sm scale-[1.02]"
-                : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface"
-            }`}
-          >
-            Sign Up
-          </button>
-        </div>
+        <motion.div variants={itemVariants} className="flex bg-expressive-surface p-1.5 rounded-full shadow-sm relative">
+          {["LOGIN", "REGISTER"].map((m) => {
+            const isActive = mode === m;
+            return (
+              <button
+                key={m}
+                type="button"
+                onClick={() => setMode(m as "LOGIN" | "REGISTER")}
+                className={`relative flex-1 py-2.5 rounded-full text-label-large cursor-pointer z-10 transition-colors ${
+                  isActive
+                    ? "text-m3-sys-light-on-primary dark:text-m3-sys-dark-on-primary font-medium"
+                    : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:text-m3-sys-light-on-surface dark:hover:text-m3-sys-dark-on-surface"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="auth-mode-bg"
+                    className="absolute inset-0 bg-m3-sys-light-primary dark:bg-m3-sys-dark-primary shadow-expressive-sm rounded-full -z-10"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                {m === "LOGIN" ? "Sign In" : "Sign Up"}
+              </button>
+            );
+          })}
+        </motion.div>
 
         {/* Quick Test Accounts Banner */}
         <motion.div variants={itemVariants} className="p-4 rounded-[28px] bg-expressive-surface border border-m3-sys-light-outline-variant/50 dark:border-m3-sys-dark-outline-variant/50 space-y-3 shadow-sm">
@@ -219,7 +221,7 @@ export const AuthPage: React.FC = () => {
         </motion.div>
 
         {/* Main Auth Form */}
-        <motion.form layout variants={itemVariants}
+        <motion.form variants={itemVariants}
           onSubmit={handleSubmit}
           className="p-6 sm:p-8 rounded-[36px] bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-expressive space-y-6"
         >
@@ -228,140 +230,114 @@ export const AuthPage: React.FC = () => {
             <label className="text-label-medium text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
               Account Type
             </label>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => setRole("STUDENT")}
-                className={`p-2 rounded-2xl text-label-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
-                  role === "STUDENT"
-                    ? "bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container"
-                    : "bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30"
-                }`}
-              >
-                <GraduationCap className="w-4 h-4 shrink-0" />
-                <span>Student</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole("INSTRUCTOR")}
-                className={`p-2 rounded-2xl text-label-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
-                  role === "INSTRUCTOR"
-                    ? "bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container"
-                    : "bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30"
-                }`}
-              >
-                <UserCheck className="w-4 h-4 shrink-0" />
-                <span>Instructor</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole("ADMIN")}
-                className={`p-2 rounded-2xl text-label-medium flex items-center justify-center gap-1.5 border transition-all cursor-pointer ${
-                  role === "ADMIN"
-                    ? "bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border-m3-sys-light-primary dark:border-m3-sys-dark-primary text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container"
-                    : "bg-transparent border-m3-sys-light-outline dark:border-m3-sys-dark-outline text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30"
-                }`}
-              >
-                <Shield className="w-4 h-4 shrink-0" />
-                <span>Admin</span>
-              </button>
+            <div className="grid grid-cols-3 gap-2 relative">
+              {[
+                { id: "STUDENT", label: "Student", icon: GraduationCap },
+                { id: "INSTRUCTOR", label: "Instructor", icon: UserCheck },
+                { id: "ADMIN", label: "Admin", icon: Shield },
+              ].map((r) => {
+                const isActive = role === r.id;
+                const Icon = r.icon;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => setRole(r.id as UserRole)}
+                    className={`relative p-2 rounded-2xl text-label-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer z-10 ${
+                      isActive
+                        ? "text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container font-medium"
+                        : "text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant hover:bg-m3-sys-light-surface-variant/30 dark:hover:bg-m3-sys-dark-surface-variant/30"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="auth-role-bg"
+                        className="absolute inset-0 bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container border border-m3-sys-light-primary/20 dark:border-m3-sys-dark-primary/20 rounded-2xl -z-10"
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span>{r.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <AnimatePresence mode="popLayout">
-            {mode === "REGISTER" && (
+          <AnimatePresence mode="wait">
             <motion.div
-                layout
-                initial={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-                transition={{ duration: 0.2 }}
-                className="space-y-6"
-              >
-                <Input
-                  label="Full Name"
-                placeholder="e.g. Alex Morgan"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                icon={<UserIcon className="w-4 h-4 text-slate-400" />}
-                required
-              />
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <Input
-                  label="Department"
-                  placeholder="Computer Science"
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                  icon={<Building2 className="w-4 h-4 text-slate-400" />}
-                />
-                {role === "STUDENT" && (
+              key={`${mode}-${role}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="space-y-6"
+            >
+              {mode === "REGISTER" && (
+                <>
                   <Input
-                    label="Learner Reference Number (LRN)"
-                    placeholder="ST-2026-1234"
-                    value={studentId}
-                    onChange={(e) => setStudentId(e.target.value)}
+                    label="Full Name"
+                    placeholder="e.g. Alex Morgan"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    icon={<UserIcon className="w-4 h-4 text-slate-400" />}
+                    required
                   />
-                )}
-              </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Input
+                      label="Department"
+                      placeholder="Computer Science"
+                      value={department}
+                      onChange={(e) => setDepartment(e.target.value)}
+                      icon={<Building2 className="w-4 h-4 text-slate-400" />}
+                    />
+                    {role === "STUDENT" && (
+                      <Input
+                        label="Learner Reference Number (LRN)"
+                        placeholder="ST-2026-1234"
+                        value={studentId}
+                        onChange={(e) => setStudentId(e.target.value)}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
 
-          <AnimatePresence mode="popLayout">
-            {!(role === "STUDENT" && mode === "LOGIN") && (
-              <motion.div
-                layout
-                initial={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-                transition={{ duration: 0.2 }}
-                className="space-y-6"
-              >
-              <Input
-                label="Email Address"
-            type="email"
-            placeholder="you@attendease.edu"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon={<Mail className="w-4 h-4 text-slate-400" />}
-            required
-          />
+              {!(role === "STUDENT" && mode === "LOGIN") && (
+                <>
+                  <Input
+                    label="Email Address"
+                    type="email"
+                    placeholder="you@attendease.edu"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    icon={<Mail className="w-4 h-4 text-slate-400" />}
+                    required
+                  />
+                  <Input
+                    label="Password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    icon={<Lock className="w-4 h-4 text-slate-400" />}
+                    required
+                  />
+                </>
+              )}
 
-          <Input
-            label="Password"
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            icon={<Lock className="w-4 h-4 text-slate-400" />}
-            required
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <AnimatePresence mode="popLayout">
-            {role === "STUDENT" && mode === "LOGIN" && (
-              <motion.div
-                layout
-                initial={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-                transition={{ duration: 0.2 }}
-                className="space-y-6"
-              >
+              {role === "STUDENT" && mode === "LOGIN" && (
                 <Input
-              label="Learner Reference Number (LRN)"
-              type="text"
-              placeholder="e.g. 123456789012"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              icon={<UserIcon className="w-4 h-4 text-slate-400" />}
-              required
+                  label="Learner Reference Number (LRN)"
+                  type="text"
+                  placeholder="e.g. 123456789012"
+                  value={studentId}
+                  onChange={(e) => setStudentId(e.target.value)}
+                  icon={<UserIcon className="w-4 h-4 text-slate-400" />}
+                  required
                 />
-              </motion.div>
-            )}
+              )}
+            </motion.div>
           </AnimatePresence>
 
           <Button
