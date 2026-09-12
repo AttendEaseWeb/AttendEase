@@ -221,7 +221,7 @@ export const AuthPage: React.FC = () => {
         </motion.div>
 
         {/* Main Auth Form */}
-        <motion.form variants={itemVariants}
+        <motion.form layout variants={itemVariants}
           onSubmit={handleSubmit}
           className="p-6 sm:p-8 rounded-[36px] bg-expressive-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 shadow-expressive space-y-6"
         >
@@ -264,17 +264,17 @@ export const AuthPage: React.FC = () => {
             </div>
           </div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${mode}-${role}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="space-y-6"
-            >
-              {mode === "REGISTER" && (
-                <>
+          <AnimatePresence initial={false}>
+            {mode === "REGISTER" && (
+              <motion.div
+                key="register"
+                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: "auto", marginBottom: 24 }}
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="space-y-6 pt-2">
                   <Input
                     label="Full Name"
                     placeholder="e.g. Alex Morgan"
@@ -300,11 +300,20 @@ export const AuthPage: React.FC = () => {
                       />
                     )}
                   </div>
-                </>
-              )}
+                </div>
+              </motion.div>
+            )}
 
-              {!(role === "STUDENT" && mode === "LOGIN") && (
-                <>
+            {!(role === "STUDENT" && mode === "LOGIN") && (
+              <motion.div
+                key="credentials"
+                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: "auto", marginBottom: 24 }}
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="space-y-6 pt-2">
                   <Input
                     label="Email Address"
                     type="email"
@@ -323,21 +332,32 @@ export const AuthPage: React.FC = () => {
                     icon={<Lock className="w-4 h-4 text-slate-400" />}
                     required
                   />
-                </>
-              )}
+                </div>
+              </motion.div>
+            )}
 
-              {role === "STUDENT" && mode === "LOGIN" && (
-                <Input
-                  label="Learner Reference Number (LRN)"
-                  type="text"
-                  placeholder="e.g. 123456789012"
-                  value={studentId}
-                  onChange={(e) => setStudentId(e.target.value)}
-                  icon={<UserIcon className="w-4 h-4 text-slate-400" />}
-                  required
-                />
-              )}
-            </motion.div>
+            {role === "STUDENT" && mode === "LOGIN" && (
+              <motion.div
+                key="student-id"
+                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: "auto", marginBottom: 24 }}
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="space-y-6 pt-2">
+                  <Input
+                    label="Learner Reference Number (LRN)"
+                    type="text"
+                    placeholder="e.g. 123456789012"
+                    value={studentId}
+                    onChange={(e) => setStudentId(e.target.value)}
+                    icon={<UserIcon className="w-4 h-4 text-slate-400" />}
+                    required
+                  />
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
 
           <Button
