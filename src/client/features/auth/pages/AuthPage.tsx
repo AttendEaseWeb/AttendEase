@@ -119,13 +119,13 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-m3-sys-light-background dark:bg-m3-sys-dark-background text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background flex items-center justify-center p-4 sm:p-6 md:p-10 relative overflow-hidden font-sans">
+    <div className="min-h-screen w-full bg-m3-sys-light-background dark:bg-m3-sys-dark-background text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background flex flex-col p-4 sm:p-6 md:p-10 relative overflow-y-auto overflow-x-hidden font-sans">
       {/* Background Decorative Blur Elements */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container rounded-full blur-[120px] pointer-events-none opacity-30 dark:opacity-20" />
+      <div className="fixed -top-40 -left-40 w-96 h-96 bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
+      <div className="fixed -bottom-40 -right-40 w-96 h-96 bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-m3-sys-light-secondary-container dark:bg-m3-sys-dark-secondary-container rounded-full blur-[120px] pointer-events-none opacity-30 dark:opacity-20" />
 
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, ease: "easeOut" }} className="w-full max-w-md mx-auto space-y-6 relative z-10">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, ease: "easeOut" }} className="w-full max-w-md mx-auto my-auto space-y-6 relative z-10 py-8 sm:py-12">
         {/* Brand Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container text-m3-sys-light-on-primary-container dark:text-m3-sys-dark-on-primary-container text-label-small shadow-sm">
