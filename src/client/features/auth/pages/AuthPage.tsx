@@ -119,7 +119,7 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-m3-sys-light-background dark:bg-m3-sys-dark-background text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background flex flex-col p-4 sm:p-6 md:p-10 relative overflow-y-auto overflow-x-hidden font-sans">
+    <div className="h-full w-full bg-m3-sys-light-background dark:bg-m3-sys-dark-background text-m3-sys-light-on-background dark:text-m3-sys-dark-on-background flex flex-col p-4 sm:p-6 md:p-10 relative overflow-y-auto overflow-x-hidden font-sans">
       {/* Background Decorative Blur Elements */}
       <div className="fixed -top-40 -left-40 w-96 h-96 bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
       <div className="fixed -bottom-40 -right-40 w-96 h-96 bg-m3-sys-light-tertiary-container dark:bg-m3-sys-dark-tertiary-container rounded-full blur-[100px] pointer-events-none opacity-60 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen" />
