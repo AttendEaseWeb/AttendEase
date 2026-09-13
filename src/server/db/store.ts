@@ -4,20 +4,13 @@ import {
   AttendanceRecord,
   AttendanceStats,
 } from "../../shared/types/attendance";
-import {
-  SEED_USERS,
-  SEED_CLASSES,
-  SEED_SESSIONS,
-  SEED_ATTENDANCE,
-} from "./seed";
-
 import { supabase } from "./supabase";
 
 class DataStore {
-  private users: User[] = [...SEED_USERS];
-  private classes: ClassSection[] = [...SEED_CLASSES];
-  private sessions: ClassSession[] = [...SEED_SESSIONS];
-  private attendanceRecords: AttendanceRecord[] = [...SEED_ATTENDANCE];
+  private users: User[] = [];
+  private classes: ClassSection[] = [];
+  private sessions: ClassSession[] = [];
+  private attendanceRecords: AttendanceRecord[] = [];
 
   // User Methods
   async getUsers(): Promise<User[]> {
