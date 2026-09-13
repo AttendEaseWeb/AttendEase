@@ -113,7 +113,7 @@ function MainLayout() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.08, ease: "easeOut" }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
               className="space-y-6"
             >
               <Suspense fallback={<div className="flex w-full h-48 items-center justify-center"><div className="w-8 h-8 border-4 border-m3-sys-light-primary/30 border-t-m3-sys-light-primary rounded-full animate-spin"></div></div>}>

@@ -104,14 +104,14 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
                 <motion.div
                   layoutId="dock-active-bg"
                   className="absolute inset-0 bg-m3-sys-light-primary-container dark:bg-m3-sys-dark-primary-container ring-1 ring-m3-sys-light-primary/40 dark:ring-m3-sys-dark-primary/50 shadow-md rounded-full"
-                  transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                  transition={{ type: "spring", stiffness: 280, damping: 28 }}
                 />
               )}
 
               <motion.div
                 className="relative z-10 flex items-center justify-center shrink-0"
                 animate={{ scale: isActive ? 1.15 : 1, y: isActive ? -2 : 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
               >
                 <Icon
                   className="w-6 h-6 sm:w-6.5 sm:h-6.5 relative z-10 shrink-0"
