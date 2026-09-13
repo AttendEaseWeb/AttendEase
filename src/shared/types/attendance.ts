@@ -61,3 +61,17 @@ export interface AttendanceStats {
   seniorHighRate?: number;
   recentActivity: AttendanceRecord[];
 }
+
+export interface ExcuseRequest {
+  id: string;
+  studentId: string;
+  studentName: string;
+  classId: string;
+  className: string;
+  instructorId: string;
+  reason: string;
+  evidenceDataUrl?: string; // base64
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  createdAt: string;
+  dateOfAbsence: string;
+}

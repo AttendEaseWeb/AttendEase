@@ -15,6 +15,8 @@ import {
   FileSpreadsheet,
   FileText, ClipboardCheck,
 } from "lucide-react";
+import { ExcuseRequestModal } from "../components/ExcuseRequestModal";
+import { Calendar } from "lucide-react";
 import { exportToExcel, exportToPDF } from "../../../utils/exportUtils";
 
 export const AttendancePage: React.FC = () => {
@@ -23,6 +25,8 @@ export const AttendancePage: React.FC = () => {
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isExcuseModalOpen, setIsExcuseModalOpen] = useState(false);
+
 
   useEffect(() => {
     fetchRecords();
@@ -95,22 +99,38 @@ export const AttendancePage: React.FC = () => {
             >
               Refresh
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExportExcel}
-              icon={<FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />}
-            >
-              Excel
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExportPDF}
-              icon={<FileText className="w-3.5 h-3.5 text-rose-600" />}
-            >
-              PDF
-            </Button>
+            
+            {user?.role === "STUDENT" ? (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setIsExcuseModalOpen(true)}
+                icon={<Calendar className="w-4 h-4" />}
+                className="rounded-full"
+              >
+                Excuse Request
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportExcel}
+                  icon={<FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />}
+                >
+                  Excel
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportPDF}
+                  icon={<FileText className="w-3.5 h-3.5 text-rose-600" />}
+                >
+                  PDF
+                </Button>
+              </>
+            )}
+
             {(user?.role === "INSTRUCTOR" || user?.role === "ADMIN") && (
               <Button
                 variant="primary"

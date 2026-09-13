@@ -6,6 +6,10 @@ import { useNotification } from "../../../context/NotificationContext";
 import { ClassSection } from "../../../../shared/types/class";
 import { User } from "../../../../shared/types/auth";
 import { AttendanceStatus } from "../../../../shared/types/attendance";
+import { ExcuseRequest } from "../../../../shared/types/attendance";
+import { ViewExcuseModal } from "./ViewExcuseModal";
+import { FileText } from "lucide-react";
+
 import {
   Users,
   CheckCircle2,
@@ -32,11 +36,13 @@ interface TakeAttendanceModalProps {
   cls: ClassSection | null;
 }
 
-const StudentSwipeCard: React.FC<{ student: User; onSwipe: (status: AttendanceStatus) => void; isTop: boolean; }> = ({ 
-  student, 
-  onSwipe,
-  isTop
-}) => {
+const StudentSwipeCard: React.FC<{ 
+  student: User; 
+  onSwipe: (status: AttendanceStatus) => void; 
+  isTop: boolean; 
+  excuse?: ExcuseRequest;
+  onViewExcuse?: (e: ExcuseRequest) => void;
+}> = ({ student, onSwipe, isTop, excuse, onViewExcuse }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-10, 10]);
@@ -105,9 +111,20 @@ const StudentSwipeCard: React.FC<{ student: User; onSwipe: (status: AttendanceSt
       <div className="w-32 h-32 rounded-full bg-m3-sys-light-primary/10 dark:bg-m3-sys-dark-primary/20 flex items-center justify-center text-m3-sys-light-primary dark:text-m3-sys-dark-primary font-bold text-5xl mb-6 shadow-sm">
         {student.name.charAt(0).toUpperCase()}
       </div>
-      <h3 className="text-3xl font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center mb-24">
+      
+      <h3 className="text-3xl font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center mb-2">
         {student.name}
       </h3>
+      {excuse && (
+        <div className="flex flex-col items-center mb-16">
+           <span className="text-sm font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full mb-2">Excused Request Submitted</span>
+           <button onClick={() => onViewExcuse && onViewExcuse(excuse)} className="text-sm text-blue-500 underline flex items-center hover:text-blue-700">
+              <FileText className="w-4 h-4 mr-1" /> View Request
+           </button>
+        </div>
+      )}
+      {!excuse && <div className="mb-24" />}
+
 
       {/* Swipe Hints */}
       <div className="absolute bottom-8 inset-x-6 opacity-60 pointer-events-none flex items-center justify-between">
@@ -135,12 +152,28 @@ const StudentSwipeCard: React.FC<{ student: User; onSwipe: (status: AttendanceSt
 };
 
 
-export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
-  isOpen,
-  onClose,
-  onSuccess,
-  cls,
-}) => {
+export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({ isOpen, onClose, onSuccess, cls }) => {
+  const [excuseRequests, setExcuseRequests] = useState<ExcuseRequest[]>([]);
+  const [viewingExcuse, setViewingExcuse] = useState<ExcuseRequest | null>(null);
+
+  useEffect(() => {
+    if (isOpen && cls) {
+      fetchExcuses();
+    }
+  }, [isOpen, cls]);
+
+  const fetchExcuses = async () => {
+    if (!cls) return;
+    try {
+      const res = await offlineCapableFetch(`/api/excuses/class/${cls.id}`);
+      if (res.ok) {
+        setExcuseRequests(await res.json());
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const { showToast } = useNotification();
   const [students, setStudents] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -426,12 +459,22 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
                         {student.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
+                        
                         <div className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
                           {student.name}
                         </div>
+                        {excuseRequests.find(e => e.studentId === student.id) && (
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">Excused</span>
+                            <button onClick={() => setViewingExcuse(excuseRequests.find(e => e.studentId === student.id)!)} className="text-xs text-blue-500 underline flex items-center hover:text-blue-700">
+                              <FileText className="w-3 h-3 mr-1" /> View
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="grid grid-cols-4 gap-2 sm:w-[240px] shrink-0">
+
                       <StatusButton
                         studentId={student.id}
                         status="PRESENT"
@@ -560,6 +603,9 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
           </div>
         </div>
       </div>
-    </Modal>
+    
+        <ViewExcuseModal isOpen={!!viewingExcuse} onClose={() => setViewingExcuse(null)} excuse={viewingExcuse} />
+      </Modal>
   );
 };
+

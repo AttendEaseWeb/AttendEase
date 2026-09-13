@@ -65,7 +65,7 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "events", label: "Classes", icon: School },
+    ...(user?.role !== "STUDENT" ? [{ id: "events", label: "Classes", icon: School }] : []),
     { id: "attendance", label: "Attendance", icon: ClipboardCheck },
     ...(user?.role === "ADMIN"
       ? [{ id: "users", label: "Directory", icon: Users }]

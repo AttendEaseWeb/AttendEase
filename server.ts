@@ -81,3 +81,13 @@ startServer().catch((err) => {
   console.error('[Server Fatal Startup Error]:', err);
   process.exit(1);
 });
+
+// Daily cleanup of excuse evidence photos
+setInterval(() => {
+  const now = new Date();
+  if (now.getHours() === 0) { // run at midnight
+    import('./src/server/db/store').then(({ dbStore }) => { 
+      dbStore.cleanupOldExcusePhotos(); 
+    }).catch(err => console.error(err));
+  }
+}, 1000 * 60 * 60); // Check every hour

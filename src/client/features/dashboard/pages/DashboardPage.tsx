@@ -5,6 +5,7 @@ import { DashboardStats } from "../components/DashboardStats";
 import { Card } from "../../../components/common/Card";
 import { Button } from "../../../components/common/Button";
 import { AttendanceStats } from "../../../../shared/types/attendance";
+import { ExcuseRequest } from "../../../../shared/types/attendance";
 import { ClassSession } from "../../../../shared/types/class";
 import { useAuth } from "../../../context/AuthContext";
 import {
@@ -12,7 +13,7 @@ import {
   ArrowRight,
   School,
   GraduationCap,
-  CheckCircle2,
+  CheckCircle2, FileText, XCircle,
 } from "lucide-react";
 
 interface DashboardPageProps {  onNavigateToTab: (tab: string) => void;
@@ -23,11 +24,28 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
   const { user } = useAuth();
   const [stats, setStats] = useState<AttendanceStats | null>(null);
   const [activeSessions, setActiveSessions] = useState<ClassSession[]>([]);
+  const [inboxExcuses, setInboxExcuses] = useState<ExcuseRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchDashboardData();
   }, [user]);
+
+  
+  const handleStatus = async (id: string, status: "APPROVED" | "REJECTED") => {
+    try {
+      const res = await offlineCapableFetch(`/api/excuses/${id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        setInboxExcuses(prev => prev.map(e => e.id === id ? { ...e, status } : e));
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  };
 
   const fetchDashboardData = async () => {
     setIsLoading(true);
@@ -51,6 +69,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
               s.status === "ACTIVE" || s.status === "UPCOMING",
           ),
         );
+      }
+      if (user?.role === "INSTRUCTOR" || user?.role === "ADMIN") {
+        const inboxRes = await offlineCapableFetch(`/api/excuses/instructor/${user.id}`);
+        if (inboxRes.ok) {
+           setInboxExcuses(await inboxRes.json());
+        }
       }
     } catch (err) {
       console.error("Failed to load dashboard metrics:", err);
@@ -91,6 +115,35 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({  onNavigateToTab,
 
       {/* Overview Stats Cards */}
       <DashboardStats stats={stats} />
+      {/* Inbox Section for Instructors */}
+      {(user?.role === "INSTRUCTOR" || user?.role === "ADMIN") && inboxExcuses.length > 0 && (
+        <div className="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2 mb-4">
+            <FileText className="w-5 h-5 text-blue-500" />
+            <h3 className="text-xl font-bold">Inbox: Pending Excuse Requests</h3>
+          </div>
+          <div className="space-y-3">
+            {inboxExcuses.filter(e => e.status === "PENDING").map(excuse => (
+              <div key={excuse.id} className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h4 className="font-bold">{excuse.studentName}</h4>
+                  <p className="text-sm text-zinc-500">Class: {excuse.className} • Date: {excuse.dateOfAbsence}</p>
+                  <p className="text-sm mt-1">Reason: {excuse.reason}</p>
+                  {excuse.evidenceDataUrl && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-md mt-2 inline-block">Evidence Attached</span>}
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button className="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-700 font-medium text-sm flex items-center gap-1 hover:bg-emerald-200" onClick={() => handleStatus(excuse.id, "APPROVED")}><CheckCircle2 className="w-4 h-4"/> Approve</button>
+                  <button className="px-3 py-1.5 rounded-lg bg-rose-100 text-rose-700 font-medium text-sm flex items-center gap-1 hover:bg-rose-200" onClick={() => handleStatus(excuse.id, "REJECTED")}><XCircle className="w-4 h-4"/> Reject</button>
+                </div>
+              </div>
+            ))}
+            {inboxExcuses.filter(e => e.status === "PENDING").length === 0 && (
+              <p className="text-sm text-zinc-500 italic">No pending requests.</p>
+            )}
+          </div>
+        </div>
+      )}
+
 
     </motion.div>
   );

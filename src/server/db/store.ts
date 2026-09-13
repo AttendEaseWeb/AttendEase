@@ -1,3 +1,4 @@
+import { ExcuseRequest } from "../../shared/types/attendance";
 import { User } from "../../shared/types/auth";
 import { ClassSection, ClassSession } from "../../shared/types/class";
 import {
@@ -11,6 +12,7 @@ class DataStore {
   private classes: ClassSection[] = [];
   private sessions: ClassSession[] = [];
   private attendanceRecords: AttendanceRecord[] = [];
+  public excuseRequests: ExcuseRequest[] = [];
 
   // User Methods
   async getUsers(): Promise<User[]> {
@@ -556,6 +558,38 @@ class DataStore {
       recentActivity: records.slice(0, 15),
     };
   }
+
+  // Excuse Request Methods
+  async getExcuseRequestsByClass(classId: string): Promise<ExcuseRequest[]> {
+    return this.excuseRequests.filter(e => e.classId === classId);
+  }
+  
+
+  async getExcuseRequestsByInstructor(instructorId: string): Promise<ExcuseRequest[]> {
+    return this.excuseRequests.filter(e => e.instructorId === instructorId);
+  }
+
+  async getExcuseRequestsByStudent(studentId: string): Promise<ExcuseRequest[]> {
+    return this.excuseRequests.filter(e => e.studentId === studentId);
+  }
+  
+  async addExcuseRequest(req: ExcuseRequest): Promise<ExcuseRequest> {
+    this.excuseRequests.push(req);
+    return req;
+  }
+
+
+  async cleanupOldExcusePhotos(): Promise<void> {
+    const today = new Date().toISOString().split('T')[0];
+    this.excuseRequests.forEach(e => {
+      if (e.createdAt.split('T')[0] !== today) {
+        e.evidenceDataUrl = undefined;
+      }
+    });
+  }
+
 }
+
+
 
 export const dbStore = new DataStore();
