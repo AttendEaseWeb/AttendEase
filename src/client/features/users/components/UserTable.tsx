@@ -45,9 +45,7 @@ export const UserTable: React.FC<UserTableProps> = ({
       (u.parentPhone &&
         u.parentPhone.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (u.parentEmail &&
-        u.parentEmail.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (u.department &&
-        u.department.toLowerCase().includes(searchTerm.toLowerCase()));
+        u.parentEmail.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesRole = roleFilter === "ALL" || u.role === roleFilter;
 

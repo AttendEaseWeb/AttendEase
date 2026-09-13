@@ -18,7 +18,7 @@ authRouter.post("/login", async (req, res, next) => {
 
 authRouter.post("/register", async (req, res, next) => {
   try {
-    const { name, email, role, department, studentId } = req.body;
+    const { name, email, role, studentId } = req.body;
     if (!name || !email || !role) {
       return res
         .status(400)
@@ -28,7 +28,6 @@ authRouter.post("/register", async (req, res, next) => {
       name,
       email,
       role,
-      department,
       studentId,
     });
     res.status(201).json(result);

@@ -8,7 +8,6 @@ export interface User {
   parentPhone?: string;
   role: UserRole;
   avatarUrl?: string;
-  department?: string;
   studentId?: string;
   createdAt: string;
 }
@@ -25,7 +24,6 @@ export interface RegisterRequest {
   email: string;
   password?: string;
   role: UserRole;
-  department?: string;
   studentId?: string;
 }
 

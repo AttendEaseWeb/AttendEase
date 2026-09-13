@@ -87,7 +87,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         name: req.email.split("@")[0].replace(".", " "),
         email: req.email,
         role,
-        department: "Computer Science",
         studentId: role === "STUDENT" ? "ST-2026-0001" : undefined,
         createdAt: new Date().toISOString(),
       };

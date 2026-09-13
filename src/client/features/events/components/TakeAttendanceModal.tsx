@@ -172,12 +172,7 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({
       if (!res.ok) throw new Error("Failed to fetch students");
       const allUsers: User[] = await res.json();
       
-      const enrolled = allUsers.filter(
-        (u) =>
-          u.role === "STUDENT" &&
-          (u.department === cls?.gradeLevel ||
-            u.department === "General Education")
-      );
+      const enrolled = allUsers.filter((u) => u.role === "STUDENT" && (!cls?.enrolledStudentIds || cls.enrolledStudentIds.includes(u.id)));
       setStudents(enrolled);
       
       // Initialize state for quick select all fallback

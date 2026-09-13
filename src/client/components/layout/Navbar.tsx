@@ -256,7 +256,6 @@ export const Navbar: React.FC<NavbarProps> = ({  activeTab,
                       {user?.name}
                     </span>
                     <span className="text-body-small text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant truncate">
-                      {user?.department}
                     </span>
                   </div>
                 </button>
@@ -308,15 +307,7 @@ export const Navbar: React.FC<NavbarProps> = ({  activeTab,
 
                       {/* Account Details */}
                       <div className="py-3 border-b border-zinc-100 dark:border-zinc-800 space-y-1.5">
-                        <div className="flex items-center justify-between text-body-small">
-                          <span className="text-m3-sys-light-on-surface-variant">
-                            Department:
-                          </span>
-                          <span className="font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
-                            {user?.department || "Academic"}
-                          </span>
-                        </div>
-                        {user?.studentId && (
+                                                {user?.studentId && (
                           <div className="flex items-center justify-between text-body-small">
                             <span className="text-m3-sys-light-on-surface-variant">
                               Student ID:

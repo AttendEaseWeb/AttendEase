@@ -91,7 +91,6 @@ syncRouter.post("/", (req, res, next) => {
               : undefined,
             role: payload.role || "STUDENT",
             studentId: cleanStudentId,
-            department: payload.department || "General Education",
             avatarUrl:
               payload.avatarUrl ||
               "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",

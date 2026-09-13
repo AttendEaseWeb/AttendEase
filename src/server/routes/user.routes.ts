@@ -33,7 +33,6 @@ userRouter.post("/", async (req, res, next) => {
       parentEmail,
       role,
       studentId,
-      department,
       avatarUrl,
     } = req.body;
     if (!name || !name.trim()) {
@@ -70,7 +69,6 @@ userRouter.post("/", async (req, res, next) => {
       parentEmail: parentEmail ? parentEmail.trim() : undefined,
       role: role || "STUDENT",
       studentId: cleanStudentId,
-      department: department || "General Education",
       avatarUrl:
         avatarUrl ||
         `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150`,

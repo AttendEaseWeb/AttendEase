@@ -47,8 +47,7 @@ export const AuthPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [department, setDepartment] = useState("Computer Science");
-  const [studentId, setStudentId] = useState("");
+    const [studentId, setStudentId] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -102,7 +101,6 @@ export const AuthPage: React.FC = () => {
           email,
           password,
           role,
-          department,
           studentId:
             role === "STUDENT"
               ? studentId ||
@@ -284,14 +282,7 @@ export const AuthPage: React.FC = () => {
                     required
                   />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <Input
-                      label="Department"
-                      placeholder="Computer Science"
-                      value={department}
-                      onChange={(e) => setDepartment(e.target.value)}
-                      icon={<Building2 className="w-4 h-4 text-slate-400" />}
-                    />
-                    {role === "STUDENT" && (
+                                        {role === "STUDENT" && (
                       <Input
                         label="Learner Reference Number (LRN)"
                         placeholder="ST-2026-1234"

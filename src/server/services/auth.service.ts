@@ -27,7 +27,6 @@ export class AuthService {
         email: req.email,
         name: capitalizedName,
         role,
-        department: "Computer Science",
         studentId:
           role === "STUDENT"
             ? `ST-2026-${Math.floor(1000 + Math.random() * 9000)}`
@@ -62,7 +61,6 @@ export class AuthService {
       name: req.name,
       email: req.email,
       role: req.role,
-      department: req.department || "Computer Science",
       studentId:
         req.studentId ||
         (req.role === "STUDENT"

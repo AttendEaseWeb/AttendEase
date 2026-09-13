@@ -120,7 +120,7 @@ export const ManualCheckInModal: React.FC<ManualCheckInModalProps> = ({
           >
             {users.map((u) => (
               <option key={u.id} value={u.id}>
-                {u.name} ({u.department || u.email})
+                {u.name} ({u.email})
               </option>
             ))}
           </select>
