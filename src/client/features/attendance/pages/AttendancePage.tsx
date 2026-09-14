@@ -200,6 +200,10 @@ export const AttendancePage: React.FC = () => {
         onClose={() => setIsManualModalOpen(false)}
         onSuccess={fetchRecords}
       />
+      <ExcuseRequestModal 
+        isOpen={isExcuseModalOpen}
+        onClose={() => setIsExcuseModalOpen(false)}
+      />
     </motion.div>
   );
 };
