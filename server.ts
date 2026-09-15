@@ -12,6 +12,7 @@
  */
 import express from 'express';
 import path from 'path';
+import { dbStore } from './src/server/db/store';
 import { createServer as createViteServer } from 'vite';
 import { apiRouter } from './src/server/routes/router';
 import { errorHandler } from './src/server/middleware/errorHandler';
@@ -86,8 +87,6 @@ startServer().catch((err) => {
 setInterval(() => {
   const now = new Date();
   if (now.getHours() === 0) { // run at midnight
-    import('./src/server/db/store').then(({ dbStore }) => { 
-      dbStore.cleanupOldExcusePhotos(); 
-    }).catch(err => console.error(err));
+    dbStore.cleanupOldExcusePhotos().catch(err => console.error(err));
   }
 }, 1000 * 60 * 60); // Check every hour
