@@ -112,8 +112,10 @@ const StudentSwipeCard: React.FC<{
         {student.name.charAt(0).toUpperCase()}
       </div>
       
-      <h3 className="text-3xl font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center mb-2">
+      <h3 className="text-3xl font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-center mb-2 flex items-center justify-center gap-3">
         {student.name}
+        {student.gender === 'MALE' && <span className="text-sm font-bold px-2 py-1 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">M</span>}
+        {student.gender === 'FEMALE' && <span className="text-sm font-bold px-2 py-1 rounded bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300">F</span>}
       </h3>
       {excuse && (
         <div className="flex flex-col items-center mb-16">
@@ -460,8 +462,10 @@ export const TakeAttendanceModal: React.FC<TakeAttendanceModalProps> = ({ isOpen
                       </div>
                       <div>
                         
-                        <div className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+                        <div className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface flex items-center gap-2">
                           {student.name}
+                          {student.gender === 'MALE' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">M</span>}
+                          {student.gender === 'FEMALE' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300">F</span>}
                         </div>
                         {excuseRequests.find(e => e.studentId === student.id) && (
                           <div className="flex items-center gap-2 mt-1">

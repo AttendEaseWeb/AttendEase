@@ -61,6 +61,7 @@ export class AuthService {
       name: req.name,
       email: req.email,
       role: req.role,
+      gender: req.gender,
       studentId:
         req.studentId ||
         (req.role === "STUDENT"

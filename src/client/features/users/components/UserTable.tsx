@@ -121,8 +121,10 @@ export const UserTable: React.FC<UserTableProps> = ({
                       className="w-10 h-10 rounded-full object-cover shrink-0 border border-m3-sys-light-outline-variant/20 dark:border-m3-sys-dark-outline-variant/20 shadow-sm"
                     />
                     <div className="flex flex-col">
-                      <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-body-large">
+                      <span className="font-bold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface text-body-large flex items-center gap-2">
                         {u.name}
+                        {u.gender === 'MALE' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">M</span>}
+                        {u.gender === 'FEMALE' && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300">F</span>}
                       </span>
                       <span className="text-label-medium text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant">
                         {u.parentEmail ? `Parent Email: ${u.parentEmail} ` : ""}

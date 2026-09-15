@@ -48,6 +48,7 @@ export const AuthPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
     const [studentId, setStudentId] = useState("");
+  const [gender, setGender] = useState<"MALE" | "FEMALE">("MALE");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -282,6 +283,19 @@ export const AuthPage: React.FC = () => {
                     required
                   />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1.5 flex flex-col">
+                      <label className="text-label-medium font-semibold text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface">
+                        Gender
+                      </label>
+                      <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value as "MALE" | "FEMALE")}
+                        className="w-full px-3 py-2 text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary"
+                      >
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                      </select>
+                    </div>
                                         {role === "STUDENT" && (
                       <Input
                         label="Learner Reference Number (LRN)"

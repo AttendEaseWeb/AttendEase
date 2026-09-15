@@ -34,6 +34,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
   const [parentPhone, setParentPhone] = useState("");
   const [parentEmail, setParentEmail] = useState("");
   const [studentId, setStudentId] = useState("");
+  const [gender, setGender] = useState<"MALE" | "FEMALE">("MALE");
   const [selectedClassId, setSelectedClassId] = useState<string>(
     defaultClassId || "",
   );
@@ -47,6 +48,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
       setParentPhone("");
       setParentEmail("");
       setStudentId("");
+      setGender("MALE");
       setSelectedClassId(defaultClassId || "");
       fetchClasses();
     }
@@ -82,6 +84,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
           parentPhone: parentPhone.trim() || undefined,
           parentEmail: parentEmail.trim() || undefined,
           role: "STUDENT",
+        gender,
           studentId: studentId.trim(),
           avatarUrl: DEFAULT_AVATAR,
         }),

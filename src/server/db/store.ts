@@ -74,7 +74,17 @@ class DataStore {
         .insert(user)
         .select()
         .single();
-      if (error) console.error("Error adding user:", error);
+      if (error) {
+        if (error.code === '42703' && error.message.includes('gender')) {
+           console.error("⚠️ SUPABASE SCHEMA ERROR: You need to add a 'gender' column (text) to your 'users' table in the Supabase dashboard to save gender information!");
+           // Retry without gender so the registration doesn't completely fail
+           const { gender, ...userWithoutGender } = user;
+           const retry = await supabase.from("users").insert(userWithoutGender).select().single();
+           if (retry.data) return retry.data as User;
+        } else {
+           console.error("Error adding user:", error);
+        }
+      }
       if (data) return data as User;
     }
     this.users.push(user);
