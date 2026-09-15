@@ -25,6 +25,19 @@ interface NavbarProps {  activeTab: string;
 export const Navbar: React.FC<NavbarProps> = ({  activeTab,
 }) => {
   const { user, logout } = useAuth();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus search on '/' or Cmd+K / Ctrl+K
+      if ((e.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") || ((e.metaKey || e.ctrlKey) && e.key === 'k')) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   const { setIsScheduleModalOpen } = useSchedule();
   const [hasNotifications, setHasNotifications] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -96,12 +109,13 @@ export const Navbar: React.FC<NavbarProps> = ({  activeTab,
             <div className="relative hidden md:block w-36 lg:w-48 xl:w-64 transition-all">
               <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant" />
               <input
+                ref={searchInputRef}
                 type="text"
                 placeholder="Search..."
                 className="w-full pl-9 pr-8 py-1.5 text-body-medium bg-m3-sys-light-surface-variant/40 dark:bg-m3-sys-dark-surface-variant/30 border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary focus:bg-m3-sys-light-surface dark:focus:bg-m3-sys-dark-surface shadow-expressive-sm transition-all"
               />
               <span className="absolute right-2.5 top-2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-m3-sys-light-surface-variant dark:bg-m3-sys-dark-surface-variant text-m3-sys-light-on-surface-variant font-semibold">
-                ⌘K
+                /
               </span>
             </div>
           </div>

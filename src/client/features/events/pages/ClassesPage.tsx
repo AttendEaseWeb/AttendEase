@@ -126,6 +126,19 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   const [categoryFilter, setCategoryFilter] = useState<"ALL" | GradeCategory>(
     "ALL",
   );
@@ -497,8 +510,9 @@ export const ClassesPage: React.FC<ClassesPageProps> = ({}) => {
           <div className="relative flex-1 sm:max-w-xs">
             <Search className="absolute left-3.5 top-2.5 w-4 h-4 text-m3-sys-light-on-surface-variant" />
             <input
+              ref={searchInputRef}
               type="text"
-              placeholder="Search section, subject..."
+              placeholder="Search section, subject... (Press / to focus)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-3 py-2 text-body-medium bg-m3-sys-light-surface-variant/20 dark:bg-m3-sys-dark-surface-variant/20 border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary"

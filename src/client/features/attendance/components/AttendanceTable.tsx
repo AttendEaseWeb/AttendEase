@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useDebounce } from "../../../hooks/useDebounce";
 import {
   AttendanceRecord,
   AttendanceStatus,
@@ -21,6 +22,20 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
 }) => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus search on '/' key, unless we are already typing in an input
+      if (e.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [justificationRecord, setJustificationRecord] = useState<AttendanceRecord | null>(null);
   const [gradeCategoryFilter, setGradeCategoryFilter] = useState<string>("ALL");
@@ -29,10 +44,10 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
     const code = record.classCode || record.courseCode || "";
     const section = record.sectionName || record.courseTitle || "";
     const matchesSearch =
-      record.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      record.studentEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      section.toLowerCase().includes(searchTerm.toLowerCase());
+      record.studentName.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      record.studentEmail.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      code.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      section.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === "ALL" || record.status === statusFilter;
@@ -54,8 +69,9 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant" />
           <input
+            ref={searchInputRef}
             type="text"
-            placeholder="Search student name, class section..."
+            placeholder="Search student name, class section... (Press / to focus)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-9 pr-3 py-2 text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm transition-shadow"

@@ -1,5 +1,6 @@
 import { offlineCapableFetch } from "../../../utils/sync";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useDebounce } from "../../../hooks/useDebounce";
 import { User } from "../../../../shared/types/auth";
 import { Badge } from "../../../components/common/Badge";
 import { Search, Trash2 } from "lucide-react";
@@ -16,6 +17,20 @@ export const UserTable: React.FC<UserTableProps> = ({
 }) => {
   const { showToast } = useNotification();
   const [searchTerm, setSearchTerm] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus search on '/' key, unless we are already typing in an input
+      if (e.key === "/" && document.activeElement?.tagName !== "INPUT" && document.activeElement?.tagName !== "TEXTAREA") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   const [roleFilter, setRoleFilter] = useState("ALL");
 
   const handleDeleteUser = async (u: User) => {
@@ -40,12 +55,12 @@ export const UserTable: React.FC<UserTableProps> = ({
 
   const filtered = users.filter((u) => {
     const matchesSearch =
-      u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      u.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      u.email.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
       (u.parentPhone &&
-        u.parentPhone.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        u.parentPhone.toLowerCase().includes(debouncedSearchTerm.toLowerCase())) ||
       (u.parentEmail &&
-        u.parentEmail.toLowerCase().includes(searchTerm.toLowerCase()));
+        u.parentEmail.toLowerCase().includes(debouncedSearchTerm.toLowerCase()));
 
     const matchesRole = roleFilter === "ALL" || u.role === roleFilter;
 
@@ -58,8 +73,9 @@ export const UserTable: React.FC<UserTableProps> = ({
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-m3-sys-light-on-surface-variant dark:text-m3-sys-dark-on-surface-variant" />
           <input
+            ref={searchInputRef}
             type="text"
-            placeholder="Search by name, email, phone..."
+            placeholder="Search by name, email, phone... (Press / to focus)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-9 pr-3 py-2 text-body-medium bg-m3-sys-light-surface dark:bg-m3-sys-dark-surface border border-m3-sys-light-outline-variant/30 dark:border-m3-sys-dark-outline-variant/30 rounded-full text-m3-sys-light-on-surface dark:text-m3-sys-dark-on-surface placeholder-m3-sys-light-on-surface-variant dark:placeholder-m3-sys-dark-on-surface-variant focus:outline-none focus:ring-2 focus:ring-m3-sys-light-primary shadow-expressive-sm transition-shadow"
