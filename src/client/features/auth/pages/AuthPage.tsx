@@ -102,6 +102,7 @@ export const AuthPage: React.FC = () => {
           email,
           password,
           role,
+          gender,
           studentId:
             role === "STUDENT"
               ? studentId ||

@@ -82,12 +82,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setToken(data.token);
     } catch (err: any) {
       const role: UserRole = req.role || "STUDENT";
+      const safeName = req.email
+        ? req.email.split("@")[0].replace(".", " ")
+        : req.lrn || "Student";
       const fallbackUser: User = {
         id: `u-${Date.now()}`,
-        name: req.email.split("@")[0].replace(".", " "),
-        email: req.email,
+        name: safeName,
+        email: req.email || "",
         role,
-        studentId: role === "STUDENT" ? "ST-2026-0001" : undefined,
+        studentId: req.lrn || (role === "STUDENT" ? "ST-2026-0001" : undefined),
         createdAt: new Date().toISOString(),
       };
       setUser(fallbackUser);

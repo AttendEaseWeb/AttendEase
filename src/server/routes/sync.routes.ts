@@ -9,7 +9,7 @@ export const syncRouter = Router();
 // In-memory set for basic deduplication (idempotency key tracking)
 const processedSyncIds = new Set<string>();
 
-syncRouter.post("/", (req, res, next) => {
+syncRouter.post("/", async (req, res, _next) => {
   try {
     const { operations } = req.body;
 
@@ -43,7 +43,7 @@ syncRouter.post("/", (req, res, next) => {
           url.includes("/api/attendance/manual") &&
           normalizedMethod === "POST"
         ) {
-          AttendanceService.manualCheckIn({
+          await AttendanceService.manualCheckIn({
             sessionId: payload.sessionId,
             studentId: payload.studentId,
             status: payload.status,
@@ -56,10 +56,9 @@ syncRouter.post("/", (req, res, next) => {
           url.includes("/api/attendance/checkin") &&
           normalizedMethod === "POST"
         ) {
-          AttendanceService.checkIn({
+          await AttendanceService.checkIn({
             sessionId: payload.sessionId,
             studentId: payload.studentId,
-            
             latitude: payload.latitude,
             longitude: payload.longitude,
           });
@@ -90,46 +89,47 @@ syncRouter.post("/", (req, res, next) => {
               ? payload.parentEmail.trim()
               : undefined,
             role: payload.role || "STUDENT",
+            gender: payload.gender || undefined,
             studentId: cleanStudentId,
             avatarUrl:
               payload.avatarUrl ||
               "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
             createdAt: payload.createdAt || new Date().toISOString(),
           };
-          UserService.createUser(newUser);
+          await UserService.createUser(newUser);
           results.push({ id: syncId, status: "success" });
         } else if (
           url.includes("/api/classes") &&
           normalizedMethod === "POST"
         ) {
-          ClassService.createClass(payload);
+          await ClassService.createClass(payload);
           results.push({ id: syncId, status: "success" });
         } else if (
           url.includes("/api/sessions") &&
           normalizedMethod === "POST"
         ) {
-          ClassService.createSession(payload);
+          await ClassService.createSession(payload);
           results.push({ id: syncId, status: "success" });
         } else if (
           url.match(/\/api\/classes\/([^\/]+)$/) &&
           normalizedMethod === "PUT"
         ) {
           const match = url.match(/\/api\/classes\/([^\/]+)$/);
-          if (match) ClassService.updateClass(match[1], payload);
+          if (match) await ClassService.updateClass(match[1], payload);
           results.push({ id: syncId, status: "success" });
         } else if (
           url.match(/\/api\/classes\/([^\/]+)$/) &&
           normalizedMethod === "DELETE"
         ) {
           const match = url.match(/\/api\/classes\/([^\/]+)$/);
-          if (match) ClassService.deleteClass(match[1]);
+          if (match) await ClassService.deleteClass(match[1]);
           results.push({ id: syncId, status: "success" });
         } else if (
           url.match(/\/api\/users\/([^\/]+)$/) &&
           normalizedMethod === "DELETE"
         ) {
           const match = url.match(/\/api\/users\/([^\/]+)$/);
-          if (match) dbStore.deleteUser(match[1]);
+          if (match) await dbStore.deleteUser(match[1]);
           results.push({ id: syncId, status: "success" });
         } else {
           console.log(

@@ -64,8 +64,7 @@ excuseRouter.get("/instructor/:id", async (req, res, next) => {
 excuseRouter.put("/:id/status", async (req, res, next) => {
   try {
     const { status } = req.body;
-    const { dbStore } = require("../db/store");
-    const excuse = dbStore['excuseRequests'].find(e => e.id === req.params.id);
+    const excuse = dbStore.excuseRequests.find(e => e.id === req.params.id);
     if (!excuse) return res.status(404).json({ error: "Not found" });
     excuse.status = status;
     res.json(excuse);

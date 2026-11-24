@@ -86,9 +86,11 @@ export class ClassService {
   ): Promise<ClassSection> {
     const cls = await dbStore.getClassById(classId);
     if (!cls) throw new Error("Class not found");
-    cls.enrolledStudentIds = studentIds;
-    cls.totalStudents = studentIds.length;
-    return cls;
+    const updated = await dbStore.updateClass(classId, {
+      enrolledStudentIds: studentIds,
+      totalStudents: studentIds.length,
+    });
+    return updated || { ...cls, enrolledStudentIds: studentIds, totalStudents: studentIds.length };
   }
 
   // Sessions

@@ -1,6 +1,7 @@
 import { offlineCapableFetch } from "../../../utils/sync";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useDebounce } from "../../../hooks/useDebounce";
 import {
   ClassSection,
   ClassSession,
